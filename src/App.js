@@ -7,7 +7,10 @@ import Weather from './shared/components/Weather';
 import Documents from './shared/components/Documents';
 import Registration from './shared/components/Registration';
 import RacerList from './shared/components/RacerList'; 
-import Editor from './shared/components/Editor'; 
+import Editor from './shared/components/Editor';
+import Login from './shared/components/Login';
+import Logout from './shared/components/Logout';
+import ResetPassword from './shared/components/ResetPassword';
 import 'mdb-react-ui-kit/dist/css/mdb.min.css';
 import { MDBContainer, MDBRow, MDBCol } from 'mdb-react-ui-kit';
 
@@ -31,6 +34,9 @@ const App = () => (
         <Route path="/registration" element={<Registration />} />
         <Route path="/racerlist" element={<RacerList />} />
         <Route path="/editor" element={<Editor />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/logout" element={<Logout />} />
+        <Route path="/resetpassword" element={<ResetPassword />} />
       </Routes>
     </MDBContainer>
 

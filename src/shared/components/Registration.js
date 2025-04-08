@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   MDBContainer,
   MDBRow,
@@ -18,9 +18,11 @@ import {
 } from "mdb-react-ui-kit";
 import { useNavigate } from "react-router-dom";
 import SHA256 from "crypto-js/sha256";
+import {apiBaseUrl, domainName, getToken} from './connection.js';
+
 
 const initialFormState = {
-  domain: "ppvcup2024",
+  domain: domainName,
   action: "registration",
   name: "",
   surname: "",
@@ -40,7 +42,18 @@ const Registration = () => {
   const [isError, setIsError] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [isLogged, setLogged] = useState(getToken().length > 0);
   const navigate = useNavigate();
+  let dataLoaded = false;
+
+  //  -------------------------------------------------------------------------------
+  //  volani DB pro uvodni nacteni z DB
+  useEffect(() => {
+    if (isLogged && !dataLoaded) {
+      dataLoaded = true;
+      loadData();
+    }
+  }, []);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -55,60 +68,73 @@ const Registration = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setMessage("Ověřuji e-mail...");
     setIsError(false);
     setLoading(true);
     setModalOpen(true);
 
-    const apiBaseUrl =
-      "https://script.google.com/macros/s/AKfycby7ANAR0E0geFDUp-Zi086Ie8KjFz7X5vcj1sQ4yIMg9yUDOPdd0LbyQYLqOs44aZxF/exec";
-
     try {
-      const checkEmailUrl = `${apiBaseUrl}?action=checkemail&email=${encodeURIComponent(formData.email)}`;
-      const checkEmailResponse = await fetch(checkEmailUrl);
-      const emailCheckResult = await checkEmailResponse.json();
+      if (!isLogged) {
+        const checkEmailUrl = `${apiBaseUrl}?action=checkemail&email=${encodeURIComponent(formData.email)}`;
+        const checkEmailResponse = await fetch(checkEmailUrl);
+        const emailCheckResult = await checkEmailResponse.json();
 
-      if (emailCheckResult.responseData?.emailExists) {
-        setMessage("Emailová adresa je již použita. Máte možnost ji změnit nebo kontaktovat organizátory.");
-        setIsError(true);
-        setLoading(false);
-        return;
+        if (emailCheckResult.responseData?.emailExists) {
+          setMessage("Emailová adresa je již použita. Máte možnost ji změnit nebo kontaktovat organizátory.");
+          setIsError(true);
+          setLoading(false);
+          return;
+        }
       }
 
       const updatedFormData = {
         ...formData,
         password: SHA256("motorola").toString(),
+        token: getToken()
       };
 
-      setMessage("Odesílám registraci...");
-      const payload = JSON.stringify(updatedFormData);
-
-      const postResponse = await fetch(apiBaseUrl, {
+      await fetch(apiBaseUrl, {
         method: "POST",
         headers: { "Content-Type": "text/plain" },
-        body: payload,
-      });
+        body: JSON.stringify(updatedFormData),
+      })
+      .then((response) => {
+        if (response.ok) {
+          return response.json()
+        } else {
+          return {isError:true, message: `HTTP chyba: ${response.status}`}
+        }
+      })
+      .then((responseData) => {
+        console.log(responseData);
+        if (!responseData.isError) {
+          setFormData(initialFormState);
+          setMessage(isLogged ? "Údaje byly změněny" : "Registrace byla přijata, můžete ji zkontrolovat v seznamu závodníků.");
+          document.querySelectorAll("input").forEach((input) => (input.value = ""));
+        } else
+          setMessage(responseData.message);
+        setIsError(responseData.isError);
+      })
+      .catch((e) => {
+        console.log(e.message)
+        setIsError(true);
+        setMessage("Kritická chyba: "+ e.message);    
+      })
+/*      if (!error && 1 == 2) { //  ???
+        await new Promise((resolve) => setTimeout(resolve, 500));
 
-      if (!postResponse.ok) {
-        throw new Error(`HTTP chyba: ${postResponse.status}`);
+        const getUrl = `${apiBaseUrl}?action=racerlist&domain=ppvcup2024&email=${encodeURIComponent(formData.email)}`;
+        const getResponse = await fetch(getUrl);
+        const result = await getResponse.json();
+        
+        if (result.isError) {
+          setMessage("Registrace byla přijata, můžete ji zkontrolovat v seznamu závodníků.");
+          setIsError(false);
+        } else {
+          setMessage("Registrace úspěšně odeslána.");
+          setIsError(false);
+        }
       }
-
-      await new Promise((resolve) => setTimeout(resolve, 500));
-
-      const getUrl = `${apiBaseUrl}?action=racerlist&domain=ppvcup2024&email=${encodeURIComponent(formData.email)}`;
-      const getResponse = await fetch(getUrl);
-      const result = await getResponse.json();
-
-      if (result.isError) {
-        setMessage("Registrace byla přijata, můžete ji zkontrolovat v seznamu závodníků.");
-        setIsError(false);
-      } else {
-        setMessage("Registrace úspěšně odeslána.");
-        setIsError(false);
-      }
-
-      setFormData(initialFormState);
-      document.querySelectorAll("input").forEach((input) => (input.value = ""));
+*/
     } catch (error) {
       console.error("Chyba při registraci:", error);
       setMessage(`Chyba při komunikaci se serverem: ${error.message}`);
@@ -117,6 +143,68 @@ const Registration = () => {
       setLoading(false);
     }
   };
+
+  //  -------------------------------------------------------------------------------
+  //  prijme data z DB
+  async function loadData()
+  {
+    console.log('loadData');
+    const formData = {
+      "action":   'getuserdata',
+      "token":    getToken(),
+      "domain":   domainName,
+      "source":   'testRegisterForm'
+    }
+
+    setIsError(false);
+    setLoading(true);
+    setModalOpen(true);
+
+    await fetch(apiBaseUrl, {
+      method: "POST",
+      headers: { "Content-Type": "text/plain" },
+      body: JSON.stringify(formData)
+    })
+    .then((response) => {
+      if (response.ok) {
+        return response.json()
+      } else {
+        return {isError:true, message: `HTTP chyba: ${response.status}`}
+      }
+    })
+    .then((responseData) => {
+      console.log(responseData);
+      if (!responseData.isError) {
+        const userParams = responseData.responseData.userParameters[domainName];
+        setFormData(
+          {
+            domain: domainName,
+            action: "edit",
+            name: userParams.name,
+            surname: userParams.surname,
+            email: responseData.responseData.email,
+            phone: userParams.phone,
+            club: userParams.club,
+            glider: userParams.glider,
+            imatriculation: userParams.imatriculation,
+            startCode: userParams.startCode,
+            gliderClass: userParams.gliderClass,
+            source: "testEditForm",
+          }
+        );
+        setModalOpen(false);
+      }
+      setIsError(responseData.isError);
+      setMessage(responseData.message);
+    })
+    .catch((e) => {
+      console.log(e.message)
+      setIsError(true);
+      setMessage("Kritická chyba: "+ e.message);    
+    })
+    
+    setLoading(false);
+  }
 
   return (
     <MDBContainer className="my-5">
@@ -127,19 +215,19 @@ const Registration = () => {
       <form onSubmit={handleSubmit}>
         <MDBRow>
           <MDBCol md="4">
-            <MDBInput label="Jméno" name="name" value={formData.name} onChange={handleChange} required />
+            <MDBInput label="Jméno" name="name" value={formData.name} onChange={handleChange} autoComplete="given-name" required />
           </MDBCol>
           <MDBCol md="4">
-            <MDBInput label="Příjmení" name="surname" value={formData.surname} onChange={handleChange} required />
+            <MDBInput label="Příjmení" name="surname" value={formData.surname} onChange={handleChange} autoComplete="family-name" required />
           </MDBCol>
         </MDBRow>
 
         <MDBRow className="mt-3">
           <MDBCol md="5">
-            <MDBInput label="Email" type="email" name="email" value={formData.email} onChange={handleChange} required />
+            <MDBInput label="Email" type="email" name="email" value={formData.email} onChange={handleChange} autoComplete="email" required readonly={isLogged} />
           </MDBCol>
           <MDBCol md="3">
-            <MDBInput label="Telefon" type="tel" name="phone" value={formData.phone} onChange={handleChange} required />
+            <MDBInput label="Telefon" type="tel" name="phone" value={formData.phone} onChange={handleChange} autoComplete="tel" required />
           </MDBCol>
         </MDBRow>
 

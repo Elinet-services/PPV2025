@@ -14,6 +14,7 @@ import {
   MDBIcon,
   MDBCollapse
 } from 'mdb-react-ui-kit';
+import {getToken} from './connection.js';
 
 const LOGO_WIDTHS = {
   aklt: '50%',
@@ -41,7 +42,8 @@ const Header = () => {
     { path: "/", label: "Home" },
     { path: "/documents", label: "Dokumenty" },
     { path: "/registration", label: "Registrace" },
-    { path: "/racerlist", label: "Seznam závodníků" }
+    { path: "/racerlist", label: "Seznam závodníků" },
+    (getToken().length > 0 ? { path: "/logout", label: "Odhlásit"} : { path: "/login", label: "Přihlásit" })
   ];
 
   return (
