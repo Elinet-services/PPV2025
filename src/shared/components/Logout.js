@@ -1,42 +1,27 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { resetCookies, getToken, apiBaseUrl, domainName} from './connection.js';
+import processRequest, { resetCookies } from './connection.js';
 
+let isLogged = true;
 
-const Logout = () => {
+const Logout = (params) => {
+
   const navigate = useNavigate();  
   useEffect(() => {
-    doLogout();
+    if (isLogged) {
+      isLogged = false;
+      doLogout();
+    }
   })
 
-  const doLogout = async() => {
-    const formData = {
-      "action":   'logout',
-      "token":    getToken(),
-      "domain":   domainName,
-      "source":   'testLogout'
-    }
-  
-    await fetch(apiBaseUrl, {
-      method: "POST",
-      headers: { "Content-Type": "text/plain" },
-      body: JSON.stringify(formData)
-    })
-    .then((response) => {
-      if (response.ok) {
-        return response.json()
-      } else {
-        return {isError:true, message: `HTTP chyba: ${response.status}`}
-      }
-    })
-    .then((responseData) => {
-      console.log(responseData);
+  const doLogout = async (e) => {
+
+    let response = await processRequest({}, 'logout', params.setLoading, params.setMessage, params.setError, params.showAlerMessage);
+    
+    if (!response.isError) {
       resetCookies();
       navigate("/");
-    })
-    .catch((e) => {
-      console.log(e.message)
-    })
+    }
   };
 }
 

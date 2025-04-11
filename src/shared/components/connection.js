@@ -63,37 +63,41 @@ export function formatDate(aDate, aDocumentType) {
 }
 
 //  -------------------------------------------------------------------------------
-export default async function processRequest(formData, source, setLoading, setMessage, setError, submitAlertMessage)
+export default async function processRequest(formData, action, setLoading, setMessage, setError, showAlerMessage)
 {
     setLoading(true);
     let isError = false;
     let responseMessage = '';
-    let adminData = {};
+    let responseData = {};
 
-    formData.append("source", source);
-    formData.append("token", getToken());
-
+    const updatedFormData = {
+        ...formData,
+        source: 'TEST',
+        action: action,
+        domain: domainName,
+        token: getToken()
+      };
+  
     /* for (const pair of formData.entries()) {
       console.log(pair[0] +', '+ pair[1]);
     } */
 
     await fetch(apiBaseUrl, {
         method: "POST",
-        body: formData
+        body: JSON.stringify(updatedFormData)
     })
     .then((response) => {
         if (response.ok) {
             return response.json()
-        } else {
-            isError = true;
-            return { message: "Požadavek se nepodařilo odeslat" }
+        } else {            
+            return { message: "Požadavek se nepodařilo odeslat", isError: true }
         }
     })
-    .then((responseData) => {
-        console.log(responseData);
-        isError         = responseData.isError;
-        responseMessage = responseData.message;
-        adminData       = responseData.adminData;
+    .then((data) => {
+        console.log(data);
+        isError         = data.isError;
+        responseMessage = data.message;
+        responseData    = data.responseData;
     })
     .catch((e) => {
         console.log(e.message)
@@ -105,7 +109,7 @@ export default async function processRequest(formData, source, setLoading, setMe
     setError(isError);
     setLoading(false);
     if (responseMessage.length > 0)  //  zobrazit vysledek volani DB - responseMessage
-        submitAlertMessage.current.click();
+        showAlerMessage(true);
 
-    return {"isError": isError, "adminData": adminData };
+    return {"isError": isError, "responseData": responseData };
 }

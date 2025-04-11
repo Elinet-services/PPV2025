@@ -6,34 +6,18 @@ import {
   MDBCol,
   MDBInput,
   MDBBtn,
-  MDBTypography,
-  MDBModal,
-  MDBModalDialog,
-  MDBModalContent,
-  MDBModalHeader,
-  MDBModalTitle,
-  MDBModalBody,
-  MDBSpinner,
-  MDBModalFooter
+  MDBTypography
 } from "mdb-react-ui-kit";
 import { sha256 } from "node-forge";
-import {apiBaseUrl, domainName, setCookies, resetCookies} from './connection.js';
+import processRequest, {setCookies, resetCookies} from './connection.js';
 
 const initialFormState = {
-  action: "login",
   email: "",
-  password: "",
-  action: "login",
-  domain: domainName,
-  source: "testLoginForm",
+  password: ""
 };
 
-const Login = () => {
+const Login = (params) => {
   const [formData, setFormData] = useState(initialFormState);
-  const [message, setMessage] = useState("");
-  const [isError, setIsError] = useState(false);
-  const [modalOpen, setModalOpen] = useState(false);
-  const [loading, setLoading] = useState(false);
   const [action, setAction] = useState('login');
   const navigate = useNavigate();
 
@@ -52,49 +36,23 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     resetCookies();
-    setIsError(false);
-    setLoading(true);
-    setModalOpen(true);
 
     const sha = sha256.create().update(formData.email + formData.password);
   
     const updatedFormData = {
       ...formData,
-      password: (action === 'login' ? sha.digest().toHex() : ''),
-      action: action
+      password: (action === 'login' ? sha.digest().toHex() : '')
     };
 
-    await fetch(apiBaseUrl, {
-      method: "POST",
-      headers: { "Content-Type": "text/plain" },
-      body: JSON.stringify(updatedFormData),
-    })
-    .then((response) => {
-      if (response.ok) {
-        return response.json()
-      } else {
-        return {isError:true, message: `HTTP chyba: ${response.status}`}
-      }
-    })
-    .then((responseData) => {
-      console.log(responseData);
-      if (!responseData.isError) {
-        console.log('logged');
-        setCookies(responseData.responseData);
+    let response = await processRequest(updatedFormData, action, params.setLoading, params.setMessage, params.setError, params.showAlerMessage);
+
+    if (!response.isError) {
+      if (action === 'login') {
+        setCookies(response.responseData);
         setFormData(initialFormState);
-        setModalOpen(false);
         navigate("/registration");
       }
-      setIsError(responseData.isError);
-      setMessage(responseData.message);
-    })
-    .catch((e) => {
-      console.log(e.message)
-      setIsError(true);
-      setMessage("Kritická chyba: "+ e.message);    
-    })
-    
-    setLoading(false);
+    }
   };
 
   return (
@@ -178,26 +136,6 @@ const Login = () => {
         </form>
       </section>
     }
-
-      <MDBModal open={modalOpen} tabIndex="-1">
-        <MDBModalDialog centered>
-          <MDBModalContent>
-            <MDBModalHeader>
-              <MDBModalTitle>{loading ? "Povádím přihlášení..." : isError ? "Chyba" : "Úspěch"}</MDBModalTitle>
-            </MDBModalHeader>
-            <MDBModalBody className="text-center">
-              {loading ? <MDBSpinner role="status" /> : <p>{message}</p>}
-            </MDBModalBody>
-            {!loading && (
-              <MDBModalFooter>
-                <MDBBtn color="secondary" onClick={() => setModalOpen(false)}>
-                  Zavřít
-                </MDBBtn>
-              </MDBModalFooter>
-            )}
-          </MDBModalContent>
-        </MDBModalDialog>
-      </MDBModal>
     </MDBContainer>
   );
 };
