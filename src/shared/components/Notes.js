@@ -12,21 +12,21 @@ import processRequest, {apiBaseUrl} from './connection.js';
 
 const getNow = () => {
   const now = new Date();
-  //return ""
-  return now.getDate() +'.'+ (now.getMonth() + 1) +'.'+ now.getFullYear() +' '+ now.getHours() +':'+ now.getMinutes();
+  return now.getDate() +'.'+ (now.getMonth() + 1) +'.'+ now.getFullYear() +' '+ now.getHours() +':'+ now.getMinutes().toString().padStart(2,'0');
 }
 
 const Notes = (params) => {
   const [loading, setLoading] = useState(true);  //  volani do DB
   const [formData, setFormData] = useState({
-    rowNr: "",
+    rowNr: 0,
     description: "",
     dateTime: getNow(),
     message: ""
   });
   const [documentList, setDocumentList] = useState({
     columns:  [
-      {label:'Datum a čas', field:'dateTime', sort: true, width: 200},
+      {label:'Řádek', field:'rowNr', sort: true, width: 50},
+      {label:'Datum a čas', field:'dateTime', sort: false, width: 200},
       {label:'Popisek', field:'description',  sort: false, width: 500}
     ], 
     rows: []
@@ -42,6 +42,7 @@ const Notes = (params) => {
           columns: documentList.columns,
           rows: responseData.map((note) => ({
             ...note,
+            rowNr: note.rowNr * 1,
             dateTime: note.date,
             description: note.header,
             message: note.bodyText
@@ -55,6 +56,7 @@ const Notes = (params) => {
   {
     if (e) e.preventDefault();
     setFormData({ rowNr: 0, dateTime: getNow(), description: "", message: "" })
+    document.querySelector('#Editor .wysiwyg-content').innerHTML = '';
   }
 
   useEffect(() => {
@@ -75,7 +77,7 @@ const Notes = (params) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
   const handleEditorChange = (value) => {
-    setFormData({ ...formData, message: value });
+    setFormData({ ...formData, message: encodeURIComponent(value) });
   };
 
   //  --------------------
@@ -84,8 +86,21 @@ const Notes = (params) => {
     e.preventDefault();
     //  const wysiwyg = document.querySelector('#Editor .wysiwyg-content');
     let response = await processRequest(formData, 'savenote', params.setLoading, params.setMessage, params.setError, params.showAlerMessage);
-    if (!response.isError)
+    if (!response.isError) {
+      const responseData = JSON.parse(response.responseData);
+      console.log(responseData);
+      setDocumentList({
+        columns: documentList.columns,
+        rows: responseData.map((note) => ({
+          ...note,
+          rowNr: note.rowNr * 1,
+          dateTime: note.date,
+          description: note.header,
+          message: note.bodyText
+        })),
+      })
       newNote();
+    }
   };
 
   return (
@@ -100,7 +115,7 @@ const Notes = (params) => {
           hover bordered fixedHeader search striped sm
           onRowClick={(row) => {
             setFormData( { rowNr: row.rowNr, dateTime: row.dateTime, description: row.description, message: row.message } );
-            document.querySelector('#Editor .wysiwyg-content').innerHTML = row.message;
+            document.querySelector('#Editor .wysiwyg-content').innerHTML = decodeURIComponent(row.message);
           }
         }                
       />

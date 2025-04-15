@@ -10,7 +10,7 @@ import {
 } from "mdb-react-ui-kit";
 import { useNavigate } from "react-router-dom";
 import SHA256 from "crypto-js/sha256";
-import processRequest, {apiBaseUrl, domainName, getToken} from './connection.js';
+import processRequest, {domainName, getToken} from './connection.js';
 
 
 const initialFormState = {
