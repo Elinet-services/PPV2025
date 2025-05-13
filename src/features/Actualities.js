@@ -8,7 +8,6 @@ const Actualities = () => {
 
   function fillDocumentList (responseData)
   {
-    console.log(responseData)
     setDocumentList(responseData.reverse());
   }
 

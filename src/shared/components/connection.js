@@ -1,4 +1,4 @@
-export const apiBaseUrl = "https://script.google.com/macros/s/AKfycbxab-auNcEJCngz37WGTRf23-SacK6aXbnEne16wsul_kPz7Ox3EaGvyogOZEC0Pj3W/exec"
+export const apiBaseUrl = "https://script.google.com/macros/s/AKfycbxIIdGsEkv1xV4lpmz6PrvZHodiFNHmIk5sQHemJA5-OZTjVOHdqCKrAs06O6esF5Si/exec"                                                              
 const cookieTimeout = 120;   //  platnost cookie v minutach
 export const domainName = 'ppvcup2024';
 
