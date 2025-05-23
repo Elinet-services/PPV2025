@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import {
   MDBContainer,
@@ -36,15 +36,24 @@ const organizers = [
 
 const Header = () => {
   const [showNav, setShowNav] = useState(false);
+  const [navItems, setNavItems] = useState([]);
   const location = useLocation();
 
-  const navItems = [
-    { path: "/", label: "Home" },
-    { path: "/documents", label: "Dokumenty" },
-    { path: "/registration", label: "Registrace" },
-    { path: "/racerlist", label: "Seznam závodníků" },
-    (getToken().length > 0 ? { path: "/logout", label: "Odhlásit"} : { path: "/login", label: "Přihlásit" })
-  ];
+  useEffect(() => {
+    fetch("/navItems.json")
+      .then((res) => res.json())
+      .then((data) => {
+        const filtered = data.map(item => {
+          if (item.authDependent) {
+            return getToken().length > 0
+              ? { path: "/logout", label: "Odhlásit" }
+              : { path: "/login", label: "Přihlásit" };
+          }
+          return item;
+        });
+        setNavItems(filtered);
+      });
+    }, []);
 
   return (
     <MDBContainer className="header-container" style={{ position: 'relative', marginBottom: '20px', overflow: 'hidden' }}>
