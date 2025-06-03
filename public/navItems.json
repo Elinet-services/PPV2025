@@ -3,5 +3,6 @@
   { "path": "/documents", "label": "Dokumenty" },
   { "path": "/registration", "label": "Registrace" },
   { "path": "/racerlist", "label": "Seznam závodníků" },
-  { "path": "/login", "label": "Přihlásit", "authDependent": true }
+  { "path": "/login", "label": "Přihlásit", "auth": "login" },
+  { "path": "/logout", "label": "Odhlásit", "auth": "logout" }
 ]

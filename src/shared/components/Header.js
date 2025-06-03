@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import {
   MDBContainer,
@@ -14,7 +14,7 @@ import {
   MDBIcon,
   MDBCollapse
 } from 'mdb-react-ui-kit';
-import {getToken} from './connection.js';
+import { AuthContext } from "../../context/AuthContext.js";
 
 const LOGO_WIDTHS = {
   aklt: '50%',
@@ -37,23 +37,23 @@ const organizers = [
 const Header = () => {
   const [showNav, setShowNav] = useState(false);
   const [navItems, setNavItems] = useState([]);
+  const { isLoggedIn } = useContext(AuthContext);
   const location = useLocation();
 
   useEffect(() => {
     fetch("/navItems.json")
       .then((res) => res.json())
       .then((data) => {
-        const filtered = data.map(item => {
-          if (item.authDependent) {
-            return getToken().length > 0
-              ? { path: "/logout", label: "Odhlásit" }
-              : { path: "/login", label: "Přihlásit" };
-          }
-          return item;
+        // Filter items based on authentication status
+        const filteredItems = data.filter(item => {
+          if (item.auth === "login" && isLoggedIn) return false;
+          if (item.auth === "logout" && !isLoggedIn) return false;
+          return true;
         });
-        setNavItems(filtered);
+
+        setNavItems(filteredItems);
       });
-    }, []);
+  }, [isLoggedIn]);
 
   return (
     <MDBContainer className="header-container" style={{ position: 'relative', marginBottom: '20px', overflow: 'hidden' }}>

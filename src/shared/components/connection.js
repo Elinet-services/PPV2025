@@ -62,7 +62,7 @@ export function formatDate(aDate, aDocumentType) {
 }
 
 //  -------------------------------------------------------------------------------
-export default async function processRequest(formData, action, setLoading, setMessage, setError, showAlerMessage)
+export async function processRequest(formData, action, setLoading, setMessage, setError, showAlerMessage)
 {
     setLoading(true);
     let isError = false;

@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { MDBWysiwyg } from 'mdb-react-wysiwyg';
 import {
   MDBContainer,
@@ -10,7 +10,7 @@ import {
   MDBCheckbox,
   MDBIcon
 } from "mdb-react-ui-kit";
-import processRequest, {apiBaseUrl, domainName, getToken} from './connection.js';
+import {processRequest, apiBaseUrl, domainName, getToken} from './connection.js';
 
 const getNow = () => {
   const now = new Date();
@@ -45,8 +45,8 @@ const Notes = (params) => {
         rowNr: note.rowNr * 1,
         dateTime: note.date,
         description: note.header,
-        published: note.published == "TRUE",
-        publishedIcon: note.published == "TRUE" ? <><MDBIcon far icon='check-circle' className='datatable-disable-onclick' /></>: '',
+        published: note.published === "TRUE",
+        publishedIcon: note.published === "TRUE" ? <><MDBIcon far icon='check-circle' className='datatable-disable-onclick' /></>: '',
         message: decodeURIComponent(note.bodyText)
       })),
     })

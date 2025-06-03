@@ -9,7 +9,7 @@ import {
   MDBTypography
 } from "mdb-react-ui-kit";
 import { sha256 } from "node-forge";
-import processRequest, {setCookies, resetCookies} from './connection.js';
+import {processRequest, setCookies, resetCookies} from './connection.js';
 
 const initialFormState = {
   email: "",
@@ -50,7 +50,9 @@ const Login = (params) => {
       if (action === 'login') {
         setCookies(response.responseData);
         setFormData(initialFormState);
+        window.dispatchEvent(new Event("loginStatusChanged"));
         navigate("/registration");
+        //window.location.replace('#/registration');
       }
     }
   };

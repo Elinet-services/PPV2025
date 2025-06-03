@@ -10,7 +10,7 @@ import {
 } from "mdb-react-ui-kit";
 import { useNavigate } from "react-router-dom";
 import SHA256 from "crypto-js/sha256";
-import processRequest, {domainName, getToken} from './connection.js';
+import {processRequest, domainName, getToken} from './connection.js';
 
 
 const initialFormState = {
@@ -28,7 +28,6 @@ const initialFormState = {
 const Registration = (params) => {
   const [formData, setFormData] = useState(initialFormState);
   const [isLogged, setLogged] = useState(getToken().length > 0);
-  const navigate = useNavigate();
   let dataLoaded = false;
 
   //  -------------------------------------------------------------------------------
@@ -56,7 +55,7 @@ const Registration = (params) => {
     const updatedFormData = {
       ...formData,
       password: SHA256("motorola").toString(),
-    };      
+    };
 
     let response = await processRequest(updatedFormData, (isLogged ? 'edit' : 'registration'), params.setLoading, params.setMessage, params.setError, params.showAlerMessage);
 
@@ -72,8 +71,6 @@ const Registration = (params) => {
   //  prijme data z DB
   async function loadData()
   {
-    console.log('loadData');
-
     let response = await processRequest({}, 'getuserdata', params.setLoading, params.setMessage, params.setError, params.showAlerMessage);
 
     if (!response.isError) {
