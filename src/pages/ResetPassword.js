@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import {
   MDBContainer,
@@ -17,7 +17,7 @@ import {
   MDBModalFooter
 } from "mdb-react-ui-kit";
 import { sha256 } from "node-forge";
-import {apiBaseUrl} from './connection.js';
+import {apiBaseUrl} from '../services/connection.js';
 
 const initialFormState = {
   action: "resetpassword",

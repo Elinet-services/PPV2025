@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { MDBListGroup, MDBListGroupItem, MDBTabs, MDBTabsItem, MDBTabsLink  } from "mdb-react-ui-kit";
-import {apiBaseUrl} from '../shared/components/connection.js'
+import {apiBaseUrl} from '../services/connection.js'
 
 const Actualities = () => {
   const [loading, setLoading] = useState(true);  //  volani do DB

@@ -1,20 +1,21 @@
 // Documents.js
-import React from 'react';
+import {useState, useEffect} from 'react';
 import { MDBContainer, MDBTable, MDBTableHead, MDBTableBody, MDBBtn } from 'mdb-react-ui-kit';
 
 const Documents = () => {
-  const documents = [
-    {
-      name: 'Propozice Plachtařský Pohár Vysočiny 2025 V1.0',
-      path: '/docs/Propozice Plachtařský Pohár Vysočiny 2025 V1.0.docx',
-      date: '2025-02-06',
-      info: 'Oficiální propozice závodu PPV 2025.'
-    }
-  ];
+    const [documentList, setDocumentList] = useState([]);
+
+    useEffect(() => {
+    fetch("/documents.json")
+      .then((res) => res.json())
+      .then((data) => {
+        setDocumentList(data);
+      });
+  }, []);
 
   return (
-    <MDBContainer className="my-4">
-      <h2>Dokumentace k PPV</h2>
+    <MDBContainer className="my-5">
+      <h2>Dokumenty k PPV</h2>
       
       <MDBTable striped>
         <MDBTableHead>
@@ -26,7 +27,7 @@ const Documents = () => {
           </tr>
         </MDBTableHead>
         <MDBTableBody>
-          {documents.map((doc, index) => (
+          {documentList.map((doc, index) => (
             <tr key={index}>
               <td>{doc.name}</td>
               <td>{doc.date}</td>

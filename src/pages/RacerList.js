@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import {
   MDBContainer,
   MDBTable,
@@ -70,7 +70,7 @@ const RacerList = () => {
     });
 
   return (
-    <MDBContainer className="my-4">
+    <MDBContainer className="my-5">
       <h4 className="mb-4 text-center">Seznam závodníků</h4>
       <MDBInput
         className="mb-3"

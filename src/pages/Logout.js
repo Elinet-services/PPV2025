@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { processRequest, resetCookies } from './connection.js';
+import { processRequest, resetCookies } from '../services/connection.js';
 
 let isLogged = true;
 
@@ -20,6 +20,8 @@ const Logout = (params) => {
     
     if (!response.isError) {
       window.dispatchEvent(new Event("loginStatusChanged"));
+      params.setUserRights([]);
+
       navigate("/");
     }
     resetCookies();

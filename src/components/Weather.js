@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { MDBTable, MDBTableHead, MDBTableBody, MDBContainer, MDBSpinner } from 'mdb-react-ui-kit';
 
 const Weather = () => {

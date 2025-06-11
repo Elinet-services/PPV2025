@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import {
   MDBContainer,
   MDBRow,
@@ -8,9 +8,8 @@ import {
   MDBBtn,
   MDBTypography
 } from "mdb-react-ui-kit";
-import { useNavigate } from "react-router-dom";
 import SHA256 from "crypto-js/sha256";
-import {processRequest, domainName, getToken} from './connection.js';
+import {processRequest, domainName, getToken} from '../services/connection.js';
 
 
 const initialFormState = {

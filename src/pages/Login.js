@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   MDBContainer,
@@ -9,7 +9,7 @@ import {
   MDBTypography
 } from "mdb-react-ui-kit";
 import { sha256 } from "node-forge";
-import {processRequest, setCookies, resetCookies} from './connection.js';
+import {processRequest, setCookies, resetCookies} from '../services/connection.js';
 
 const initialFormState = {
   email: "",
@@ -50,7 +50,7 @@ const Login = (params) => {
       if (action === 'login') {
         setCookies(response.responseData);
         setFormData(initialFormState);
-        window.dispatchEvent(new Event("loginStatusChanged"));
+        params.setUserRights(response.responseData.rights);
         navigate("/");
       }
     }

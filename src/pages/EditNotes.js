@@ -10,7 +10,7 @@ import {
   MDBCheckbox,
   MDBIcon
 } from "mdb-react-ui-kit";
-import {processRequest, apiBaseUrl, domainName, getToken} from './connection.js';
+import {processRequest, apiBaseUrl, domainName, getToken} from '../services/connection.js';
 
 const getNow = () => {
   const now = new Date();
