@@ -2,6 +2,7 @@ import React from 'react';
 import { MDBFooter, MDBContainer, MDBRow, MDBCol } from 'mdb-react-ui-kit';
 
 const Footer = () => (
+  <MDBContainer>
   <MDBFooter className="text-center text-lg-start bg-light text-muted py-3">
     <MDBContainer>
       <MDBRow className="text-center">
@@ -48,6 +49,7 @@ const Footer = () => (
       </MDBRow>
     </MDBContainer>
   </MDBFooter>
+  </MDBContainer>
 );
 
 export default Footer;

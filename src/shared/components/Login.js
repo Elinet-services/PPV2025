@@ -51,8 +51,7 @@ const Login = (params) => {
         setCookies(response.responseData);
         setFormData(initialFormState);
         window.dispatchEvent(new Event("loginStatusChanged"));
-        navigate("/registration");
-        //window.location.replace('#/registration');
+        navigate("/");
       }
     }
   };

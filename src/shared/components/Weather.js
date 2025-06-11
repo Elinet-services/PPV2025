@@ -13,7 +13,6 @@ const Weather = () => {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const data = await response.json();
-      console.log('Data vrácená serverem:', data); // Zde se vypíší data
       setWeatherData(data);
     } catch (err) {
       console.error('Error fetching weather data:', err);
@@ -23,7 +22,6 @@ const Weather = () => {
     }
   };
   
-
   useEffect(() => {
     fetchWeatherData(); // Načte data při načtení komponenty
     const interval = setInterval(fetchWeatherData, 90000); // Automatická obnova každých 90 sekund
@@ -52,9 +50,7 @@ const Weather = () => {
     return `${formattedDate.getHours().toString().padStart(2, '0')}:${formattedDate.getMinutes().toString().padStart(2, '0')}`;
   };
   
-  
-
-  if (loading) {
+    if (loading) {
     return (
       <MDBContainer className="text-center">
         <MDBSpinner role="status">

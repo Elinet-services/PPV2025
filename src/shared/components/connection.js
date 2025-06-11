@@ -1,4 +1,5 @@
-export const apiBaseUrl = "https://script.google.com/macros/s/AKfycbxIIdGsEkv1xV4lpmz6PrvZHodiFNHmIk5sQHemJA5-OZTjVOHdqCKrAs06O6esF5Si/exec"                                                              
+//  export const apiBaseUrl = "https://script.google.com/macros/s/AKfycbxIIdGsEkv1xV4lpmz6PrvZHodiFNHmIk5sQHemJA5-OZTjVOHdqCKrAs06O6esF5Si/exec"                                                              
+export const apiBaseUrl = "https://script.google.com/macros/s/AKfycbx4bwjD-4bBvQleKlV9tjasYEgA4rQF6rjaPsqmOoSUbv-0Vu3LKsYWGAIpYsczois/exec";
 const cookieTimeout = 120;   //  platnost cookie v minutach
 export const domainName = 'ppvcup2024';
 
@@ -8,15 +9,32 @@ export function getEmail () {
 export function getToken() {
     return getCookie('token');
 }
+export function getOperatorLevel() {   //  N - none; U - User; A - Admin
+    let operatorLevel = getCookie('role');
+    if (operatorLevel.length === 0)
+        operatorLevel = 'N';
+    return operatorLevel;
+}
+export function getUserName () {
+    return getCookie('userName');
+}
+export function getRights () {
+    return getCookie('rights');
+}
 
 export function setCookies(responseData) {
     setCookie('token', responseData.loginToken);
     setCookie('email', responseData.email);
+    setCookie('role', responseData.role);
+    setCookie('userName', responseData.userName);
+    setCookie('rights', responseData.rights);
 }
 export function resetCookies() {
     console.log('resetCookies');
     deleteCookie('token');
-    deleteCookie('email');
+    deleteCookie('role');
+    deleteCookie('userName');
+    deleteCookie('rights');
 }
 
 function setCookie(aName, aValue) {

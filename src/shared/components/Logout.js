@@ -8,10 +8,10 @@ const Logout = (params) => {
 
   const navigate = useNavigate();  
   useEffect(() => {
-    if (isLogged) {
-      isLogged = false;
+//    if (isLogged) {
+//      isLogged = false;
       doLogout();
-    }
+//    }
   })
 
   const doLogout = async (e) => {
@@ -19,11 +19,10 @@ const Logout = (params) => {
     let response = await processRequest({}, 'logout', params.setLoading, params.setMessage, params.setError, params.showAlerMessage);
     
     if (!response.isError) {
-      resetCookies();
       window.dispatchEvent(new Event("loginStatusChanged"));
       navigate("/");
-      //window.location.replace('/');
     }
+    resetCookies();
   };
 }
 

@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { NavLink, useLocation } from 'react-router-dom';
+import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import {
   MDBContainer,
   MDBCarousel,
   MDBCarouselItem,
   MDBCarouselCaption,
+  MDBBtn,
   MDBRow,
   MDBCol,
   MDBNavbar,
@@ -12,8 +13,10 @@ import {
   MDBNavbarItem,
   MDBNavbarToggler,
   MDBIcon,
-  MDBCollapse
+  MDBCollapse,
+  MDBDropdown, MDBDropdownToggle, MDBDropdownMenu, MDBDropdownItem
 } from 'mdb-react-ui-kit';
+import {getOperatorLevel, getUserName, geRights} from './connection.js';
 import { AuthContext } from "../../context/AuthContext.js";
 
 const LOGO_WIDTHS = {
@@ -37,23 +40,34 @@ const organizers = [
 const Header = () => {
   const [showNav, setShowNav] = useState(false);
   const [navItems, setNavItems] = useState([]);
+  const [userMenuItems, setUserMenuItems] = useState([]);
   const { isLoggedIn } = useContext(AuthContext);
+  const { userRights } = useContext(AuthContext);
   const location = useLocation();
+  const navigate = useNavigate();
 
+  // Fetch navigation items from JSON file
   useEffect(() => {
     fetch("/navItems.json")
       .then((res) => res.json())
       .then((data) => {
-        // Filter items based on authentication status
-        const filteredItems = data.filter(item => {
-          if (item.auth === "login" && isLoggedIn) return false;
-          if (item.auth === "logout" && !isLoggedIn) return false;
-          return true;
-        });
-
-        setNavItems(filteredItems);
+        setNavItems(data);
       });
   }, [isLoggedIn]);
+
+  // Fetch user menu items based on user rights
+  useEffect(() => {
+    fetch("/userMenuItems.json")
+      .then((res) => res.json())
+      .then((data) => {
+        // Filter items based on authentication status
+        const filteredItems = data.filter(item => {
+          if (userRights.indexOf(item.right) === -1) return false;  // User does not have the right          
+          return true;
+        });
+        setUserMenuItems(filteredItems);
+      });
+  }, [userRights]);
 
   return (
     <MDBContainer className="header-container" style={{ position: 'relative', marginBottom: '20px', overflow: 'hidden' }}>
@@ -122,17 +136,15 @@ const Header = () => {
           </NavLink>
 
           <MDBNavbarToggler
-            type="button"
-            aria-label="Toggle navigation"
+            aria-label="Otevřít menu"
             onClick={() => setShowNav(!showNav)}
-            aria-controls="navbarNav"
-            aria-expanded={showNav}
+            aria-controls='navbarSupportedContent'            
           >
             <MDBIcon icon="bars" fas />
           </MDBNavbarToggler>
 
-          <MDBCollapse id="navbarNav" open={showNav} navbar className="collapse navbar-collapse">
-            <MDBNavbarNav className="ms-auto">
+          <MDBCollapse id="navbarNav" open={showNav} navbar>
+            <MDBNavbarNav className='mb-2 mb-lg-0'>
               {navItems.map((item) => (
                 <MDBNavbarItem key={item.path}>
                   <NavLink
@@ -145,6 +157,27 @@ const Header = () => {
                 </MDBNavbarItem>
               ))}
             </MDBNavbarNav>
+            {getOperatorLevel() === 'N' ? (
+              <MDBBtn color='light' onClick={() => {setShowNav(false); navigate("/login")}}>
+                Přihlášení
+              </MDBBtn>
+            ) : (
+              <MDBDropdown>
+                <MDBDropdownToggle tag='a' className='nav-link' role='button'>
+                  <MDBIcon icon='user' className='ms-2' /> {getUserName() || 'Uživatel'} 
+                </MDBDropdownToggle>
+                <MDBDropdownMenu>
+                  {userMenuItems.map((item) => (
+                    <React.Fragment key={item.path}>
+                      {item.addDivider && <MDBDropdownItem divider />}
+                      <MDBDropdownItem link childTag='button' onClick={() => {navigate(item.path)}}>
+                        {item.label}
+                      </MDBDropdownItem>
+                    </React.Fragment>
+                  ))}
+                </MDBDropdownMenu>                
+              </MDBDropdown>
+            )}
           </MDBCollapse>
         </MDBContainer>
       </MDBNavbar>

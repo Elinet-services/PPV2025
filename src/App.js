@@ -24,7 +24,6 @@ const App = () => {
   
   return (
   <Router>
-  <MDBContainer>
       <Header />  {/* Header je mimo Routes = bude všude */}
       {/* Odeslani do DB */}
       <MDBModal open={loading} tabIndex='-1' staticBackdrop>
@@ -52,8 +51,8 @@ const App = () => {
         >
           {responseMessage}
       </MDBAlert>
-    </MDBContainer>
-    
+
+    {/* Hlavní obsah aplikace */}  
     <MDBContainer>
       <Routes>
         <Route path="/" element={
