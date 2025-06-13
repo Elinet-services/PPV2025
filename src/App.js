@@ -93,7 +93,7 @@ const App = () => {
           autohide appendToBody
           position='top-center'
           width={800}
-          delay={3000}
+          delay={error ? 5000: 3000}
         >
           {responseMessage}
       </MDBAlert>

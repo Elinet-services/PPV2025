@@ -104,7 +104,7 @@ export async function processRequest(formData, action, setLoading, setMessage, s
         source: source,
         action: action,
         domain: domainName,
-        token: token
+        token: formData.token || token || '',  //  pokud neni token v datech, pouzijeme token z cookies
       };
   
     /* for (const pair of formData.entries()) {

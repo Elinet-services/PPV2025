@@ -1,38 +1,17 @@
 import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import {
-  MDBContainer,
-  MDBRow,
-  MDBCol,
-  MDBInput,
-  MDBBtn,
-  MDBTypography,
-  MDBModal,
-  MDBModalDialog,
-  MDBModalContent,
-  MDBModalHeader,
-  MDBModalTitle,
-  MDBModalBody,
-  MDBSpinner,
-  MDBModalFooter
-} from "mdb-react-ui-kit";
+import { MDBContainer, MDBRow, MDBCol, MDBInput, MDBBtn, MDBTypography } from "mdb-react-ui-kit";
 import { sha256 } from "node-forge";
-import {apiBaseUrl} from '../services/connection.js';
+import {processRequest} from '../services/connection.js';
 
 const initialFormState = {
-  action: "resetpassword",
   token: "",
   password: "",
-  rePassword: "",
-  source: "testResetPasswordForm",
+  rePassword: ""
 };
 
-const ResetPassword = () => {
+const ResetPassword = (params) => {
   const [formData, setFormData] = useState(initialFormState);
-  const [message, setMessage] = useState("");
-  const [isError, setIsError] = useState(false);
-  const [modalOpen, setModalOpen] = useState(false);
-  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const resetToken = new URLSearchParams(useLocation().search).get('resetToken');
@@ -59,9 +38,7 @@ const ResetPassword = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setIsError(false);
-    setLoading(true);
-    setModalOpen(true);
+
     const sha = sha256.create().update(hexDecode(resetToken.substring(resetToken.indexOf('g')+ 1 )) + formData.password);
   
     const updatedFormData = {
@@ -70,35 +47,13 @@ const ResetPassword = () => {
       rePassword: '',
       token: resetToken.substring(0, resetToken.indexOf('g'))
     };
+    let response = await processRequest(updatedFormData, "resetpassword", params.setLoading, params.setMessage, params.setError, params.showAlerMessage);
 
-    await fetch(apiBaseUrl, {
-      method: "POST",
-      headers: { "Content-Type": "text/plain" },
-      body: JSON.stringify(updatedFormData),
-    })
-    .then((response) => {
-      if (response.ok) {
-        return response.json()
-      } else {
-        return {isError:true, message: `HTTP chyba: ${response.status}`}
-      }
-    })
-    .then((responseData) => {
-      console.log(responseData);
-      if (!responseData.isError) {
-        setFormData(initialFormState);
-        document.querySelectorAll("input").forEach((input) => (input.value = ""));    
-      }
-      setIsError(responseData.isError);
-      setMessage(responseData.message);
-    })
-    .catch((e) => {
-      console.log(e.message)
-      setIsError(true);
-      setMessage("Kritická chyba: "+ e.message);    
-    })
-    
-    setLoading(false);    
+    if (!response.isError) {
+      setFormData(initialFormState);
+      document.querySelectorAll("input").forEach((input) => (input.value = ""));
+      navigate("/login");
+    }
   };
 
   return (
@@ -140,31 +95,6 @@ const ResetPassword = () => {
           </MDBRow>
         </MDBCol>
       </form>
-
-      <MDBModal open={modalOpen} tabIndex="-1">
-        <MDBModalDialog centered>
-          <MDBModalContent>
-            <MDBModalHeader>
-              <MDBModalTitle>{loading ? "Měním Vaše heslo..." : isError ? "Chyba" : "Úspěch"}</MDBModalTitle>
-            </MDBModalHeader>
-            <MDBModalBody className="text-center">
-              {loading ? <MDBSpinner role="status" /> : <p>{message}</p>}
-            </MDBModalBody>
-            {!loading && (
-              <MDBModalFooter>
-                <MDBBtn color="secondary" onClick={() => setModalOpen(false)}>
-                  Zavřít
-                </MDBBtn>
-                {!isError ?
-                  <MDBBtn color="primary" onClick={() => navigate("/login")}>
-                    přihlásit se
-                  </MDBBtn> : ''
-                }
-              </MDBModalFooter>
-            )}
-          </MDBModalContent>
-        </MDBModalDialog>
-      </MDBModal>
     </MDBContainer>
   );
 };
