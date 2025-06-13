@@ -1,25 +1,16 @@
 import { useState, useEffect } from "react";
-import { MDBListGroup, MDBListGroupItem, MDBTabs, MDBTabsItem, MDBTabsLink  } from "mdb-react-ui-kit";
+import { MDBListGroup, MDBListGroupItem, MDBTabs, MDBTabsItem, MDBTabsLink,
+  MDBContainer, MDBSpinner  } from "mdb-react-ui-kit";
 import {apiBaseUrl} from '../services/connection.js'
 
 const Actualities = () => {
-  const [loading, setLoading] = useState(true);  //  volani do DB
+  const [loading, setLoading] = useState(true);
   const [allNoteList, setAllNoteList] = useState(false);
   const [documentList, setDocumentList] = useState([]);
 
-  function fillDocumentList (responseData)
-  {
-    setDocumentList(responseData.reverse());
-  }
-
-  function realoadNotes(allNotes)
-  {
-    setLoading(false);
-    setAllNoteList(allNotes);
-    setDocumentList([]);
+  useEffect(() => {
     //  volani DB pro aktuality
-    //  pokud je allNotes true, tak se nactou vsechny aktuality, jinak jen 5 poslednich
-    fetch(apiBaseUrl + '?action=notes&limit='+ ( allNotes ? 1000 : 5 ))
+    fetch(apiBaseUrl + '?action=notes&limit=1000')
     .then((response) => {
         if (response.ok) {
             return response.json()
@@ -28,42 +19,43 @@ const Actualities = () => {
         }
     })
     .then((data) => {
+      setLoading(false);
       if (!data.isError) {
-        setLoading(false);
-        fillDocumentList( JSON.parse(data.responseData) );
+        setDocumentList(JSON.parse(data.responseData).reverse());
       }
     })
-  }
-  
-  useEffect(() => {
-    if (loading) {
-      realoadNotes(false);
-    }
-  }, [loading, documentList]);
+  }, []);
+
+  const filteredDocumentList = allNoteList ? documentList: documentList.slice(0, 5);
 
   return (
     <div id="actualities">
       <MDBTabs>
         <MDBTabsItem>
-          <MDBTabsLink onClick={() => realoadNotes(false)} active={allNoteList === false}>
+          <MDBTabsLink onClick={() => setAllNoteList(false)} active={allNoteList === false}>
             Poslední aktuality
           </MDBTabsLink>
         </MDBTabsItem>
         <MDBTabsItem>
-          <MDBTabsLink onClick={() => realoadNotes(true)} active={allNoteList === true}>
+          <MDBTabsLink onClick={() => setAllNoteList(true)} active={allNoteList === true}>
             Všechny aktuality
           </MDBTabsLink>
         </MDBTabsItem>
       </MDBTabs>
-      
-      <MDBListGroup>
-        {documentList.map(({ date, header, bodyText }, index) => (
-          <MDBListGroupItem key={index}>
-            <h6>{date} - <b> {header}</b></h6>
-            <span dangerouslySetInnerHTML={{ __html: decodeURIComponent(bodyText) }} />            
-          </MDBListGroupItem>
-        ))}
-      </MDBListGroup>
+      {loading ? (
+          <MDBSpinner role="status" className="text-left my-4">
+            <span className="visually-hidden">Načítám aktuality...</span>
+          </MDBSpinner>
+      ) : (
+        <MDBListGroup>
+          {filteredDocumentList.map(({ date, header, bodyText }, index) => (
+            <MDBListGroupItem key={index}>
+              <h6>{date} - <b> {header}</b></h6>
+              <span dangerouslySetInnerHTML={{ __html: decodeURIComponent(bodyText) }} />            
+            </MDBListGroupItem>
+          ))}
+        </MDBListGroup>
+      )}
     </div>
   );
 };

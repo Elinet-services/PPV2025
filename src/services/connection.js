@@ -1,7 +1,15 @@
-//  export const apiBaseUrl = "https://script.google.com/macros/s/AKfycbxIIdGsEkv1xV4lpmz6PrvZHodiFNHmIk5sQHemJA5-OZTjVOHdqCKrAs06O6esF5Si/exec"                                                              
-export const apiBaseUrl = "https://script.google.com/macros/s/AKfycbx4bwjD-4bBvQleKlV9tjasYEgA4rQF6rjaPsqmOoSUbv-0Vu3LKsYWGAIpYsczois/exec";
-const cookieTimeout = 120;   //  platnost cookie v minutach
-export const domainName = 'ppvcup2024';
+export let apiBaseUrl = "https://script.google.com/macros/s/AKfycbx4bwjD-4bBvQleKlV9tjasYEgA4rQF6rjaPsqmOoSUbv-0Vu3LKsYWGAIpYsczois/exec";
+export let domainName = 'ppvcup2024';
+export const source = document.location.hostname;  //  pro testovani localhost, pro produkci ppvcup.cz
+const cookieTokenTimeout = 120;     //  platnost tokenu v minutach
+const cookieTimeout = 1200;         //  platnost ostatnich cookies v minutach
+
+export function setDomainName(aDomainName) {
+    domainName = aDomainName;
+}
+export function setApiBaseUrl(aApiBaseUrl) {
+    apiBaseUrl = aApiBaseUrl;
+}
 
 export function getEmail () {
     return getCookie('email');
@@ -9,12 +17,12 @@ export function getEmail () {
 export function getToken() {
     return getCookie('token');
 }
-export function getOperatorLevel() {   //  N - none; U - User; A - Admin
+/* export function getOperatorLevel() {   //  N - none; U - User; A - Admin
     let operatorLevel = getCookie('role');
     if (operatorLevel.length === 0)
         operatorLevel = 'N';
     return operatorLevel;
-}
+}*/
 export function getUserName () {
     return getCookie('userName');
 }
@@ -23,7 +31,7 @@ export function getRights () {
 }
 
 export function setCookies(responseData) {
-    setCookie('token', responseData.loginToken);
+    setCookie('token', responseData.loginToken, cookieTokenTimeout);
     setCookie('email', responseData.email);
     setCookie('role', responseData.role);
     setCookie('userName', responseData.userName);
@@ -37,9 +45,9 @@ export function resetCookies() {
     deleteCookie('rights');
 }
 
-function setCookie(aName, aValue) {
+function setCookie(aName, aValue, timeout = cookieTimeout) {
     const expireDate = new Date();
-    expireDate.setTime(expireDate.getTime() + (cookieTimeout * 60 * 1000));
+    expireDate.setTime(expireDate.getTime() + (timeout * 60 * 1000));
     document.cookie = aName +"="+ aValue +";expires="+ expireDate.toUTCString() +";path=/";
 }
   
@@ -86,13 +94,17 @@ export async function processRequest(formData, action, setLoading, setMessage, s
     let isError = false;
     let responseMessage = '';
     let responseData = {};
+    const token = getToken();
+    if (token.length != 0) {
+        setCookie('token', token, cookieTokenTimeout);  //  obnoveni platnosti cookie tokenu
+    }
 
     const updatedFormData = {
         ...formData,
-        source: 'TEST',
+        source: source,
         action: action,
         domain: domainName,
-        token: getToken()
+        token: token
       };
   
     /* for (const pair of formData.entries()) {

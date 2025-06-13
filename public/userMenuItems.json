@@ -1,5 +1,5 @@
 [
   { "right": "edit", "label": "Změna údajů", "path": "/registration"},
   { "right": "notelist", "label": "Editace novinek", "path": "/notes"},
-  { "right": "logout", "label": "Odhlásit", "path": "/logout", "addDivider": true }
+  { "right": "logout", "label": "Odhlásit", "path": "logout", "addDivider": true }
 ]

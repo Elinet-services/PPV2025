@@ -13,7 +13,7 @@ import {
   MDBCollapse,
   MDBDropdown, MDBDropdownToggle, MDBDropdownMenu, MDBDropdownItem
 } from 'mdb-react-ui-kit';
-import {getOperatorLevel, getUserName} from '../services/connection.js';
+import {getToken, getUserName} from '../services/connection.js';
 
 const carouselItems = [
   { id: 1, img: "/img/1_pic.jpg", caption: "První snímek" },
@@ -21,8 +21,7 @@ const carouselItems = [
   { id: 3, img: "/img/3_pic.jpg", caption: "Třetí snímek" }
 ];
 
-
-const Header = ({ userMenuItems }) => {
+const Header = ({ userMenuItems, logout }) => {
   const navigate = useNavigate();
 
   const [navItems, setNavItems] = useState([]);
@@ -63,8 +62,7 @@ const Header = ({ userMenuItems }) => {
       <MDBCarousel showIndicators showControls fade interval={11000}>
         {carouselItems.map(slide => (
           <MDBCarouselItem key={slide.id} itemId={slide.id}>
-            <img src={slide.img} alt={`Slide ${slide.id}`} className="d-block w-100" 
-              style={{ height: '400px', objectFit: 'cover'}} />
+            <img src={slide.img} alt={`Slide ${slide.id}`} className="d-block w-100" style={{ height: '400px', objectFit: 'cover'}} />
             <div className='carousel-gradient-overlay'/>
           </MDBCarouselItem>
         ))}
@@ -79,7 +77,7 @@ const Header = ({ userMenuItems }) => {
             <MDBNavbarToggler
               aria-label="Otevřít menu"
               onClick={() => setShowNav(!showNav)}
-              aria-controls='navbarSupportedContent'            
+              aria-controls='navbarSupportedContent'
             >
               <MDBIcon icon="bars" fas />
             </MDBNavbarToggler>
@@ -98,7 +96,7 @@ const Header = ({ userMenuItems }) => {
                   </MDBNavbarItem>
                 ))}
               </MDBNavbarNav>
-              {getOperatorLevel() === 'N' ? (
+              {getToken().length === 0 ? (
                 <MDBBtn color='light' onClick={() => {setShowNav(false); navigate("/login")}}>
                   Přihlášení
                 </MDBBtn>
@@ -111,12 +109,18 @@ const Header = ({ userMenuItems }) => {
                     {userMenuItems.map((item) => (
                       <React.Fragment key={item.path}>
                         {item.addDivider && <MDBDropdownItem divider />}
-                        <MDBDropdownItem link childTag='button' onClick={() => {navigate(item.path)}}>
+                        <MDBDropdownItem link childTag='button' onClick={() => {
+                          if (item.path === 'logout')
+                            logout();
+                          else
+                            navigate(item.path);
+                          setShowNav(false);
+                          }}>
                           {item.label}
                         </MDBDropdownItem>
                       </React.Fragment>
                     ))}
-                  </MDBDropdownMenu>                
+                  </MDBDropdownMenu>
                 </MDBDropdown>
               )}
             </MDBCollapse>

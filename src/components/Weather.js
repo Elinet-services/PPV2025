@@ -65,7 +65,7 @@ const Weather = () => {
   }
 
   if (!weatherData) {
-    return <p className="text-center">Žádná data o počasí nejsou dostupná.</p>;
+    return <p className="text-center">Nejsou dostupná data o počasí.</p>;
   }
 
   return (

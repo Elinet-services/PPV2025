@@ -10,7 +10,7 @@ import {
   MDBCheckbox,
   MDBIcon
 } from "mdb-react-ui-kit";
-import {processRequest, apiBaseUrl, domainName, getToken} from '../services/connection.js';
+import {processRequest, apiBaseUrl, domainName, source, getToken} from '../services/connection.js';
 
 const getNow = () => {
   const now = new Date();
@@ -57,7 +57,7 @@ const Notes = (params) => {
     fetch(apiBaseUrl, {
       method: "POST",
       body: JSON.stringify({
-              source: 'TEST',
+              source: source,
               action: 'notelist',
               domain: domainName,
               token: getToken()
