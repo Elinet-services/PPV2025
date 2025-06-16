@@ -7,12 +7,13 @@ import { MDBContainer,
 import Header from './components/Header';
 import Footer from './components/Footer';
 import HomePage from './pages/HomePage';
-import Documents from './pages/Documents';
-import Registration from './pages/Registration';
+import DocumentList from './pages/DocumentList.js';
 import RacerList from './pages/RacerList'; 
 import EditNotes from './pages/EditNotes';
-import Login from './pages/Login';
-import ResetPassword from './pages/ResetPassword';
+import UserLogin from './pages/UserLogin.js';
+import UserRegistration from './pages/UserRegistration.js';
+import UserResetPassword from './pages/UserResetPassword.js';
+import UserChangePassword from './pages/UserChangePassword';
 
 import {getRights, processRequest, resetCookies, setDomainName, setApiBaseUrl} from './services/connection.js';
 
@@ -49,9 +50,10 @@ const App = () => {
   useEffect(() => {
     fetch("/userMenuItems.json")
       .then((res) => res.json())
-      .then((data) => {
+      .then((data) => {        
         // Filter items based on authentication status
         const filteredItems = data.filter(item => {
+          if (item.addDivider) return true; // oddelovac
           if (userRights.indexOf(item.right) === -1) return false;  // User does not have the right          
           return true;
         });
@@ -105,12 +107,13 @@ const App = () => {
       <MDBContainer>
         <Routes>
           <Route path="/" element={<HomePage />} />
-          <Route path="/documents" element={<Documents />} />
-          <Route path="/registration" element={<Registration setLoading={setLoading} setMessage={setResponseMessage} setError={setError} showAlerMessage={showAlerMessage}/>} />
+          <Route path="/documents" element={<DocumentList />} />
           <Route path="/racerlist" element={<RacerList />} />
           <Route path="/notes" element={<EditNotes setLoading={setLoading} setMessage={setResponseMessage} setError={setError} showAlerMessage={showAlerMessage}/>} />
-          <Route path="/login" element={<Login setLoading={setLoading} setMessage={setResponseMessage} setError={setError} showAlerMessage={showAlerMessage} setUserRights={setUserRights}/>} />
-          <Route path="/resetpassword" element={<ResetPassword setLoading={setLoading} setMessage={setResponseMessage} setError={setError} showAlerMessage={showAlerMessage}/>} />
+          <Route path="/login" element={<UserLogin setLoading={setLoading} setMessage={setResponseMessage} setError={setError} showAlerMessage={showAlerMessage} setUserRights={setUserRights}/>} />
+          <Route path="/registration" element={<UserRegistration setLoading={setLoading} setMessage={setResponseMessage} setError={setError} showAlerMessage={showAlerMessage}/>} />
+          <Route path="/resetpassword" element={<UserResetPassword setLoading={setLoading} setMessage={setResponseMessage} setError={setError} showAlerMessage={showAlerMessage}/>} />
+          <Route path="/changepassword" element={<UserChangePassword setLoading={setLoading} setMessage={setResponseMessage} setError={setError} showAlerMessage={showAlerMessage}/>} />
         </Routes>
       </MDBContainer>
 

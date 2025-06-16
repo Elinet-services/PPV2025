@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import {
   MDBContainer,
@@ -103,12 +103,13 @@ const Header = ({ userMenuItems, logout }) => {
               ) : (
                 <MDBDropdown>
                   <MDBDropdownToggle tag='a' className='nav-link' role='button'>
-                    <MDBIcon icon='user' className='ms-2' /> {getUserName() || 'Uživatel'} 
+                    <MDBIcon icon='user' className='ms-2' /> {getUserName() || 'Uživatel'}
                   </MDBDropdownToggle>
                   <MDBDropdownMenu>
                     {userMenuItems.map((item) => (
-                      <React.Fragment key={item.path}>
-                        {item.addDivider && <MDBDropdownItem divider />}
+                      item.addDivider ? 
+                        <MDBDropdownItem divider /> 
+                      : 
                         <MDBDropdownItem link childTag='button' onClick={() => {
                           if (item.path === 'logout')
                             logout();
@@ -118,7 +119,6 @@ const Header = ({ userMenuItems, logout }) => {
                           }}>
                           {item.label}
                         </MDBDropdownItem>
-                      </React.Fragment>
                     ))}
                   </MDBDropdownMenu>
                 </MDBDropdown>

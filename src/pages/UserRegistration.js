@@ -24,7 +24,7 @@ const initialFormState = {
   gliderClass: "club"
 };
 
-const Registration = (params) => {
+const UserRegistration = (params) => {
   const [formData, setFormData] = useState(initialFormState);
   const [isLogged, setLogged] = useState(getToken().length > 0);
   let dataLoaded = false;
@@ -153,4 +153,4 @@ const Registration = (params) => {
   );
 };
 
-export default Registration;
+export default UserRegistration;

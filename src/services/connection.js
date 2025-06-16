@@ -105,7 +105,7 @@ export async function processRequest(formData, action, setLoading, setMessage, s
         action: action,
         domain: domainName,
         token: formData.token || token || '',  //  pokud neni token v datech, pouzijeme token z cookies
-      };
+    };
   
     /* for (const pair of formData.entries()) {
       console.log(pair[0] +', '+ pair[1]);
