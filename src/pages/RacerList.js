@@ -1,8 +1,7 @@
 import { useState, useEffect } from "react";
-import {
-  MDBContainer, MDBTable, MDBTableHead, MDBTableBody, MDBBadge, MDBInput,
+import { MDBContainer, MDBTable, MDBTableHead, MDBTableBody, MDBBadge, MDBInput,
   MDBTabs, MDBTabsItem, MDBTabsLink, MDBSpinner} from "mdb-react-ui-kit";
-import {apiBaseUrl} from '../services/connection.js'
+import {fetchData} from '../services/connection.js'
 
 const RacerList = () => {
   const [loading, setLoading] = useState(true);
@@ -11,21 +10,14 @@ const RacerList = () => {
   const [activeTab, setActiveTab] = useState("all");
 
   useEffect(() => {
-    
-    fetch(apiBaseUrl + '?action=racerlist&domain=ppvcup2024&limit=1000')
-    .then((response) => {
-        if (response.ok) {
-            return response.json()
-        } else {
-            return { message: "Požadavek se nepodařilo odeslat", isError: true }
-        }
-    })
-    .then((data) => {
-      setLoading(false);
+    const loadData = async () => {
+      const data = await fetchData('racerlist', '&limit=1000');
       if (!data.isError) {
-        setRacers(JSON.parse(data.responseData));
+        setRacers(JSON.parse(data.responseData).reverse());
       }
-    })
+      setLoading(false);
+    };
+    loadData();
   }, []);
 
   const filteredRacers = racers

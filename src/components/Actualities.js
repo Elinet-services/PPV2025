@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
-import { MDBListGroup, MDBListGroupItem, MDBTabs, MDBTabsItem, MDBTabsLink,
-  MDBContainer, MDBSpinner  } from "mdb-react-ui-kit";
-import {apiBaseUrl} from '../services/connection.js'
+import { MDBListGroup, MDBListGroupItem, MDBTabs, MDBTabsItem, MDBTabsLink, MDBSpinner  } from "mdb-react-ui-kit";
+import {fetchData} from '../services/connection.js'
 
 const Actualities = () => {
   const [loading, setLoading] = useState(true);
@@ -9,21 +8,14 @@ const Actualities = () => {
   const [documentList, setDocumentList] = useState([]);
 
   useEffect(() => {
-    //  volani DB pro aktuality
-    fetch(apiBaseUrl + '?action=notes&limit=1000')
-    .then((response) => {
-        if (response.ok) {
-            return response.json()
-        } else {
-            return { message: "Požadavek se nepodařilo odeslat", isError: true }
-        }
-    })
-    .then((data) => {
-      setLoading(false);
+    const loadData = async () => {
+      const data = await fetchData('notes', '&limit=1000');
       if (!data.isError) {
         setDocumentList(JSON.parse(data.responseData).reverse());
       }
-    })
+      setLoading(false);
+    };
+    loadData();
   }, []);
 
   const filteredDocumentList = allNoteList ? documentList: documentList.slice(0, 5);

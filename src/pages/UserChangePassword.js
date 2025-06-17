@@ -60,7 +60,6 @@ const UserChangePassword = (params) => {
     if (!response.isError) {
       setFormData(initialFormState);
       document.querySelectorAll("input").forEach((input) => (input.value = ""));
-      navigate("/login");
     }
   };
 

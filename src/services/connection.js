@@ -88,6 +88,22 @@ export function formatDate(aDate, aDocumentType) {
 }
 
 //  -------------------------------------------------------------------------------
+//  zavola GET do DB
+export async function fetchData(action, params)
+{
+    try {
+        let response = await fetch(apiBaseUrl + `?action=${action}&domain=${domainName}`+ params)
+        if (response.ok) {
+            return response.json()
+        } else {
+            return { message: "Požadavek se nepodařilo odeslat", isError: true }
+        }
+    } catch (e) {
+        return { message: "Chyba při odesílání požadavku", isError: true }
+    }
+}
+
+//  -------------------------------------------------------------------------------
 export async function processRequest(formData, action, setLoading, setMessage, setError, showAlerMessage)
 {
     setLoading(true);

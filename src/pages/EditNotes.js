@@ -1,16 +1,7 @@
 import { useState, useEffect } from 'react';
 import { MDBWysiwyg } from 'mdb-react-wysiwyg';
-import {
-  MDBContainer,
-  MDBRow,
-  MDBCol,
-  MDBBtn,
-  MDBInput,
-  MDBDatatable,
-  MDBCheckbox,
-  MDBIcon
-} from "mdb-react-ui-kit";
-import {processRequest, apiBaseUrl, domainName, source, getToken} from '../services/connection.js';
+import { MDBContainer, MDBRow, MDBCol, MDBBtn, MDBInput, MDBDatatable, MDBCheckbox, MDBIcon } from "mdb-react-ui-kit";
+import {processRequest} from '../services/connection.js';
 
 const getNow = () => {
   const now = new Date();
@@ -18,7 +9,6 @@ const getNow = () => {
 }
 
 const Notes = (params) => {
-  const [loading, setLoading] = useState(true);  //  volani do DB
   const [formData, setFormData] = useState({
     rowNr: 0,
     description: "",
@@ -52,51 +42,20 @@ const Notes = (params) => {
     })
   }
 
-  function realoadNotes()
-  {
-    fetch(apiBaseUrl, {
-      method: "POST",
-      body: JSON.stringify({
-              source: source,
-              action: 'notelist',
-              domain: domainName,
-              token: getToken()
-      })
-    })
-    .then((response) => {
-        if (response.ok) {
-            return response.json()
-        } else {            
-            return { message: "Požadavek se nepodařilo odeslat", isError: true }
-        }
-    })
-    .then((data) => {
-      setLoading(false);
-      if (!data.isError)
-        fillDocumentList( JSON.parse(data.responseData) );
-    })
-  }
+  useEffect(async () => {
+    let response = await processRequest({}, 'notelist', params.setLoading, params.setMessage, params.setError, params.showAlerMessage);
+    if (!response.isError) {
+      fillDocumentList( JSON.parse(response.responseData) );
+    }
+  }, []);
 
+  //  --------------------
   function newNote(e)
   {
     if (e) e.preventDefault();
     setFormData({ rowNr: 0, dateTime: getNow(), description: "", published: true, message: "" })
     document.querySelector('#Editor .wysiwyg-content').innerHTML = '';
   }
-
-  useEffect(() => {
-    if (loading) {
-      realoadNotes();
-    }
-  }, [loading, documentList.columns]);
-
-  useEffect(() => {
-    if (documentList.rows.length === 0) {
-      setLoading(true);
-    } else {
-      setLoading(false);
-    }
-  }, [documentList.rows]);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -136,7 +95,6 @@ const Notes = (params) => {
   return (
     <MDBContainer className="my-5">
       <MDBDatatable data={documentList} 
-          isLoading={loading}
           pagination={false}
           maxHeight='350px' 
           entries={9999}
