@@ -51,8 +51,8 @@ const UserChangePassword = (params) => {
 
     const updatedFormData = {
       ...formData,
-      oldPassword: sha256.create().update(getEmail + formData.oldPassword).digest().toHex(),
-      password: sha256.create().update(getEmail + formData.password).digest().toHex(),
+      oldPassword: sha256.create().update(getEmail() + formData.oldPassword).digest().toHex(),
+      password: sha256.create().update(getEmail() + formData.password).digest().toHex(),
       rePassword: ''
     };
     let response = await processRequest(updatedFormData, "changepassword", params.setLoading, params.setMessage, params.setError, params.showAlerMessage);
