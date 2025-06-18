@@ -108,16 +108,17 @@ const Header = ({ userMenuItems, logout }) => {
                   <MDBDropdownMenu>
                     {userMenuItems.map((item) => (
                       item.addDivider ? 
-                        <MDBDropdownItem divider /> 
+                        <MDBDropdownItem divider key={item.right}/> 
                       : 
-                        <MDBDropdownItem link childTag='button' onClick={() => {
-                          if (item.path === 'logout')
-                            logout();
-                          else
-                            navigate(item.path);
-                          setShowNav(false);
-                          }}>
-                          {item.label}
+                        <MDBDropdownItem link childTag='button' key={item.right}
+                          onClick={() => {
+                            if (item.path === 'logout')
+                              logout();
+                            else
+                              navigate(item.path);
+                            setShowNav(false);
+                            }}
+                          >{item.label}
                         </MDBDropdownItem>
                     ))}
                   </MDBDropdownMenu>

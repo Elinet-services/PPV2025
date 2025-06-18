@@ -1,13 +1,5 @@
 import { useState, useEffect } from "react";
-import {
-  MDBContainer,
-  MDBRow,
-  MDBCol,
-  MDBInput,
-  MDBRadio,
-  MDBBtn,
-  MDBTypography
-} from "mdb-react-ui-kit";
+import { MDBContainer, MDBRow, MDBCol, MDBInput, MDBRadio, MDBBtn, MDBTypography, MDBSelect } from "mdb-react-ui-kit";
 import SHA256 from "crypto-js/sha256";
 import {processRequest, domainName, getToken} from '../services/connection.js';
 
@@ -21,12 +13,17 @@ const initialFormState = {
   glider: "",
   imatriculation: "",
   startCode: "",
-  gliderClass: "club"
+  gliderClass: "club",
+  deviceType1: "",
+  deviceId1: "",
+  deviceType2: "",
+  deviceId2: ""
 };
 
 const UserRegistration = (params) => {
   const [formData, setFormData] = useState(initialFormState);
   const [isLogged, setLogged] = useState(getToken().length > 0);
+  const deviceTypeData = [{text:'', value:''},{ text: 'FLARM', value: 'FLARM'},{ text: 'OGN', value: 'OGN' }, { text: 'ADS-B (ICAO)', value: 'ADS'}]
   let dataLoaded = false;
 
   //  -------------------------------------------------------------------------------
@@ -40,6 +37,9 @@ const UserRegistration = (params) => {
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+    if (e.target.name === 'deviceId1' || e.target.name === 'deviceId2') {
+      e.target.setCustomValidity('');
+    }
   };
 
   const handleRadioChange = (e) => {
@@ -49,8 +49,32 @@ const UserRegistration = (params) => {
     }));
   };
 
+  const handleSelectChange = (deviceNr, value) => {
+    setFormData({ ...formData, [`deviceType${deviceNr}`]: value });
+    document.getElementById(`deviceId${deviceNr}`).setCustomValidity('');
+  };
+
+  //  -------------------------------------------------------------------------------
+  function checkFilledDeviceFields(deviceNr, e)
+  {
+    const deviceTypeKey = `deviceType${deviceNr}`;
+    const deviceIdKey = `deviceId${deviceNr}`;
+
+    const deviceIdInput = document.getElementById(deviceIdKey);
+    deviceIdInput.setCustomValidity(''); // Reset custom validity
+    // Kontrola: obě pole musí být vyplněná, nebo žádné
+    if ((!!formData[deviceTypeKey]) != (!!formData[deviceIdKey])) {
+      deviceIdInput.setCustomValidity("Vyplňte buď oba údaje o odpovídači, nebo žádný.");
+      if (e) e.target.reportValidity(); // Spustí nativní validaci a zobrazí chybovou hlášku
+      return false;
+    }
+    return true
+  }
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!checkFilledDeviceFields(1, e) || !checkFilledDeviceFields(2, e)) return;
+
     const updatedFormData = {
       ...formData,
       password: SHA256("motorola").toString(),
@@ -59,9 +83,9 @@ const UserRegistration = (params) => {
     let response = await processRequest(updatedFormData, (isLogged ? 'edit' : 'registration'), params.setLoading, params.setMessage, params.setError, params.showAlerMessage);
 
     if (!response.isError) {
-        setFormData(initialFormState);
         params.setMessage(isLogged ? "Údaje byly změněny" : "Registrace byla přijata, můžete ji zkontrolovat v seznamu závodníků.");
-        document.querySelectorAll("input").forEach((input) => (input.value = ""));
+        if (!isLogged)
+          setFormData(initialFormState);
     }
     params.setLoading(false);
   };
@@ -84,7 +108,11 @@ const UserRegistration = (params) => {
           glider: userParams.glider,
           imatriculation: userParams.imatriculation,
           startCode: userParams.startCode,
-          gliderClass: userParams.gliderClass
+          gliderClass: userParams.gliderClass,
+          deviceType1: userParams.deviceType1,
+          deviceId1: userParams.deviceId1,
+          deviceType2: userParams.deviceType2,
+          deviceId2: userParams.deviceId2
         }
       );
     }
@@ -93,7 +121,7 @@ const UserRegistration = (params) => {
   return (
     <MDBContainer className="my-5">
       <MDBTypography tag="h4" className="mb-4 text-start">
-        Registrační formulář
+        {isLogged ? 'Změna registrace' : 'Registrační formulář'}
       </MDBTypography>
 
       <form onSubmit={handleSubmit}>
@@ -133,11 +161,32 @@ const UserRegistration = (params) => {
           </MDBCol>
         </MDBRow>
 
-        <MDBRow className="mt-4">
+        <MDBRow className="mt-3">
           <MDBCol md="12">
             <label className="form-label">Třída větroně:</label>
             <MDBRadio name="gliderClass" id="gliderClassClub" label="Klubová třída" value="club" checked={formData.gliderClass === "club"} onChange={handleRadioChange} />
             <MDBRadio name="gliderClass" id="gliderClassCombi" label="Kombinovaná třída" value="combi" checked={formData.gliderClass === "combi"} onChange={handleRadioChange} />
+          </MDBCol>
+        </MDBRow>
+
+        <MDBRow className="mt-3">
+          <MDBCol md="4">
+            <MDBSelect label="Typ odpovídače" value={formData.deviceType1} data={deviceTypeData}
+              onChange={(e) => {handleSelectChange('1', e.value)}}
+            />
+          </MDBCol>
+          <MDBCol md="3">
+            <MDBInput label="Číslo odpovídače" id="deviceId1" name="deviceId1" value={formData.deviceId1} onChange={handleChange} />
+          </MDBCol>
+        </MDBRow>
+        <MDBRow className="mt-3">
+          <MDBCol md="4">
+            <MDBSelect label="Typ odpovídače" value={formData.deviceType2} data={deviceTypeData}
+              onChange={(e) => {handleSelectChange('2', e.value)}}
+            />
+          </MDBCol>
+          <MDBCol md="3">
+            <MDBInput label="Číslo odpovídače" id="deviceId2" name="deviceId2" value={formData.deviceId2} onChange={handleChange} />
           </MDBCol>
         </MDBRow>
 
