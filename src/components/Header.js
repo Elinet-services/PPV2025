@@ -89,6 +89,7 @@ const Header = ({ userMenuItems, logout }) => {
                     <NavLink
                       className='nav-link'
                       to={item.path}
+                       {...(item.external ? { target: '_blank' } : {})}
                       onClick={() => setShowNav(false)}
                     >
                       {item.label}

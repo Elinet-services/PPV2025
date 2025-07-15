@@ -1,8 +1,21 @@
 [
+        {
+      "name": "Selfbriefing",
+      "path": "/docs/Selfbriefing PPV 2025.pdf",
+      "date": "11.07.2025",
+      "info": "Dokument slouží jako úvodní a organizační informace pro účastníky plachtařské soutěže PPV 2025. Obsahuje praktické pokyny a informace k areálu letiště, provozním podmínkám, zázemí a bezpečnostním aspektům (The Selfbriefing PPV 2025 document provides introductory and organizational information for participants of the PPV 2025 gliding competition. It contains practical guidelines and details about the airfield facilities, operational rules, logistics, and safety). "
+    },
     {
+      "name": "Otočné body",
+      "path": "/docs/2025_ppvcup.zip",
+      "date": "08.07.2025",
+      "info": "Zazipovaná databáze otočných bodů pro plánování tratí (Turnpoints for task planning.)"
+    }, 
+{
       "name": "Propozice Plachtařský Pohár Vysočiny 2025 V1.0",
       "path": "/docs/Propozice Plachtařský Pohár Vysočiny 2025 V1.0.docx",
       "date": "06.02.2025",
-      "info": "Oficiální propozice závodu PPV 2025."
+      "info": "Oficiální propozice závodu PPV 2025 (Official competition rules for PPV 2025)"
     }
+
 ]
