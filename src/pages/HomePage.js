@@ -14,7 +14,7 @@ const LOGO_WIDTHS = {
   hb: '40%',
 };
 
-const HomePage = () => {
+const HomePage = ({noteList}) => {
   return (
     <MDBContainer className="my-4">
       {/* Organizátoři sekce */}
@@ -35,7 +35,7 @@ const HomePage = () => {
 
       <MDBRow>
         <MDBCol md="8">
-            <Actualities />
+            <Actualities noteList={noteList}/>
         </MDBCol>
         <MDBCol md="4">
             <Weather />

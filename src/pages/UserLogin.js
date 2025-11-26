@@ -51,7 +51,10 @@ const Login = (params) => {
         setCookies(response.responseData);
         setFormData(initialFormState);
         params.setUserRights(response.responseData.rights);
-        navigate("/");
+        if (response.responseData.role == 'A')
+          navigate("/backoffice");
+        else
+          navigate("/");
       }
     }
   };

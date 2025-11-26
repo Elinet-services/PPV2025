@@ -1,0 +1,4 @@
+[
+  { "right": "changepassword", "label": "Změna hesla", "path": "/changepassword"},
+  { "right": "logout", "label": "Odhlásit", "path": "logout" }
+]

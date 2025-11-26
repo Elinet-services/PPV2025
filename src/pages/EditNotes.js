@@ -1,14 +1,17 @@
-import { useState, useEffect } from 'react';
+import { useContext, useState, useEffect } from 'react';
 import { MDBWysiwyg } from 'mdb-react-wysiwyg';
 import { MDBContainer, MDBRow, MDBCol, MDBBtn, MDBInput, MDBDatatable, MDBCheckbox, MDBIcon } from "mdb-react-ui-kit";
 import {processRequest} from '../services/connection.js';
+import { AppContext } from '../App.js';
 
 const getNow = () => {
   const now = new Date();
   return now.getDate() +'.'+ (now.getMonth() + 1) +'.'+ now.getFullYear() +' '+ now.getHours() +':'+ now.getMinutes().toString().padStart(2,'0');
 }
 
-const Notes = (params) => {
+const Notes = () => {
+  const app = useContext(AppContext);
+
   const [formData, setFormData] = useState({
     rowNr: 0,
     description: "",
@@ -16,6 +19,7 @@ const Notes = (params) => {
     published: true,
     message: ""
   });
+
   const [documentList, setDocumentList] = useState({
     columns:  [
       {label:'Řádek', field:'rowNr', sort: true, width: 50},
@@ -42,12 +46,25 @@ const Notes = (params) => {
     })
   }
 
-  useEffect(async () => {
-    let response = await processRequest({}, 'notelist', params.setLoading, params.setMessage, params.setError, params.showAlerMessage);
-    if (!response.isError) {
-      fillDocumentList( JSON.parse(response.responseData) );
-    }
-  }, []);
+  useEffect(() => {
+    let mounted = true; // ochrana proti setState po unmountu
+    const loadData = async () => {
+      try {
+        const response = await processRequest({}, 'notelist', app.setLoading, app.setResponseMessage, app.setError, app.showAlerMessage);
+        if (!response.isError && mounted) {
+          fillDocumentList(JSON.parse(response.responseData));
+        }
+      } catch (err) {
+        console.error('load notes error', err);
+      }
+    };
+
+    loadData();
+
+    return () => {
+      mounted = false;
+    };
+  }, []);  
 
   //  --------------------
   function newNote(e)
@@ -85,7 +102,7 @@ const Notes = (params) => {
       ...formData,
       message: encodeURIComponent( decodeHTML(formData.message) )
     };
-    let response = await processRequest(updatedFormData, 'savenote', params.setLoading, params.setMessage, params.setError, params.showAlerMessage);
+    let response = await processRequest(updatedFormData, 'savenote', app.setLoading, app.setResponseMessage, app.setError, app.showAlerMessage);
     if (!response.isError) {
       fillDocumentList( JSON.parse(response.responseData) );
       newNote();

@@ -1,5 +1,5 @@
-export let apiBaseUrl = "https://script.google.com/macros/s/AKfycbx4bwjD-4bBvQleKlV9tjasYEgA4rQF6rjaPsqmOoSUbv-0Vu3LKsYWGAIpYsczois/exec";
-export let domainName = 'ppvcup2024';
+export let apiBaseUrl = "https://script.google.com/macros/s/AKfycbyFwAYNBzhHw83VRQ2Enf1syEOnrMcBDFrK9xdJRPfIdhjYUhoj0HKxefswtGGJpZTR/exec";
+export let domainName = 'ppvcup2026';
 export const source = document.location.hostname;  //  pro testovani localhost, pro produkci ppvcup.cz
 const cookieTokenTimeout = 120;     //  platnost tokenu v minutach
 const cookieTimeout = 1200;         //  platnost ostatnich cookies v minutach

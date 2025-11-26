@@ -1,7 +1,6 @@
 [
   { "right": "edit", "label": "Změna údajů", "path": "/registration"},
-  { "right": "notelist", "label": "Editace novinek", "path": "/notes"},
-  { "right": "divider1", "addDivider": true },
+  { "right": "documentmanagement", "label": "Backoffice", "path": "/backoffice"},
   { "right": "changepassword", "label": "Změna hesla", "path": "/changepassword"},
   { "right": "logout", "label": "Odhlásit", "path": "logout" }
 ]

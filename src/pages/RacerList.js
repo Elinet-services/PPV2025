@@ -1,26 +1,42 @@
-import { useState, useEffect } from "react";
+import { useContext, useState, useEffect } from "react";
 import { MDBContainer, MDBTable, MDBTableHead, MDBTableBody, MDBBadge, MDBInput,
   MDBTabs, MDBTabsItem, MDBTabsLink, MDBSpinner} from "mdb-react-ui-kit";
+import {AppContext } from '../App.js';
 import {fetchData} from '../services/connection.js'
 
 const RacerList = () => {
+  const app = useContext(AppContext);
+
   const [loading, setLoading] = useState(true);
-  const [racers, setRacers] = useState([]);
+  const [racerList, setRacerList] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [activeTab, setActiveTab] = useState("all");
 
   useEffect(() => {
+    let mounted = true; // ochrana proti setState po unmountu
+    
     const loadData = async () => {
-      const data = await fetchData('racerlist', '&limit=1000');
-      if (!data.isError) {
-        setRacers(JSON.parse(data.responseData).reverse());
-      }
-      setLoading(false);
-    };
-    loadData();
-  }, []);
+      if (!app.apiBaseUrlState) return;
 
-  const filteredRacers = racers
+      try {
+        const response = await fetchData('racerlist', '&limit=1000');
+        if (!response.isError && mounted) {
+          setRacerList(JSON.parse(response.responseData).reverse());
+          setLoading(false);
+        }
+      } catch (err) {
+        console.error('load notes error', err);
+      }
+    };
+
+    loadData();
+
+    return () => {
+      mounted = false;
+    };
+  }, [app.apiBaseUrlState]);   
+
+  const filteredRacers = racerList
     .filter((racer) => {
       if (!racer.name || !racer.surname) return false;
       return Object.values(racer).some((value) =>
@@ -50,7 +66,7 @@ const RacerList = () => {
       } else if (dateA && !dateB) {
         return -1;
       }
-      return racers.indexOf(a) - racers.indexOf(b);
+      return racerList.indexOf(a) - racerList.indexOf(b);
     });
 
   return (
@@ -91,49 +107,50 @@ const RacerList = () => {
         </MDBTabsItem>
       </MDBTabs>
 
-      <MDBTable align="middle" striped bordered small>
-        <MDBTableHead dark>
-          <tr>
-            <th>#</th>
-            <th>Jméno</th>
-            <th>Příjmení</th>
-            <th>Aeroklub</th>
-            <th>Typ letadla</th>
-            <th>Imatrikulace</th>
-            <th style={{ textAlign: 'center' }}>Startovní znak</th>
-            <th style={{ textAlign: 'center' }}>Třída</th>
-            <th style={{ textAlign: 'center' }}>Datum platby</th>
-          </tr>
-        </MDBTableHead>
-        <MDBTableBody>
-          {loading ? (
-              <MDBSpinner role="status" className="text-right my-4" style={{borderWidth: '4px'}}>
-                <span className="visually-hidden">Načítám seznam...</span>
-              </MDBSpinner>
-          ) : (
-              filteredRacers.map((racer, index) => (
-              <tr key={index}>
-                <td>{index + 1}</td>
-                <td>{racer.name}</td>
-                <td>{racer.surname}</td>
-                <td>{racer.club}</td>
-                <td>{racer.glider}</td>
-                <td>{racer.imatriculation}</td>
-                <td style={{ textAlign: 'center' }}>{racer.startCode || "-"}</td>
-                <td style={{ textAlign: 'center' }}>
-                  <MDBBadge
-                    color={racer.gliderClass === "club" ? "success" : "primary"}
-                    pill
-                  >
-                    {racer.gliderClass}
-                  </MDBBadge>
-                </td>
-                <td style={{ textAlign: 'center' }}>{racer.paymentDate ? racer.paymentDate : "-"}</td>
-              </tr>
-            ))
-          )}
-        </MDBTableBody>
-      </MDBTable>
+      {loading ? (
+          <MDBSpinner role="status" className="text-right my-4" style={{borderWidth: '4px'}}>
+            <span className="visually-hidden">Načítám seznam...</span>
+          </MDBSpinner>
+      ) : (
+        <MDBTable align="middle" striped bordered small>
+          <MDBTableHead dark>
+            <tr>
+              <th>#</th>
+              <th>Jméno</th>
+              <th>Příjmení</th>
+              <th>Aeroklub</th>
+              <th>Typ letadla</th>
+              <th>Imatrikulace</th>
+              <th style={{ textAlign: 'center' }}>Startovní znak</th>
+              <th style={{ textAlign: 'center' }}>Třída</th>
+              <th style={{ textAlign: 'center' }}>Datum platby</th>
+            </tr>
+          </MDBTableHead>
+          <MDBTableBody>
+            { filteredRacers.map((racer, index) => (
+                <tr key={index}>
+                  <td>{index + 1}</td>
+                  <td>{racer.name}</td>
+                  <td>{racer.surname}</td>
+                  <td>{racer.club}</td>
+                  <td>{racer.glider}</td>
+                  <td>{racer.imatriculation}</td>
+                  <td style={{ textAlign: 'center' }}>{racer.startCode || "-"}</td>
+                  <td style={{ textAlign: 'center' }}>
+                    <MDBBadge
+                      color={racer.gliderClass === "club" ? "success" : "primary"}
+                      pill
+                    >
+                      {racer.gliderClass}
+                    </MDBBadge>
+                  </td>
+                  <td style={{ textAlign: 'center' }}>{racer.paymentDate ? racer.paymentDate : "-"}</td>
+                </tr>
+              ))
+            }            
+          </MDBTableBody>
+        </MDBTable>
+      )}
     </MDBContainer>
   );
 };

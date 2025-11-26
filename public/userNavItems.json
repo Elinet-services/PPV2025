@@ -1,9 +1,9 @@
 [
-  { "path": "/", "label": "Home" },
+  { "path": "/registration", "label": "Registrace" },
   { "path": "/documents", "label": "Dokumenty" },
   { "path": "/racerlist", "label": "Seznam závodníků" },
   {
-    "path": "http://www.soaringspot.com/cs/plachtarsky-pohar-vysociny-2025-havlickuv-brod/",
+    "path": "http://www.soaringspot.com/cs/plachtarsky-pohar-vysociny-2026-havlickuv-brod/",
     "label": "Výsledky",
     "external": true
   }
