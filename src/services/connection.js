@@ -1,4 +1,4 @@
-export let apiBaseUrl = "https://script.google.com/macros/s/AKfycbyFwAYNBzhHw83VRQ2Enf1syEOnrMcBDFrK9xdJRPfIdhjYUhoj0HKxefswtGGJpZTR/exec";
+export let apiBaseUrl = "https://script.google.com/macros/s/AKfycbzD4_eaZd8XHjDXQEa9QCEwNfATQMLFfjIXsMEJNxCi4scW9WihVlp7Nfgla9MVTJRy/exec";
 export let domainName = 'ppvcup2026';
 export const source = document.location.hostname;  //  pro testovani localhost, pro produkci ppvcup.cz
 const cookieTokenTimeout = 120;     //  platnost tokenu v minutach
@@ -86,11 +86,18 @@ export function formatDate(aDate, aDocumentType) {
     }
     return dateString;
 }
+function extendSession() {
+    const token = getToken();
+    if (token.length != 0) {
+        setCookie('token', token, cookieTokenTimeout);  //  obnoveni platnosti cookie tokenu
+    }
+}
 
 //  -------------------------------------------------------------------------------
 //  zavola GET do DB
 export async function fetchData(action, params)
 {
+    extendSession();
     try {
         let response = await fetch(apiBaseUrl + `?action=${action}&domain=${domainName}`+ params)
         if (response.ok) {
@@ -111,10 +118,8 @@ export async function processRequest(formData, action, setLoading, setMessage, s
     let responseMessage = '';
     let responseData = {};
     const token = getToken();
-    if (token.length != 0) {
-        setCookie('token', token, cookieTokenTimeout);  //  obnoveni platnosti cookie tokenu
-    }
-
+    extendSession();
+    
     const updatedFormData = {
         ...formData,
         source: source,

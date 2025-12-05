@@ -36,3 +36,6 @@ code {
   z-index: 5;
   pointer-events: none;
 }
+li.nav-item a.nav-link.active {
+  font-weight: 700 !important;
+}

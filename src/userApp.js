@@ -1,5 +1,5 @@
 import { useContext, useState, useEffect }  from 'react';
-import { Routes, Route, useNavigate } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import { MDBContainer} from 'mdb-react-ui-kit';
 
 import Header from './components/Header';
@@ -12,8 +12,8 @@ import UserLogin from './pages/UserLogin.js';
 import UserRegistration from './pages/UserRegistration.js';
 import UserResetPassword from './pages/UserResetPassword.js';
 import UserChangePassword from './pages/UserChangePassword';
-import { AppContext } from './App.js';
-import {apiBaseUrl, fetchData} from './services/connection.js';
+import {AppContext } from './App.js';
+import {fetchData} from './services/connection.js';
 
 const UserApp = () => {
   const app = useContext(AppContext);
@@ -22,6 +22,7 @@ const UserApp = () => {
 
   useEffect(() => {
     let mounted = true; // ochrana proti setState po unmountu
+
     const loadData = async () => {
       if (!app.apiBaseUrlState) return;
       try {
@@ -53,7 +54,6 @@ const UserApp = () => {
           <Route path="/" element={<HomePage noteList={noteList}/>} />
           <Route path="/documents" element={<DocumentList documentList={documentList}/>} />
           <Route path="/racerlist" element={<RacerList />} />
-          <Route path="/notes" element={<EditNotes setLoading={app.setLoading} setMessage={app.setResponseMessage} setError={app.setError} showAlerMessage={app.showAlerMessage}/>} />
           <Route path="/login" element={<UserLogin setLoading={app.setLoading} setMessage={app.setResponseMessage} setError={app.setError} showAlerMessage={app.showAlerMessage} setUserRights={app.setUserRights}/>} />
           <Route path="/registration" element={<UserRegistration setLoading={app.setLoading} setMessage={app.setResponseMessage} setError={app.setError} showAlerMessage={app.showAlerMessage}/>} />
           <Route path="/resetpassword" element={<UserResetPassword setLoading={app.setLoading} setMessage={app.setResponseMessage} setError={app.setError} showAlerMessage={app.showAlerMessage}/>} />

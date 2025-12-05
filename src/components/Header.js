@@ -35,8 +35,6 @@ const Header = () => {
     fetch("/userMenuItems.json")
       .then((res) => res.json())
       .then((data) => {
-        console.log(app.userRights);
-        
         // Filter items based on authentication status
         const filteredItems = data.filter(item => {
           if (item.addDivider) return true; // oddelovac
@@ -108,7 +106,7 @@ const Header = () => {
                 {navItems.map((item) => (
                   <MDBNavbarItem key={item.path}>
                     <NavLink
-                      className='nav-link fw-bold'
+                      className='nav-link'
                       to={item.path}
                        {...(item.external ? { target: '_blank' } : {})}
                       onClick={() => setShowNav(false)}
@@ -140,7 +138,7 @@ const Header = () => {
                               navigate(item.path);
                             setShowNav(false);
                             }}
-                          ><div class="fw-bold">{item.label}</div>
+                          ><div>{item.label}</div>
                         </MDBDropdownItem>
                     ))}
                   </MDBDropdownMenu>

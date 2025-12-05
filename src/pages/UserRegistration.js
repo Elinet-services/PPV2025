@@ -1,10 +1,12 @@
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { MDBContainer, MDBRow, MDBCol, MDBInput, MDBRadio, MDBBtn, MDBTypography, MDBSelect } from "mdb-react-ui-kit";
-import SHA256 from "crypto-js/sha256";
-import {processRequest, domainName, getToken} from '../services/connection.js';
+import { sha256 } from "node-forge";
+import {processRequest, domainName, getToken, getEmail} from '../services/connection.js';
 
 
 const initialFormState = {
+  domain: domainName,
   name: "",
   surname: "",
   email: "",
@@ -17,13 +19,18 @@ const initialFormState = {
   deviceType1: "",
   deviceId1: "",
   deviceType2: "",
-  deviceId2: ""
+  deviceId2: "",
+  password: "",
+  rePassword: ""
 };
 
 const UserRegistration = (params) => {
   const [formData, setFormData] = useState(initialFormState);
   const [isLogged, setLogged] = useState(getToken().length > 0);
+  const [isRegistered, setRegistered] = useState(true);
+  const [userParameters, setUserParameters] = useState({});
   const deviceTypeData = [{text:'', value:''},{ text: 'FLARM', value: 'FLARM'},{ text: 'OGN', value: 'OGN' }, { text: 'ADS-B (ICAO)', value: 'ADS'}]
+  const [raceListData, setRaceListData] = useState([]);
   let dataLoaded = false;
 
   //  -------------------------------------------------------------------------------
@@ -40,6 +47,22 @@ const UserRegistration = (params) => {
     if (e.target.name === 'deviceId1' || e.target.name === 'deviceId2') {
       e.target.setCustomValidity('');
     }
+    if (e.target.name === 'password') {
+      if (e.target.value.length === 0)
+          e.target.setCustomValidity('');
+      else if (e.target.value.length < 8)
+          e.target.setCustomValidity('Heslo musí mít délku alespoň 8 znaků');
+      else
+          e.target.setCustomValidity('');
+    }
+    if (e.target.name === 'rePassword') {
+        if (e.target.value.length === 0)
+            e.target.setCustomValidity('');
+        else if (e.target.value !== formData.password)
+            e.target.setCustomValidity('Hesla se neshodují');
+        else
+            e.target.setCustomValidity('');
+    }
   };
 
   const handleRadioChange = (e) => {
@@ -49,9 +72,13 @@ const UserRegistration = (params) => {
     }));
   };
 
-  const handleSelectChange = (deviceNr, value) => {
-    setFormData({ ...formData, [`deviceType${deviceNr}`]: value });
-    document.getElementById(`deviceId${deviceNr}`).setCustomValidity('');
+  const handleSelectChange = (name, value) => {
+    if (name === 'domain') {
+      setUserData(value, userParameters[value]);
+      return;
+    }
+    setFormData({ ...formData, [`deviceType${name}`]: value });
+    document.getElementById(`deviceId${name}`).setCustomValidity('');
   };
 
   //  -------------------------------------------------------------------------------
@@ -71,16 +98,18 @@ const UserRegistration = (params) => {
     return true
   }
 
+  //  -------------------------------------------------------------------------------
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!checkFilledDeviceFields(1, e) || !checkFilledDeviceFields(2, e)) return;
 
     const updatedFormData = {
       ...formData,
-      password: SHA256("motorola").toString(),
+      password: (isLogged ? 'xx' : sha256.create().update(getEmail() + formData.password).digest().toHex()),
+      rePassword: ''
     };
 
-    let response = await processRequest(updatedFormData, (isLogged ? 'edit' : 'registration'), params.setLoading, params.setMessage, params.setError, params.showAlerMessage);
+    let response = await processRequest(updatedFormData, (isRegistered ? 'edit' : 'registration'), params.setLoading, params.setMessage, params.setError, params.showAlerMessage);
 
     if (!response.isError) {
         params.setMessage(isLogged ? "Údaje byly změněny" : "Registrace byla přijata, můžete ji zkontrolovat v seznamu závodníků.");
@@ -90,6 +119,33 @@ const UserRegistration = (params) => {
     params.setLoading(false);
   };
 
+  //  --------------------------
+  function setUserData(domain, userParams)
+  {
+    if (userParams == undefined)
+      setFormData(initialFormState);
+    else
+      setFormData({
+        domain: domain,
+        name: userParams.name || '',
+        surname: userParams.surname || '',
+        email: getEmail(),
+        phone: userParams.phone || '',
+        club: userParams.club || '',
+        glider: userParams.glider || '',
+        imatriculation: userParams.imatriculation || '',
+        startCode: userParams.startCode || '',
+        gliderClass: userParams.gliderClass || 'club',
+        deviceType1: userParams.deviceType1 || '',
+        deviceId1: userParams.deviceId1 || '',
+        deviceType2: userParams.deviceType2 || '',
+        deviceId2: userParams.deviceId2 || '',
+        password: '',
+        rePassword: ''
+      }
+    );
+  }
+
   //  -------------------------------------------------------------------------------
   //  prijme data z DB
   async function loadData()
@@ -97,34 +153,53 @@ const UserRegistration = (params) => {
     let response = await processRequest({}, 'getuserdata', params.setLoading, params.setMessage, params.setError, params.showAlerMessage);
 
     if (!response.isError) {
-      const userParams = response.responseData.userParameters[domainName];
-      setFormData(
-        {
-          name: userParams.name,
-          surname: userParams.surname,
-          email: response.responseData.email,
-          phone: userParams.phone,
-          club: userParams.club,
-          glider: userParams.glider,
-          imatriculation: userParams.imatriculation,
-          startCode: userParams.startCode,
-          gliderClass: userParams.gliderClass,
-          deviceType1: userParams.deviceType1,
-          deviceId1: userParams.deviceId1,
-          deviceType2: userParams.deviceType2,
-          deviceId2: userParams.deviceId2
-        }
-      );
+      setUserParameters(response.responseData.userParameters);
+
+      const raceListArray = Object.entries(response.responseData.userParameters).map(([key, value]) => ({
+          text: response.responseData.raceList[key].raceName,
+          value: key
+      }));
+      
+      if (response.responseData.userParameters[domainName] == undefined) {
+        //  neregistrovan v zavode
+        setRegistered(false);
+        raceListArray.push({text: response.responseData.raceList[domainName].raceName, value:domainName})
+      } else {
+        //  registrovan v zavode
+        setRegistered(true);
+        setUserData(domainName, response.responseData.userParameters[domainName]);
+      }
+      setRaceListData(raceListArray);
     }
+
   }
 
   return (
     <MDBContainer className="my-5">
       <MDBTypography tag="h4" className="mb-4 text-start">
-        {isLogged ? 'Změna registrace' : 'Registrační formulář'}
+        {isLogged ? (isRegistered ? 'Změna registrace' : 'Registrace z předchozích ročníků') : 'Registrační formulář'}
       </MDBTypography>
 
+      {isLogged ? null : (
+        <MDBRow>
+          <label className="form-label">
+            Pokud jste s námi již létali, <Link to="/login">přihlaste</Link>, budete moci použít údaje z předchozích ročníků.
+          </label>
+        </MDBRow>
+      )}
+
       <form onSubmit={handleSubmit}>
+
+        {isLogged && !isRegistered ? 
+          <MDBRow className="mb-3">
+            <MDBCol md="4">
+              <MDBSelect label="Předchozí ročníky" value={formData.domain} data={raceListData}
+                onChange={(e) => {handleSelectChange('domain', e.value)}}
+              />
+            </MDBCol>
+          </MDBRow>
+        : null}
+
         <MDBRow>
           <MDBCol md="4">
             <MDBInput label="Jméno" name="name" value={formData.name} onChange={handleChange} autoComplete="given-name" required />
@@ -171,8 +246,12 @@ const UserRegistration = (params) => {
 
         <MDBRow className="mt-3">
           <MDBCol md="4">
-            <MDBSelect label="Typ odpovídače" value={formData.deviceType1} data={deviceTypeData}
-              onChange={(e) => {handleSelectChange('1', e.value)}}
+            <MDBSelect
+              key={`deviceType1-${formData.deviceType1}`}            // vynutí remount při změně hodnoty (včetně prázdné)
+              label="Typ odpovídače"
+              value={formData.deviceType1}
+              data={deviceTypeData}
+              onChange={(e) => { handleSelectChange('1', e.value); }}
             />
           </MDBCol>
           <MDBCol md="3">
@@ -181,14 +260,48 @@ const UserRegistration = (params) => {
         </MDBRow>
         <MDBRow className="mt-3">
           <MDBCol md="4">
-            <MDBSelect label="Typ odpovídače" value={formData.deviceType2} data={deviceTypeData}
-              onChange={(e) => {handleSelectChange('2', e.value)}}
+            <MDBSelect
+              key={`deviceType2-${formData.deviceType2}`}            // vynutí remount při změně hodnoty (včetně prázdné)
+              label="Typ odpovídače"
+              value={formData.deviceType2}
+              data={deviceTypeData}
+              onChange={(e) => { handleSelectChange('2', e.value); }}
             />
           </MDBCol>
           <MDBCol md="3">
             <MDBInput label="Číslo odpovídače" id="deviceId2" name="deviceId2" value={formData.deviceId2} onChange={handleChange} />
           </MDBCol>
         </MDBRow>
+
+        {isLogged ? null :
+          <div>
+            <MDBRow className="mt-4">
+              <MDBCol md="4">
+                <MDBInput
+                  name="password" id="password"
+                  onChange={handleChange}
+                  value={formData.password}
+                  type="password"
+                  label="Heslo (min 8 znaků)"
+                  required autoComplete="new-password"
+                />
+              </MDBCol>
+            </MDBRow>
+            <MDBRow className="mt-3">
+              <MDBCol md="4">
+                <MDBInput
+                  name="rePassword" id="rePassword"
+                  onChange={handleChange}
+                  value={formData.rePassword}
+                  type="password"
+                  wrapperClass="mb-4"
+                  label="Heslo pro kontrolu"
+                  required autoComplete="new-password"
+                />
+              </MDBCol>
+            </MDBRow>
+          </div>
+        } 
 
         <MDBRow className="mt-4">
           <MDBCol md="4">

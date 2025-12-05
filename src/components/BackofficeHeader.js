@@ -47,7 +47,7 @@ const Header = ({ menuItems, logout }) => {
                 {navItems.map((item) => (
                   <MDBNavbarItem key={item.path}>
                     <NavLink
-                      className='nav-link fw-bold'
+                      className='nav-link'
                       to={(item.backoffice ? apiBaseUrl + item.path +'&token='+ getToken() : item.path) }
                       {...(item.external ? { target: '_blank' } : {})}
                       onClick={() => setShowNav(false)}
@@ -71,7 +71,7 @@ const Header = ({ menuItems, logout }) => {
                       item.addDivider ? 
                         <MDBDropdownItem divider key={item.right}/> 
                       : 
-                        <MDBDropdownItem link childTag='button' key={item.right} className='fw-bold'
+                        <MDBDropdownItem link childTag='button' key={item.right}
                           onClick={() => {
                             if (item.path === 'logout')
                               logout();
@@ -79,7 +79,7 @@ const Header = ({ menuItems, logout }) => {
                               navigate(item.path);
                             setShowNav(false);
                             }}
-                          ><div class="fw-bold">{item.label}</div>
+                          ><div>{item.label}</div>
                         </MDBDropdownItem>
                     ))}
                   </MDBDropdownMenu>
