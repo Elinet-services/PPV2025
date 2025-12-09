@@ -12,7 +12,7 @@ export function setApiBaseUrl(aApiBaseUrl) {
 }
 
 export function getEmail () {
-    return getCookie('email');
+    return getCookie('email').toLowerCase();
 }
 export function getToken() {
     return getCookie('token');

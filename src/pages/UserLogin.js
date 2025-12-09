@@ -37,7 +37,7 @@ const Login = (params) => {
     e.preventDefault();
     resetCookies();
 
-    const sha = sha256.create().update(formData.email + formData.password);
+    const sha = sha256.create().update(formData.email.toLowerCase() + formData.password);
   
     const updatedFormData = {
       ...formData,

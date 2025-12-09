@@ -7,7 +7,6 @@ import Footer from './components/Footer';
 import HomePage from './pages/HomePage';
 import DocumentList from './pages/DocumentList.js';
 import RacerList from './pages/RacerList'; 
-import EditNotes from './pages/EditNotes';
 import UserLogin from './pages/UserLogin.js';
 import UserRegistration from './pages/UserRegistration.js';
 import UserResetPassword from './pages/UserResetPassword.js';

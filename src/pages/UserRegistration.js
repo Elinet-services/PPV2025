@@ -36,10 +36,13 @@ const UserRegistration = (params) => {
   //  -------------------------------------------------------------------------------
   //  volani DB pro uvodni nacteni z DB
   useEffect(() => {
-    if (isLogged && !dataLoaded) {
-      dataLoaded = true;
-      loadData();
-    }
+    if (isLogged) {
+      if (!dataLoaded) {
+        dataLoaded = true;
+        loadData();
+      }
+    } else
+      setRegistered(false);
   }, []);
 
   const handleChange = (e) => {
@@ -105,14 +108,14 @@ const UserRegistration = (params) => {
 
     const updatedFormData = {
       ...formData,
-      password: (isLogged ? 'xx' : sha256.create().update(getEmail() + formData.password).digest().toHex()),
+      password: (isLogged ? 'xx' : sha256.create().update(formData.email.toLowerCase() + formData.password).digest().toHex()),
       rePassword: ''
     };
 
     let response = await processRequest(updatedFormData, (isRegistered ? 'edit' : 'registration'), params.setLoading, params.setMessage, params.setError, params.showAlerMessage);
 
     if (!response.isError) {
-        params.setMessage(isLogged ? "Údaje byly změněny" : "Registrace byla přijata, můžete ji zkontrolovat v seznamu závodníků.");
+        params.setMessage(response.message);
         if (!isLogged)
           setFormData(initialFormState);
     }
