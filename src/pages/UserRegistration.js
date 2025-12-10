@@ -1,8 +1,9 @@
-import { useState, useEffect } from "react";
+import { useContext, useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { MDBContainer, MDBRow, MDBCol, MDBInput, MDBRadio, MDBBtn, MDBTypography, MDBSelect } from "mdb-react-ui-kit";
 import { sha256 } from "node-forge";
 import {processRequest, domainName, getToken, getEmail} from '../services/connection.js';
+import { AppContext } from "../App.js";
 
 
 const initialFormState = {
@@ -25,25 +26,39 @@ const initialFormState = {
 };
 
 const UserRegistration = (params) => {
+  const app = useContext(AppContext);
   const [formData, setFormData] = useState(initialFormState);
   const [isLogged, setLogged] = useState(getToken().length > 0);
-  const [isRegistered, setRegistered] = useState(true);
+  const [isRegistered, setRegistered] = useState(false);
   const [userParameters, setUserParameters] = useState({});
   const deviceTypeData = [{text:'', value:''},{ text: 'FLARM', value: 'FLARM'},{ text: 'OGN', value: 'OGN' }, { text: 'ADS-B (ICAO)', value: 'ADS'}]
   const [raceListData, setRaceListData] = useState([]);
-  let dataLoaded = false;
 
   //  -------------------------------------------------------------------------------
-  //  volani DB pro uvodni nacteni z DB
+  //  volani DB pro uvodni nacteni z DB + kontrola odhlášení
   useEffect(() => {
-    if (isLogged) {
-      if (!dataLoaded) {
-        dataLoaded = true;
-        loadData();
-      }
-    } else
+    const logged = getToken().length > 0;
+    setLogged(logged);
+
+    if (logged) {
+      loadData();
+    } else {
       setRegistered(false);
+      setFormData(initialFormState);
+      setUserParameters({});
+      setRaceListData([]);
+    }
   }, []);
+
+  //  odhlaseni
+  useEffect(() => {
+    // když se změní app.userRights (někdy vyprázdní po logout), resetuj formulář
+    if (app.userRights.length === 0 || app.userRights[0] === '') {
+      setLogged(false);
+      setRegistered(false);
+      setFormData(initialFormState);
+    }
+  }, [app.userRights]);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -93,7 +108,7 @@ const UserRegistration = (params) => {
     const deviceIdInput = document.getElementById(deviceIdKey);
     deviceIdInput.setCustomValidity(''); // Reset custom validity
     // Kontrola: obě pole musí být vyplněná, nebo žádné
-    if ((!!formData[deviceTypeKey]) != (!!formData[deviceIdKey])) {
+    if ((!!formData[deviceTypeKey]) !== (!!formData[deviceIdKey])) {
       deviceIdInput.setCustomValidity("Vyplňte buď oba údaje o odpovídači, nebo žádný.");
       if (e) e.target.reportValidity(); // Spustí nativní validaci a zobrazí chybovou hlášku
       return false;
@@ -112,10 +127,9 @@ const UserRegistration = (params) => {
       rePassword: ''
     };
 
-    let response = await processRequest(updatedFormData, (isRegistered ? 'edit' : 'registration'), params.setLoading, params.setMessage, params.setError, params.showAlerMessage);
+    let response = await processRequest(updatedFormData, (isLogged && isRegistered ? 'edit' : 'registration'), params.setLoading, params.setMessage, params.setError, params.showAlerMessage);
 
     if (!response.isError) {
-        params.setMessage(response.message);
         if (!isLogged)
           setFormData(initialFormState);
     }
@@ -125,7 +139,7 @@ const UserRegistration = (params) => {
   //  --------------------------
   function setUserData(domain, userParams)
   {
-    if (userParams == undefined)
+    if (userParams === undefined)
       setFormData(initialFormState);
     else
       setFormData({
@@ -163,7 +177,7 @@ const UserRegistration = (params) => {
           value: key
       }));
       
-      if (response.responseData.userParameters[domainName] == undefined) {
+      if (response.responseData.userParameters[domainName] === undefined) {
         //  neregistrovan v zavode
         setRegistered(false);
         raceListArray.push({text: response.responseData.raceList[domainName].raceName, value:domainName})
@@ -174,7 +188,6 @@ const UserRegistration = (params) => {
       }
       setRaceListData(raceListArray);
     }
-
   }
 
   return (
