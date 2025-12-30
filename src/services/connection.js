@@ -1,4 +1,5 @@
 export let apiBaseUrl = "https://script.google.com/macros/s/AKfycbzD4_eaZd8XHjDXQEa9QCEwNfATQMLFfjIXsMEJNxCi4scW9WihVlp7Nfgla9MVTJRy/exec";
+export let apiBaseUrlGet = "https://script.google.com/macros/s/AKfycbzTOeppmYl4PS91Ue3ymfHcJHEYJh_1SGA1BHHS5lpW42VkR6JpM30YIpGRlDCvZR0b9A/exec";
 export let domainName = 'ppvcup2026';
 export const source = document.location.hostname;  //  pro testovani localhost, pro produkci ppvcup.cz
 const cookieTokenTimeout = 120;     //  platnost tokenu v minutach
@@ -9,6 +10,9 @@ export function setDomainName(aDomainName) {
 }
 export function setApiBaseUrl(aApiBaseUrl) {
     apiBaseUrl = aApiBaseUrl;
+}
+export function setApiBaseUrlGet(aApiBaseUrl) {
+    apiBaseUrlGet = aApiBaseUrl;
 }
 
 export function getEmail () {
@@ -50,7 +54,7 @@ function setCookie(aName, aValue, timeout = cookieTimeout) {
     expireDate.setTime(expireDate.getTime() + (timeout * 60 * 1000));
     document.cookie = aName +"="+ aValue +";expires="+ expireDate.toUTCString() +";path=/";
 }
-  
+
 function getCookie(aName)
 {
     const name = aName +"=";
@@ -99,7 +103,8 @@ export async function fetchData(action, params)
 {
     extendSession();
     try {
-        let response = await fetch(apiBaseUrl + `?action=${action}&domain=${domainName}`+ params)
+        let response = await fetch((action ==='racerlist' ? apiBaseUrlGet : apiBaseUrl)
+            + `?action=${action}&domain=${domainName}`+ params)
         if (response.ok) {
             return response.json()
         } else {
@@ -127,7 +132,7 @@ export async function processRequest(formData, action, setLoading, setMessage, s
         domain: domainName,
         token: formData.token || token || '',  //  pokud neni token v datech, pouzijeme token z cookies
     };
-  
+
     /* for (const pair of formData.entries()) {
       console.log(pair[0] +', '+ pair[1]);
     } */
@@ -139,7 +144,7 @@ export async function processRequest(formData, action, setLoading, setMessage, s
     .then((response) => {
         if (response.ok) {
             return response.json()
-        } else {            
+        } else {
             return { message: "Požadavek se nepodařilo odeslat", isError: true }
         }
     })
@@ -153,8 +158,7 @@ export async function processRequest(formData, action, setLoading, setMessage, s
         console.log(e.message)
         isError = true;
         responseMessage = "Kritická chyba: "+ e.message;
-    
-    })
+     })
     setMessage(responseMessage);
     setError(isError);
     setLoading(false);

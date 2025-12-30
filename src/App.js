@@ -5,7 +5,7 @@ import { MDBModal, MDBModalDialog, MDBModalContent, MDBModalHeader, MDBModalTitl
 
 import UserApp from './userApp';
 import BackofficeApp from './backofficeApp.js';
-import {getRights, processRequest, resetCookies, setDomainName, setApiBaseUrl} from './services/connection.js';
+import {getRights, processRequest, resetCookies, setDomainName, setApiBaseUrl, setApiBaseUrlGet} from './services/connection.js';
 
 export const AppContext = React.createContext(null);
 
@@ -27,13 +27,15 @@ const App = () => {
         // naplnit konfiguraci
         cfg.forEach(obj => 
           Object.entries(obj).forEach(([key, value]) => {
-            if (key === 'apiBaseUrl') {
+            if (key === 'apiBaseUrl')
               setApiBaseUrl(value);
-              setApiBaseUrlState(true); // aktualizovat lokální stav
-            }
+
+            if (key === 'apiBaseUrlGet')
+              setApiBaseUrlGet(value);
+
             if (key === 'domainName') setDomainName(value);
         }));
-
+        setApiBaseUrlState(true); // aktualizovat lokální stav
       }).catch(()=>{});
   }, []);
 
@@ -55,7 +57,7 @@ const App = () => {
     if (mounted) submitRegistration();
     return () => { mounted = false; };
   }, [apiBaseUrlState, registrationToken]);
-  
+
   //  odhlášení uživatele
   async function logout() {
     let response = await processRequest({}, 'logout', setLoading, setResponseMessage, setError, showAlerMessage);
@@ -65,7 +67,7 @@ const App = () => {
     setUserRights([]);
     navigate("/");
   };
-  
+
   return (
     <>   
       {/* Odeslani do DB */}

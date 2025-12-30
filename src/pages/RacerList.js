@@ -14,14 +14,14 @@ const RacerList = () => {
 
   useEffect(() => {
     let mounted = true; // ochrana proti setState po unmountu
-    
+
     const loadData = async () => {
       if (!app.apiBaseUrlState) return;
 
       try {
         const response = await fetchData('racerlist', '&limit=1000');
         if (!response.isError && mounted) {
-          setRacerList(JSON.parse(response.responseData).reverse());
+          setRacerList(JSON.parse(response.responseData));
           setLoading(false);
         }
       } catch (err) {
@@ -147,7 +147,7 @@ const RacerList = () => {
                   <td style={{ textAlign: 'center' }}>{racer.paymentDate ? racer.paymentDate : "-"}</td>
                 </tr>
               ))
-            }            
+            }
           </MDBTableBody>
         </MDBTable>
       )}

@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { MDBListGroup, MDBListGroupItem, MDBTabs, MDBTabsItem, MDBTabsLink, MDBSpinner  } from "mdb-react-ui-kit";
-import {fetchData} from '../services/connection.js'
 
 const Actualities = ({noteList}) => {
   const [loading, setLoading] = useState(true);
