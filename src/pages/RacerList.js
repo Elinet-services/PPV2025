@@ -4,37 +4,18 @@ import { MDBContainer, MDBTable, MDBTableHead, MDBTableBody, MDBBadge, MDBInput,
 import {AppContext } from '../App.js';
 import {fetchData} from '../services/connection.js'
 
-const RacerList = () => {
+const RacerList = ({racerList}) => {
   const app = useContext(AppContext);
 
   const [loading, setLoading] = useState(true);
-  const [racerList, setRacerList] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [activeTab, setActiveTab] = useState("all");
 
   useEffect(() => {
-    let mounted = true; // ochrana proti setState po unmountu
+    if (racerList.length === 0) return;
+    setLoading(false);
+  }, [racerList]);
 
-    const loadData = async () => {
-      if (!app.apiBaseUrlState) return;
-
-      try {
-        const response = await fetchData('racerlist', '&limit=1000');
-        if (!response.isError && mounted) {
-          setRacerList(JSON.parse(response.responseData));
-          setLoading(false);
-        }
-      } catch (err) {
-        console.error('load notes error', err);
-      }
-    };
-
-    loadData();
-
-    return () => {
-      mounted = false;
-    };
-  }, [app.apiBaseUrlState]);   
 
   const filteredRacers = racerList
     .filter((racer) => {

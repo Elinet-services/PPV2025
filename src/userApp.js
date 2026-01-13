@@ -18,24 +18,40 @@ const UserApp = () => {
   const app = useContext(AppContext);
   const [documentList, setDocumentList] = useState([]);
   const [noteList, setNoteList] = useState([]);
+  const [racerList, setRacerList] = useState([]);
 
   useEffect(() => {
     let mounted = true; // ochrana proti setState po unmountu
 
-    const loadData = async () => {
+    async function loadAllData() {
       if (!app.apiBaseUrlState) return;
+
       try {
-        const response = await fetchData('getall', '&limit=1000');
-        if (!response.isError && mounted) {
-          setNoteList(response.responseData.noteList.reverse());
-          setDocumentList(response.responseData.documentList);
+        const [racers, notes, documents] = await Promise.all([
+          fetchData('racerlist', '&limit=1000'),
+          fetchData('notes'),
+          fetchData('documentlist'),
+        ]);
+
+        if (!mounted) return;
+
+        if (!racers.isError) {
+          setRacerList(racers.data);
+        }
+
+        if (!notes.isError) {
+          setNoteList(notes.data);
+        }
+
+        if (!documents.isError) {
+          setDocumentList(documents.data);
         }
       } catch (err) {
-        console.error('load notes error', err);
+        console.error('load data error', err);
       }
-    };
+    }
 
-    loadData();
+    loadAllData();
 
     return () => {
       mounted = false;
@@ -52,7 +68,7 @@ const UserApp = () => {
         <Routes>
           <Route path="/" element={<HomePage noteList={noteList}/>} />
           <Route path="/documents" element={<DocumentList documentList={documentList}/>} />
-          <Route path="/racerlist" element={<RacerList />} />
+          <Route path="/racerlist" element={<RacerList racerList={racerList}/>} />
           <Route path="/login" element={<UserLogin setLoading={app.setLoading} setMessage={app.setResponseMessage} setError={app.setError} showAlerMessage={app.showAlerMessage} setUserRights={app.setUserRights}/>} />
           <Route path="/registration" element={<UserRegistration setLoading={app.setLoading} setMessage={app.setResponseMessage} setError={app.setError} showAlerMessage={app.showAlerMessage}/>} />
           <Route path="/resetpassword" element={<UserResetPassword setLoading={app.setLoading} setMessage={app.setResponseMessage} setError={app.setError} showAlerMessage={app.showAlerMessage}/>} />

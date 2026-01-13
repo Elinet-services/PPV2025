@@ -1,5 +1,5 @@
 export let apiBaseUrl = "https://script.google.com/macros/s/AKfycbzD4_eaZd8XHjDXQEa9QCEwNfATQMLFfjIXsMEJNxCi4scW9WihVlp7Nfgla9MVTJRy/exec";
-export let apiBaseUrlGet = "https://script.google.com/macros/s/AKfycbzTOeppmYl4PS91Ue3ymfHcJHEYJh_1SGA1BHHS5lpW42VkR6JpM30YIpGRlDCvZR0b9A/exec";
+export let apiBaseUrlGet = "https://script.google.com/macros/s/AKfycbwpF48CKmoeOtbkq5EU1drEilJ8yBx6u1DIV3DdSwYl3XtZrSlPLTMTnouzpbSv2zWGJg/exec";
 export let domainName = 'ppvcup2026';
 export const source = document.location.hostname;  //  pro testovani localhost, pro produkci ppvcup.cz
 const cookieTokenTimeout = 120;     //  platnost tokenu v minutach
@@ -103,15 +103,15 @@ export async function fetchData(action, params)
 {
     extendSession();
     try {
-        let response = await fetch((action ==='racerlist' ? apiBaseUrlGet : apiBaseUrl)
-            + `?action=${action}&domain=${domainName}`+ params)
+        let response = await fetch(apiBaseUrlGet
+            + `?action=${action}&domain=${domainName}`+ (params||''))
         if (response.ok) {
             return response.json()
         } else {
-            return { message: "Požadavek se nepodařilo odeslat", isError: true }
+            return { message: "Požadavek se nepodařilo odeslat", isError: true, responseData:{} }
         }
     } catch (e) {
-        return { message: "Chyba při odesílání požadavku", isError: true }
+        return { message: "Chyba při odesílání požadavku", isError: true, responseData:{} }
     }
 }
 
