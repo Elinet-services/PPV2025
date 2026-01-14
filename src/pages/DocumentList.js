@@ -1,6 +1,7 @@
 // Documents.js
 import {useState, useEffect} from 'react';
 import { MDBContainer, MDBTable, MDBTableHead, MDBTableBody, MDBBtn, MDBSpinner } from 'mdb-react-ui-kit';
+import {formatDate} from '../services/connection.js';
 
 const Documents = ({documentList}) => {
   const [loading, setLoading] = useState(true);
@@ -31,7 +32,7 @@ const Documents = ({documentList}) => {
             {documentList.map((doc, index) => (
               <tr key={index}>
                 <td>{doc.docName}</td>
-                <td>{doc.dateInserted}</td>
+                <td>{formatDate(doc.dateInserted)}</td>
                 <td>{doc.description}</td>
                 <td>
                   <MDBBtn

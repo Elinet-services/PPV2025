@@ -78,18 +78,22 @@ function deleteCookie(aName)
 }
 
 //  -------------------------------------------------------------------------------
-//  preformatuje datum z DB k zobrazeni v prehledu
-export function formatDate(aDate, aDocumentType) {
-    let dateString = '';
-    if (aDocumentType === 'D' && aDate != null) {
-        const firstDot = aDate.indexOf('-');
-        const lastDot  = aDate.lastIndexOf('-');
-        //  kontrola
-        if (firstDot > 0 && lastDot > firstDot )
-        dateString = parseInt(aDate.substring(lastDot + 1)) +'.'+ parseInt(aDate.substring(firstDot + 1, lastDot)) +'.'+ aDate.substring(0, firstDot);
-    }
-    return dateString;
-}
+//  preformatuje datum z ISO k zobrazeni v prehledu
+export function formatDate (isoDate) {
+    const parts = new Intl.DateTimeFormat('cs-CZ', {
+      timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+    }).formatToParts(new Date(isoDate));
+
+    const get = (type) => parts.find(p => p.type === type)?.value;
+
+    return `${get('day')}.${get('month')}.${get('year')} ${get('hour')}:${get('minute')}`;
+  };
+
 function extendSession() {
     const token = getToken();
     if (token.length != 0) {

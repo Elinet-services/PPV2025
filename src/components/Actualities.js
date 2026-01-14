@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { MDBListGroup, MDBListGroupItem, MDBTabs, MDBTabsItem, MDBTabsLink, MDBSpinner  } from "mdb-react-ui-kit";
+import {formatDate} from '../services/connection.js';
 
 const Actualities = ({noteList}) => {
   const [loading, setLoading] = useState(true);
@@ -34,7 +35,7 @@ const Actualities = ({noteList}) => {
         <MDBListGroup>
           {filteredNoteList.map(({ date, header, bodyText }, index) => (
             <MDBListGroupItem key={index}>
-              <h6>{date} - <b> {header}</b></h6>
+              <h6>{formatDate(date)} - <b> {header}</b></h6>
               <span dangerouslySetInnerHTML={{ __html: decodeURIComponent(bodyText) }} />            
             </MDBListGroupItem>
           ))}
