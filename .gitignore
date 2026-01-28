@@ -9,8 +9,7 @@
 # production
 /build
 
-# misc
-.DS_Store
+# environment
 .env
 .env.local
 .env.development
@@ -25,6 +24,7 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
+*.log
 
 # Editor-specific files
 .vscode/
@@ -35,10 +35,15 @@ pnpm-debug.log*
 *.sln
 *.sw?
 
-# Optional lock files
+# Optional lock files (vyber jen jeden ekosystém)
 package-lock.json
 yarn.lock
 pnpm-lock.yaml
 
-# MacOS system files
+# OS junk
 .DS_Store
+Thumbs.db
+desktop.ini
+
+# temp
+*.tmp
