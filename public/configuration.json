@@ -1,5 +1,11 @@
 [
-  {"apiBaseUrl": "https://script.google.com/macros/s/AKfycbzm0FSQtmSWcmPwrXBvuSjGEHEN_NJgiBghWQInKp6_boFy-piC15pepGMI5xT-tE7L/exec"},
-  {"apiBaseUrlGet": "https://script.google.com/macros/s/AKfycbwpF48CKmoeOtbkq5EU1drEilJ8yBx6u1DIV3DdSwYl3XtZrSlPLTMTnouzpbSv2zWGJg/exec"},
-  {"domainName": "ppvcup2026"}
+  {
+    "apiBaseUrl": "https://script.google.com/macros/s/AKfycbwfQxDxBG-jcFfhVBUjtsgGYZt42AOJwneC0FX14tbB476GhjTAI_4qsvxtSGLqqIM-/exec"
+  },
+  {
+    "apiBaseUrlGet": "https://script.google.com/macros/s/AKfycbzBlIIuGAfEoOqcCHQbLIfIVfXvXLnwBn7ZmmG3AeeC6TXq69gAVNrj4CiopSwndpHS/exec"
+  },
+  {
+    "domainName": "ppvcup2026"
+  }
 ]
