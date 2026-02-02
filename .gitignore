@@ -1,15 +1,24 @@
-# dependencies
+# =====================
+# Dependencies
+# =====================
 /node_modules
 /.pnp
 .pnp.js
 
-# testing
+# =====================
+# Testing
+# =====================
 /coverage
 
-# production
+# =====================
+# Production / build output
+# =====================
 /build
+/ppvcup.cz
 
-# environment
+# =====================
+# Environment variables
+# =====================
 .env
 .env.local
 .env.development
@@ -19,14 +28,18 @@
 .env.production
 .env.production.local
 
+# =====================
 # Logs
+# =====================
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 *.log
 
+# =====================
 # Editor-specific files
+# =====================
 .vscode/
 .idea/
 *.suo
@@ -35,15 +48,22 @@ pnpm-debug.log*
 *.sln
 *.sw?
 
-# Optional lock files (vyber jen jeden ekosystém)
+# =====================
+# Optional lock files
+# (vyber jen jeden ekosystém)
+# =====================
 package-lock.json
 yarn.lock
 pnpm-lock.yaml
 
+# =====================
 # OS junk
+# =====================
 .DS_Store
 Thumbs.db
 desktop.ini
 
-# temp
+# =====================
+# Temporary files
+# =====================
 *.tmp
