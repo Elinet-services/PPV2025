@@ -1,0 +1,17 @@
+/* Mobile: schovat #, Jméno, Aeroklub, Startovní znak */
+@media (max-width: 575.98px) {
+  /* # (1. sloupec) */
+  .racer-datatable table th:nth-child(1),
+  .racer-datatable table td:nth-child(1),
+  /* Jméno (2. sloupec) */
+  .racer-datatable table th:nth-child(2),
+  .racer-datatable table td:nth-child(2),
+  /* Aeroklub (4. sloupec) */
+  .racer-datatable table th:nth-child(4),
+  .racer-datatable table td:nth-child(4),
+  /* Startovní znak (7. sloupec) */
+  .racer-datatable table th:nth-child(7),
+  .racer-datatable table td:nth-child(7) {
+    display: none;
+  }
+}

@@ -8,7 +8,7 @@ const Footer = () => (
         <MDBCol lg="2" md="6" className="mb-4">
           <h6 className="text-uppercase">Ředitel závodu</h6>
           <ul className="list-unstyled">
-            <li><small><b>Jan Kantor</b></small></li>
+            <li><small><b>Jan Koťan</b></small></li>
             <li><small><a href="mailto:poradatel@ppvcup.cz">poradatel@ppvcup.cz</a></small></li>
           </ul>
         </MDBCol>
