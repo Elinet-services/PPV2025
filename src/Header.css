@@ -10,6 +10,25 @@
   position: relative;
 }
 
+
+/* Navbar links: clearer text + active highlight */
+.header-container .nav-link {
+  color: #1f2937;
+  font-weight: 500;
+  opacity: 1;
+}
+
+.header-container .nav-link:hover,
+.header-container .nav-link:focus {
+  color: #0d6efd;
+}
+
+.header-container .nav-link.active,
+.header-container .nav-link[aria-current="page"] {
+  color: #111827;
+  background-color: rgba(17, 24, 39, 0.08);
+  border-radius: 6px;
+}
 /* Gradient overlay for carousel */
 .carousel-gradient-overlay {
   position: absolute;
@@ -45,15 +64,16 @@
   max-width: 600px;
   height: auto;
   position: absolute;
-  top: 150px;
+  top: 95px;
   left: 70%;
   transform: translateX(-50%);
   z-index: 10;
 }
 
 .carousel-image {
-  height: 400px;
+  height: 360px;
   object-fit: cover;
+  object-position: top;
 }
 
 /* Hamburger menu placed inside carousel near caption */
@@ -137,7 +157,7 @@
   }
 
   .carousel-image {
-    height: 180px;
+    height: 162px;
     opacity: 0.2;
   }
 
@@ -155,7 +175,7 @@
     max-width: 100%;
     height: var(--mobile-caption-height);
     object-fit: contain;
-    top: calc(8px + (var(--mobile-caption-height) * 2.2) + var(--mobile-logo-gap));
+    top: calc(8px + (var(--mobile-caption-height) * 2.2) + var(--mobile-logo-gap) - 12px);
     left: 50%;
     transform: translateX(-50%);
   }
@@ -174,5 +194,14 @@
     border-radius: 0;
     min-width: 0;
     max-height: none;
+  }
+}
+
+
+
+/* Desktop navbar: allow collapse content to take full width */
+@media (min-width: 992px) {
+  .header-container .navbar .navbar-collapse {
+    flex-grow: 1 !important;
   }
 }

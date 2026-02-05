@@ -51,7 +51,7 @@ const Login = (params) => {
         setCookies(response.responseData);
         setFormData(initialFormState);
         params.setUserRights(response.responseData.rights);
-        if (response.responseData.role == 'A')
+        if (response.responseData.role === 'A')
           navigate("/backoffice");
         else
           navigate("/");
@@ -68,42 +68,45 @@ const Login = (params) => {
         </MDBTypography>
 
         <form onSubmit={handleSubmit}>
-          <MDBCol md="4">
-            <MDBRow >
+          <MDBRow className="g-3 align-items-end">
+            <MDBCol md="4">
               <MDBInput
-                  name="email"
-                  id="email"
-                  onChange={handleChange}
-                  value={formData.email}
-                  type="email"
-                  wrapperClass="mb-4"
-                  label="Email"
-                  required autoComplete="email"
+                name="email"
+                id="email"
+                onChange={handleChange}
+                value={formData.email}
+                type="email"
+                label="Email"
+                required autoComplete="email"
               />
-            </MDBRow>
-            <MDBRow md="4">
+            </MDBCol>
+            <MDBCol md="4">
               <MDBInput
-                  name="password"
-                  id="password"
-                  onChange={handleChange}
-                  value={formData.password}
-                  type="password"
-                  wrapperClass="mb-4"
-                  label="Heslo"
-                  required autoComplete="current-password"
+                name="password"
+                id="password"
+                onChange={handleChange}
+                value={formData.password}
+                type="password"
+                label="Heslo"
+                required autoComplete="current-password"
               />
-            </MDBRow>
-            <MDBRow className="mt-4">
-              <MDBBtn type="submit" className="btn-block">
-                Přihlásit
-              </MDBBtn>
-            </MDBRow>
-            <MDBRow className="mt-4">
-              <MDBBtn color='link' onClick={() => setAction('forgotpassword')}>
-                Zapomenuté heslo
-              </MDBBtn>
-            </MDBRow>
-          </MDBCol>
+            </MDBCol>
+            <MDBCol md="4">
+              <div className="d-flex gap-2">
+                <MDBBtn type="submit" color="primary" className="w-100 px-4 login-btn">
+                  Přihlásit
+                </MDBBtn>
+                <MDBBtn
+                  type="button"
+                  color="secondary"
+                  className="w-100 px-4 login-btn"
+                  onClick={() => setAction('forgotpassword')}
+                >
+                  Zapomenuté heslo
+                </MDBBtn>
+              </div>
+            </MDBCol>
+          </MDBRow>
         </form>
       </section>
       : 

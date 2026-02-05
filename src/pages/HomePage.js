@@ -9,9 +9,9 @@ const organizers = [
 ];
 
 const LOGO_WIDTHS = {
-  aklt: '50%',
-  akhb: '34%',
-  hb: '40%',
+  aklt: '47.5%',
+  akhb: '32.3%',
+  hb: '38%',
 };
 
 const HomePage = ({noteList}) => {

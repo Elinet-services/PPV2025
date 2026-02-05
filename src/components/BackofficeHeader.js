@@ -3,7 +3,8 @@ import { NavLink, useNavigate } from 'react-router-dom';
 import '../Header.css';
 import {
   MDBContainer,
-  MDBBtn,
+  MDBRow,
+  MDBCol,
   MDBNavbar,
   MDBNavbarNav,
   MDBNavbarItem,
@@ -35,58 +36,69 @@ const Header = ({ menuItems, logout }) => {
         {/* Navigační menu */}
         <MDBNavbar expand="lg" light bgColor="light">
           <MDBContainer fluid>
-            <MDBNavbarToggler
-              aria-label="Otevřít menu"
-              onClick={() => setShowNav(!showNav)}
-              aria-controls='navbarSupportedContent'
-            >
-              <MDBIcon icon="bars" fas />
-            </MDBNavbarToggler>
+            <MDBRow className="w-100 align-items-center g-0">
+              <MDBCol md="9" className="d-flex align-items-center">
+                <MDBNavbarToggler
+                  aria-label={"Otev\u0159\u00edt menu"}
+                  onClick={() => setShowNav(!showNav)}
+                  aria-controls='navbarSupportedContent'
+                >
+                  <MDBIcon icon="bars" fas />
+                </MDBNavbarToggler>
 
-            <MDBCollapse id="navbarNav" open={showNav} navbar>
-              <MDBNavbarNav className='mb-2 mb-lg-0'>
-                {navItems.map((item) => (
-                  <MDBNavbarItem key={item.path}>
-                    <NavLink
-                      className='nav-link'
-                      to={(item.backoffice ? apiBaseUrl + item.path +'&token='+ getToken() : item.path) }
-                      {...(item.external ? { target: '_blank' } : {})}
-                      onClick={() => setShowNav(false)}
-                    >
-                      {item.label}
-                    </NavLink>
-                  </MDBNavbarItem>
-                ))}
-              </MDBNavbarNav>
-              {getToken().length === 0 ? (
-                <MDBBtn color='light' onClick={() => {setShowNav(false); navigate("/backoffice/login")}}>
-                  Přihlášení
-                </MDBBtn>
-              ) : (
-                <MDBDropdown>
-                  <MDBDropdownToggle tag='a' className='nav-link' role='button'>
-                    <MDBIcon icon='user' className='ms-2' /> {getUserName() || 'Uživatel'}
-                  </MDBDropdownToggle>
-                  <MDBDropdownMenu>
-                    {menuItems.map((item) => (
-                      item.addDivider ? 
-                        <MDBDropdownItem divider key={item.right}/> 
-                      : 
-                        <MDBDropdownItem link childTag='button' key={item.right}
-                          onClick={() => {
-                            if (item.path === 'logout')
-                              logout();
-                            else
-                              navigate(item.path);
-                            setShowNav(false);
-                            }}
-                          ><div>{item.label}</div>
-                        </MDBDropdownItem>
+                <MDBCollapse id="navbarNav" open={showNav} navbar className="flex-grow-1">
+                  <MDBNavbarNav className='mb-2 mb-lg-0'>
+                    {navItems.map((item) => (
+                      <MDBNavbarItem key={item.path}>
+                        <NavLink
+                          className='nav-link'
+                          to={(item.backoffice ? apiBaseUrl + item.path +'&token='+ getToken() : item.path) }
+                          {...(item.external ? { target: '_blank' } : {})}
+                          onClick={() => setShowNav(false)}
+                        >
+                          {item.label}
+                        </NavLink>
+                      </MDBNavbarItem>
                     ))}
-                  </MDBDropdownMenu>
-                </MDBDropdown>
-              )}
-            </MDBCollapse>
+                  </MDBNavbarNav>
+                </MDBCollapse>
+              </MDBCol>
+
+              <MDBCol md="3" className="d-flex justify-content-end">
+                {getToken().length === 0 ? (
+                  <NavLink
+                    className="nav-link"
+                    to="/backoffice/login"
+                    onClick={() => {setShowNav(false); navigate("/backoffice/login");}}
+                  >
+                    {"P\u0159ihl\u00e1\u0161en\u00ed"}
+                  </NavLink>
+                ) : (
+                  <MDBDropdown>
+                    <MDBDropdownToggle tag='a' className='nav-link' role='button'>
+                      <MDBIcon icon='user' className='ms-2' /> {getUserName() || 'U\u017eivatel'}
+                    </MDBDropdownToggle>
+                    <MDBDropdownMenu>
+                      {menuItems.map((item) => (
+                        item.addDivider ? 
+                          <MDBDropdownItem divider key={item.right}/> 
+                        : 
+                          <MDBDropdownItem link childTag='button' key={item.right}
+                            onClick={() => {
+                              if (item.path === 'logout')
+                                logout();
+                              else
+                                navigate(item.path);
+                              setShowNav(false);
+                              }}
+                            ><div>{item.label}</div>
+                          </MDBDropdownItem>
+                      ))}
+                    </MDBDropdownMenu>
+                  </MDBDropdown>
+                )}
+              </MDBCol>
+            </MDBRow>
           </MDBContainer>
         </MDBNavbar>
       </MDBContainer>

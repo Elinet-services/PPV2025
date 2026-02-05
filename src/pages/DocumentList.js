@@ -13,7 +13,6 @@ const Documents = ({documentList}) => {
       
   return (
     <MDBContainer className="my-5">
-      <h2>Dokumenty k PPV</h2>
       {loading ? (
         <MDBSpinner role="status" className="text-left my-4">
           <span className="visually-hidden">Načítám aktuality...</span>
