@@ -1,9 +1,13 @@
 import { useContext, useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { MDBContainer, MDBRow, MDBCol, MDBInput, MDBRadio, MDBBtn, MDBTypography, MDBSelect } from "mdb-react-ui-kit";
+import { MDBContainer, MDBRow, MDBCol, MDBInput, MDBBtn, MDBSelect, MDBSwitch } from "mdb-react-ui-kit";
+import PhoneInput from "react-phone-number-input";
+import { isValidPhoneNumber } from "libphonenumber-js";
 import { sha256 } from "node-forge";
 import {processRequest, domainName, getToken, getEmail} from '../services/connection.js';
 import { AppContext } from "../App.js";
+import ClubTypeahead from "../components/ClubTypeahead.js";
+import { AEROKLUBY } from "../constants/aeroclubs.js";
 
 
 const initialFormState = {
@@ -31,7 +35,6 @@ const UserRegistration = (params) => {
   const [isLogged, setLogged] = useState(getToken().length > 0);
   const [isRegistered, setRegistered] = useState(false);
   const [userParameters, setUserParameters] = useState({});
-  const deviceTypeData = [{text:'', value:''},{ text: 'FLARM', value: 'FLARM'},{ text: 'OGN', value: 'OGN' }, { text: 'ADS-B (ICAO)', value: 'ADS'}]
   const [raceListData, setRaceListData] = useState([]);
 
   //  -------------------------------------------------------------------------------
@@ -61,6 +64,15 @@ const UserRegistration = (params) => {
   }, [app.userRights]);
 
   const handleChange = (e) => {
+    if (e.target.name === 'deviceId1') {
+      const nextValue = e.target.value;
+      if (nextValue.length === 0 && formData.deviceId2) {
+        setFormData({ ...formData, deviceId1: formData.deviceId2, deviceId2: "" });
+      } else {
+        setFormData({ ...formData, deviceId1: nextValue });
+      }
+      return;
+    }
     setFormData({ ...formData, [e.target.name]: e.target.value });
     if (e.target.name === 'deviceId1' || e.target.name === 'deviceId2') {
       e.target.setCustomValidity('');
@@ -83,11 +95,9 @@ const UserRegistration = (params) => {
     }
   };
 
-  const handleRadioChange = (e) => {
-    setFormData((prevData) => ({
-      ...prevData,
-      gliderClass: e.target.value,
-    }));
+  const handlePhoneChange = (phoneValue) => {
+    const nextValue = phoneValue || "";
+    setFormData({ ...formData, phone: nextValue });
   };
 
   const handleSelectChange = (name, value) => {
@@ -102,15 +112,17 @@ const UserRegistration = (params) => {
   //  -------------------------------------------------------------------------------
   function checkFilledDeviceFields(deviceNr, e)
   {
-    const deviceTypeKey = `deviceType${deviceNr}`;
-    const deviceIdKey = `deviceId${deviceNr}`;
+    const deviceId1Input = document.getElementById("deviceId1");
+    const deviceId2Input = document.getElementById("deviceId2");
+    if (deviceId1Input) deviceId1Input.setCustomValidity("");
+    if (deviceId2Input) deviceId2Input.setCustomValidity("");
 
-    const deviceIdInput = document.getElementById(deviceIdKey);
-    deviceIdInput.setCustomValidity(''); // Reset custom validity
-    // Kontrola: obě pole musí být vyplněná, nebo žádné
-    if ((!!formData[deviceTypeKey]) !== (!!formData[deviceIdKey])) {
-      deviceIdInput.setCustomValidity("Vyplňte buď oba údaje o odpovídači, nebo žádný.");
-      if (e) e.target.reportValidity(); // Spustí nativní validaci a zobrazí chybovou hlášku
+    // Pokud je vyplněn záložní logger, musí být vyplněn i hlavní.
+    if (deviceNr === 2 && !!formData.deviceId2 && !formData.deviceId1) {
+      if (deviceId2Input) {
+        deviceId2Input.setCustomValidity("Nejdříve vyplňte hlavní logger, poté záložní.");
+        if (e) e.target.reportValidity();
+      }
       return false;
     }
     return true
@@ -119,6 +131,14 @@ const UserRegistration = (params) => {
   //  -------------------------------------------------------------------------------
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!formData.phone || !isValidPhoneNumber(formData.phone)) {
+      const phoneInput = document.getElementById("phone") || document.getElementById("phone-mobile");
+      if (phoneInput) {
+        phoneInput.setCustomValidity(formData.phone ? "Zadejte platné telefonní číslo." : "Telefon je povinný.");
+        phoneInput.reportValidity();
+      }
+      return;
+    }
     if (!checkFilledDeviceFields(1, e) || !checkFilledDeviceFields(2, e)) return;
 
     const updatedFormData = {
@@ -192,23 +212,18 @@ const UserRegistration = (params) => {
 
   return (
     <MDBContainer className="my-5">
-      <MDBTypography tag="h4" className="mb-4 text-start">
-        {isLogged ? (isRegistered ? 'Změna registrace' : 'Registrace z předchozích ročníků') : 'Registrační formulář'}
-      </MDBTypography>
-
       {isLogged ? null : (
-        <MDBRow>
+        <MDBRow className="mb-3">
           <label className="form-label">
             Pokud jste s námi již létali, <Link to="/login">přihlaste</Link>, budete moci použít údaje z předchozích ročníků.
           </label>
         </MDBRow>
       )}
-
       <form onSubmit={handleSubmit}>
 
         {isLogged && !isRegistered ? 
           <MDBRow className="mb-3">
-            <MDBCol md="4">
+            <MDBCol md="3">
               <MDBSelect label="Předchozí ročníky" value={formData.domain} data={raceListData}
                 onChange={(e) => {handleSelectChange('domain', e.value)}}
               />
@@ -229,69 +244,24 @@ const UserRegistration = (params) => {
           <MDBCol md="5">
             <MDBInput label="Email" type="email" name="email" value={formData.email} onChange={handleChange} autoComplete="email" required readonly={isLogged} />
           </MDBCol>
-          <MDBCol md="3">
-            <MDBInput label="Telefon" type="tel" name="phone" value={formData.phone} onChange={handleChange} autoComplete="tel" required />
-          </MDBCol>
-        </MDBRow>
-
-        <MDBRow className="mt-3">
-          <MDBCol md="5">
-            <MDBInput label="Aeroklub" name="club" value={formData.club} onChange={handleChange} />
-          </MDBCol>
-        </MDBRow>
-
-        <MDBRow className="mt-3">
-          <MDBCol md="4">
-            <MDBInput label="Typ letadla" name="glider" value={formData.glider} onChange={handleChange} />
-          </MDBCol>
-          <MDBCol md="3">
-            <MDBInput label="Imatrikulace" name="imatriculation" value={formData.imatriculation} onChange={handleChange} />
-          </MDBCol>
-          <MDBCol md="3">
-            <MDBInput label="Startovní znak" name="startCode" value={formData.startCode} onChange={handleChange} />
-          </MDBCol>
-        </MDBRow>
-
-        <MDBRow className="mt-3">
-          <MDBCol md="12">
-            <label className="form-label">Třída větroně:</label>
-            <MDBRadio name="gliderClass" id="gliderClassClub" label="Klubová třída" value="club" checked={formData.gliderClass === "club"} onChange={handleRadioChange} />
-            <MDBRadio name="gliderClass" id="gliderClassCombi" label="Kombinovaná třída" value="combi" checked={formData.gliderClass === "combi"} onChange={handleRadioChange} />
-          </MDBCol>
-        </MDBRow>
-
-        <MDBRow className="mt-3">
-          <MDBCol md="4">
-            <MDBSelect
-              key={`deviceType1-${formData.deviceType1}`}            // vynutí remount při změně hodnoty (včetně prázdné)
-              label="Typ odpovídače"
-              value={formData.deviceType1}
-              data={deviceTypeData}
-              onChange={(e) => { handleSelectChange('1', e.value); }}
+          <MDBCol md="3" className="d-none d-md-block">
+            <label className="form-label">Telefon</label>
+            <PhoneInput
+              id="phone"
+              value={formData.phone || undefined}
+              onChange={handlePhoneChange}
+              defaultCountry="CZ"
+              autoComplete="tel"
+              placeholder="+420 123 456 789"
+              className="w-100"
+              inputClassName="form-control"
             />
           </MDBCol>
-          <MDBCol md="3">
-            <MDBInput label="Číslo odpovídače" id="deviceId1" name="deviceId1" value={formData.deviceId1} onChange={handleChange} />
-          </MDBCol>
-        </MDBRow>
-        <MDBRow className="mt-3">
-          <MDBCol md="4">
-            <MDBSelect
-              key={`deviceType2-${formData.deviceType2}`}            // vynutí remount při změně hodnoty (včetně prázdné)
-              label="Typ odpovídače"
-              value={formData.deviceType2}
-              data={deviceTypeData}
-              onChange={(e) => { handleSelectChange('2', e.value); }}
-            />
-          </MDBCol>
-          <MDBCol md="3">
-            <MDBInput label="Číslo odpovídače" id="deviceId2" name="deviceId2" value={formData.deviceId2} onChange={handleChange} />
-          </MDBCol>
         </MDBRow>
 
-        {isLogged ? null :
-          <div>
-            <MDBRow className="mt-4">
+        {isLogged ? null : (
+          <>
+            <MDBRow className="mt-3">
               <MDBCol md="4">
                 <MDBInput
                   name="password" id="password"
@@ -316,8 +286,88 @@ const UserRegistration = (params) => {
                 />
               </MDBCol>
             </MDBRow>
-          </div>
-        } 
+          </>
+        )}
+
+        <MDBRow className="mt-3 d-md-none">
+          <MDBCol md="3">
+            <label className="form-label">Telefon</label>
+            <PhoneInput
+              id="phone-mobile"
+              value={formData.phone || undefined}
+              onChange={handlePhoneChange}
+              defaultCountry="CZ"
+              autoComplete="tel"
+              placeholder="+420 123 456 789"
+              className="w-100"
+              inputClassName="form-control"
+            />
+          </MDBCol>
+        </MDBRow>
+
+        <MDBRow className="mt-3">
+          <MDBCol md="5">
+            <ClubTypeahead
+              label="Aeroklub"
+              value={formData.club}
+              clubs={AEROKLUBY}
+              onChange={(club) => setFormData({ ...formData, club })}
+            />
+          </MDBCol>
+        </MDBRow>
+
+        <MDBRow className="mt-3">
+          <MDBCol md="4">
+            <MDBInput label="Typ letadla" name="glider" value={formData.glider} onChange={handleChange} />
+          </MDBCol>
+          <MDBCol md="3">
+            <MDBInput label="Imatrikulace" name="imatriculation" value={formData.imatriculation} onChange={handleChange} />
+          </MDBCol>
+          <MDBCol md="3">
+            <MDBInput label="Startovní znak" name="startCode" value={formData.startCode} onChange={handleChange} />
+          </MDBCol>
+        </MDBRow>
+
+        <MDBRow className="mt-3">
+          <MDBCol md="12">
+            <label className="form-label d-block">Třída větroně:</label>
+            <div className="d-flex align-items-center gap-2">
+              <span className={formData.gliderClass === "club" ? "fw-bold text-primary" : ""}>
+                Klubová třída
+              </span>
+              <MDBSwitch
+                id="gliderClassSwitch"
+                checked={formData.gliderClass === "combi"}
+                onChange={(e) =>
+                  setFormData((prevData) => ({
+                    ...prevData,
+                    gliderClass: e.target.checked ? "combi" : "club",
+                  }))
+                }
+              />
+              <span className={formData.gliderClass === "combi" ? "fw-bold text-primary" : ""}>
+                Kombinovaná třída
+              </span>
+            </div>
+          </MDBCol>
+        </MDBRow>
+        <MDBRow className="mt-3">
+          <MDBCol md="3">
+            <MDBInput label="Hlavní logger" id="deviceId1" name="deviceId1" value={formData.deviceId1} onChange={handleChange} />
+          </MDBCol>
+          <MDBCol md="3">
+            <MDBInput
+              label="Záložní logger"
+              id="deviceId2"
+              name="deviceId2"
+              value={formData.deviceId2}
+              onChange={handleChange}
+              disabled={!formData.deviceId1}
+            />
+          </MDBCol>
+        </MDBRow>
+
+
 
         <MDBRow className="mt-4">
           <MDBCol md="4">
@@ -332,3 +382,28 @@ const UserRegistration = (params) => {
 };
 
 export default UserRegistration;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,14 +1,11 @@
 import { useContext, useState, useEffect } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
+import '../Header.css';
 import {
   MDBContainer,
   MDBCarousel,
   MDBCarouselItem,
   MDBBtn,
-  MDBNavbar,
-  MDBNavbarNav,
-  MDBNavbarItem,
-  MDBNavbarToggler,
   MDBIcon,
   MDBCollapse,
   MDBDropdown,
@@ -119,20 +116,14 @@ const Header = () => {
         <img
           src="/img/ppv 2025 png.png"
           alt="Plachtařský Pohár Vysočiny 2026"
-          style={{
-            width: '22%', maxWidth: '500px', height: 'auto', position: 'absolute',
-            top: '10px', left: '3%', zIndex: 10, opacity: 0.9, padding: '1px', borderRadius: '3px',
-          }}
+          className="carousel-logo"
         />
       </a>
 
       <img
         src="/img/CarouselText.png"
         alt="PPV 2026"
-        style={{
-          width: '40%', maxWidth: '600px', height: 'auto', position: 'absolute',
-          top: '150px', left: '70%', transform: 'translateX(-50%)', zIndex: 10,
-        }}
+        className="carousel-caption-image"
       />
 
       {/* Carousel */}
@@ -142,49 +133,60 @@ const Header = () => {
             <img
               src={slide.img}
               alt={`Slide ${slide.id}`}
-              className="d-block w-100"
-              style={{ height: '400px', objectFit: 'cover' }}
+              className="d-block w-100 carousel-image"
             />
             <div className='carousel-gradient-overlay' />
           </MDBCarouselItem>
         ))}
       </MDBCarousel>
+      {/* Navigašní menu (hamburger v carouselu) */}
+      <div className="carousel-menu">
+        <MDBBtn
+          color="light"
+          size="sm"
+          className="carousel-menu-toggle"
+          aria-label="Otevřít menu"
+          onClick={() => setShowNav(!showNav)}
+        >
+          <MDBIcon icon="bars" fas />
+        </MDBBtn>
 
-      {/* Navigační menu */}
-      <MDBNavbar expand="lg" light bgColor="light">
-        <MDBContainer fluid>
-          <NavLink className="navbar-brand" to="/">
-            <MDBIcon fas icon="home" size="lg" />
-          </NavLink>
+        {showNav ? (
+          <div
+            className="carousel-menu-backdrop"
+            onClick={() => setShowNav(false)}
+            aria-hidden="true"
+          />
+        ) : null}
 
-          <MDBNavbarToggler
-            aria-label="Otevřít menu"
-            onClick={() => setShowNav(!showNav)}
-            aria-controls='navbarSupportedContent'
-          >
-            <MDBIcon icon="bars" fas />
-          </MDBNavbarToggler>
+        <MDBCollapse id="carouselNav" open={showNav} className="carousel-menu-panel">
+          <div className="carousel-menu-items">
+            <NavLink
+              className='nav-link'
+              to="/"
+              onClick={() => setShowNav(false)}
+            >
+              Home
+            </NavLink>
 
-          <MDBCollapse id="navbarNav" open={showNav} navbar>
-            <MDBNavbarNav className='mb-2 mb-lg-0'>
-              {showPublic && navItems.map((item) => (
-                <MDBNavbarItem key={item.path}>
-                  <NavLink
-                    className='nav-link'
-                    to={item.path}
-                    {...(item.external ? { target: '_blank' } : {})}
-                    onClick={() => setShowNav(false)}
-                  >
-                    {item.label}
-                  </NavLink>
-                </MDBNavbarItem>
-              ))}
-            </MDBNavbarNav>
+            {showPublic && navItems.map((item) => (
+              <NavLink
+                key={item.path}
+                className='nav-link'
+                to={item.path}
+                {...(item.external ? { target: '_blank' } : {})}
+                onClick={() => setShowNav(false)}
+              >
+                {item.label}
+              </NavLink>
+            ))}
 
             {getToken().length === 0 ? (
               showPublic ? (
                 <MDBBtn
                   color='light'
+                  size="sm"
+                  className="mt-2"
                   onClick={() => { setShowNav(false); navigate("/login"); }}
                 >
                   Přihlášení
@@ -217,11 +219,16 @@ const Header = () => {
                 </MDBDropdownMenu>
               </MDBDropdown>
             )}
-          </MDBCollapse>
-        </MDBContainer>
-      </MDBNavbar>
+          </div>
+        </MDBCollapse>
+      </div>
     </MDBContainer>
   );
 };
 
 export default Header;
+
+
+
+
+

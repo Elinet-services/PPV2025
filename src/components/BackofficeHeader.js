@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
+import '../Header.css';
 import {
   MDBContainer,
   MDBBtn,

@@ -10,11 +10,13 @@
     "@testing-library/user-event": "^13.5.0",
     "crypto-js": "^4.2.0",
     "express": "^4.21.2",
+    "libphonenumber-js": "^1.12.36",
     "mdb-react-table-editor": "git+https://@git.mdbootstrap.com/mdb/react/mdb5/plugins/prd/table-editor",
     "mdb-react-ui-kit": "git+https://@git.mdbootstrap.com/mdb/react/mdb5/prd/mdb5-react-ui-kit-pro-advanced",
     "mdb-react-wysiwyg": "git+https://oauth2:WD71xL7gGeb-jc7MDGM-@git.mdbootstrap.com/mdb/react/mdb5/plugins/prd/wysiwyg-editor",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "react-phone-number-input": "^3.4.14",
     "react-router-dom": "^7.1.5",
     "react-scripts": "^5.0.1",
     "web-vitals": "^2.1.4"
