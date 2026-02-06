@@ -32,6 +32,11 @@ li.nav-item a.nav-link.active {
   margin-top: 1rem !important;
 }
 
+/* Reduce bottom spacing between content and footer */
+.content-container .my-5 {
+  margin-bottom: 1.5rem !important;
+}
+
 /* Registration phone input (single field with floating label) */
 .registration-phone-field {
   position: relative;
