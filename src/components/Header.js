@@ -184,7 +184,10 @@ const Header = () => {
               <MDBCollapse id="navbarNav" open={showNav} navbar className="flex-grow-1">
                 <MDBNavbarNav className="mb-2 mb-lg-0">
                   {navItems.filter(shouldShowNavItem).map((item) => (
-                    <MDBNavbarItem key={item.path}>
+                    <MDBNavbarItem
+                      key={item.path}
+                      className={item.path === "/navody" ? "nav-item-guides ms-auto" : ""}
+                    >
                       <NavLink
                         className={`nav-link ${item.path === "/navody" ? "nav-link-guides" : ""}`}
                         to={item.path}

@@ -44,10 +44,13 @@
 }
 
 /* "Návody" as slightly separated last item (not as far as Login) */
-.header-container .nav-link.nav-link-guides {
-  margin-left: 34px;
-  padding-left: 22px;
+.header-container .navbar-nav .nav-item-guides {
+  padding-left: 16px;
+  margin-left: 16px;
   border-left: 1px solid rgba(17, 24, 39, 0.18);
+}
+
+.header-container .nav-link.nav-link-guides {
   font-size: 0.95rem;
 }
 /* Gradient overlay for carousel */
