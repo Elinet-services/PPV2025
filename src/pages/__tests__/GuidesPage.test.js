@@ -26,14 +26,17 @@ test("search shows whole matching block", async () => {
 
   await userEvent.type(screen.getByLabelText("Vyhledat v nápovědě"), "reset");
 
-  expect(screen.queryByRole("heading", { name: "Přihlášení" })).not.toBeInTheDocument();
+  expect(
+    screen.queryByRole("heading", { name: "Přihlášení" })
+  ).not.toBeInTheDocument();
   expect(
     screen.getByRole("heading", { name: "Reset hesla (nastavení nového hesla)" })
   ).toBeInTheDocument();
 
-  // whole block content is present
   expect(
-    screen.getByText("Zadejte nové heslo (min. 8 znaků) a potvrďte ho ve druhém poli.")
+    screen.getByText(
+      "Zadejte nové heslo (min. 8 znaků) a potvrďte ho ve druhém poli."
+    )
   ).toBeInTheDocument();
 });
 

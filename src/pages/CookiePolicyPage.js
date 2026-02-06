@@ -19,9 +19,12 @@ const CookiePolicyPage = () => {
       </MDBTypography>
 
       <MDBTypography className="text-start mb-4">
-        {
-          "Tento web používá nezbytné cookies potřebné pro jeho funkčnost (např. přihlášení a udržení relace). Volitelné cookies (např. analytické nebo marketingové) aktuálně nepoužíváme. Pokud je v budoucnu přidáme, budete je moci povolit/odmítnout v cookie liště. Pokud máte dotazy, kontaktujte nás na poradatel@ppvcup.cz."
-        }
+        {"Tento web používá nezbytné cookies potřebné pro jeho funkčnost (např. přihlášení a udržení relace). "}
+        {"Volitelné cookies (např. analytické nebo marketingové) aktuálně nepoužíváme. "}
+        {"Pokud je v budoucnu přidáme, budete je moci povolit/odmítnout v cookie liště. "}
+        {"Pokud máte dotazy, kontaktujte nás na "}
+        <a href="mailto:poradatel@ppvcup.cz">poradatel@ppvcup.cz</a>
+        {"."}
       </MDBTypography>
 
       <MDBRow className="g-4">
@@ -57,7 +60,6 @@ const CookiePolicyPage = () => {
                   {" – práva uživatele (řízení přístupů k funkcím)."}
                 </MDBListGroupItem>
               </MDBListGroup>
-
             </MDBCardBody>
           </MDBCard>
         </MDBCol>
@@ -75,11 +77,7 @@ const CookiePolicyPage = () => {
               </MDBTypography>
 
               <div className="mt-auto d-flex flex-wrap gap-2">
-                <MDBBtn
-                  color="secondary"
-                  type="button"
-                  onClick={() => clearCookieConsent()}
-                >
+                <MDBBtn color="secondary" type="button" onClick={() => clearCookieConsent()}>
                   {"Změnit volbu cookies"}
                 </MDBBtn>
               </div>
@@ -87,7 +85,6 @@ const CookiePolicyPage = () => {
           </MDBCard>
         </MDBCol>
       </MDBRow>
-
     </MDBContainer>
   );
 };

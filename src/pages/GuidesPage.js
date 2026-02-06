@@ -1,4 +1,4 @@
-﻿import { useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import {
   MDBContainer,
@@ -69,9 +69,7 @@ const GuidesPage = () => {
         title: "Změna hesla po přihlášení",
         items: [
           <>
-            {
-              "Po přihlášení otevřete uživatelské menu a zvolte „Změna hesla“, nebo přejděte přímo na "
-            }
+            {"Po přihlášení otevřete uživatelské menu a zvolte „Změna hesla“, nebo přejděte přímo na "}
             <Link to="/changepassword">{"Změnu hesla"}</Link>
             {"."}
           </>,

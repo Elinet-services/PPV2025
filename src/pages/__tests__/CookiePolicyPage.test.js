@@ -26,4 +26,3 @@ test("renders cookie policy summary, cookie list, and consent change button", as
   await userEvent.click(screen.getByRole("button", { name: "Změnit volbu cookies" }));
   expect(clearCookieConsent).toHaveBeenCalledTimes(1);
 });
-
