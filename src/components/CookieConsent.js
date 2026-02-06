@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { MDBBtn, MDBCard, MDBCardBody, MDBTypography } from "mdb-react-ui-kit";
 
 const STORAGE_KEY = "ppv_cookie_consent_v1";
+const CONSENT_EVENT = "ppv-cookie-consent-changed";
 
 export function getCookieConsent() {
   try {
@@ -15,6 +16,16 @@ export function getCookieConsent() {
 export function setCookieConsent(value) {
   try {
     localStorage.setItem(STORAGE_KEY, value);
+    window.dispatchEvent(new Event(CONSENT_EVENT));
+  } catch {
+    // ignore
+  }
+}
+
+export function clearCookieConsent() {
+  try {
+    localStorage.removeItem(STORAGE_KEY);
+    window.dispatchEvent(new Event(CONSENT_EVENT));
   } catch {
     // ignore
   }
@@ -24,7 +35,16 @@ const CookieConsent = () => {
   const [consent, setConsent] = useState(null);
 
   useEffect(() => {
-    setConsent(getCookieConsent());
+    const update = () => setConsent(getCookieConsent());
+    update();
+
+    window.addEventListener("storage", update);
+    window.addEventListener(CONSENT_EVENT, update);
+
+    return () => {
+      window.removeEventListener("storage", update);
+      window.removeEventListener(CONSENT_EVENT, update);
+    };
   }, []);
 
   const shouldShow = useMemo(() => !consent, [consent]);
@@ -53,7 +73,6 @@ const CookieConsent = () => {
               aria-label="Odmítnout volitelné cookies"
               onClick={() => {
                 setCookieConsent("necessary");
-                setConsent("necessary");
               }}
             >
               {"Pouze nezbytné"}
@@ -64,7 +83,6 @@ const CookieConsent = () => {
               aria-label="Povolit cookies"
               onClick={() => {
                 setCookieConsent("all");
-                setConsent("all");
               }}
             >
               {"Povolit vše"}
@@ -77,4 +95,3 @@ const CookieConsent = () => {
 };
 
 export default CookieConsent;
-
