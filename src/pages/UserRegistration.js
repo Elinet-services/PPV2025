@@ -3,13 +3,19 @@ import { Link } from "react-router-dom";
 import { MDBBtn, MDBCol, MDBContainer, MDBInput, MDBRow, MDBSelect, MDBSwitch } from "mdb-react-ui-kit";
 import { useTranslation } from "react-i18next";
 import PhoneInput from "react-phone-number-input";
-import { getCountryCallingCode, isValidPhoneNumber, parsePhoneNumberFromString } from "libphonenumber-js";
 import { sha256 } from "node-forge";
 
 import { AppContext } from "../App";
 import ClubTypeahead from "../components/ClubTypeahead";
 import { AEROKLUBY } from "../constants/aeroclubs";
 import { domainName, getEmail, getToken, processRequest } from "../services/connection";
+import {
+  DEFAULT_PHONE_COUNTRY,
+  detectPhoneCountry,
+  normalizePhoneCountryPrefix,
+  replacePhoneCountryCode,
+  validateRegistrationPhone,
+} from "../services/registrationPhone";
 
 const initialFormState = {
   domain: domainName,
@@ -28,36 +34,6 @@ const initialFormState = {
   deviceId2: "",
   password: "",
   rePassword: "",
-};
-
-const DEFAULT_PHONE_COUNTRY = "CZ";
-
-const normalizePhoneCountryPrefix = (phoneValue) => {
-  if (!phoneValue) return "";
-  return String(phoneValue).replace(/^\+0+/, "+");
-};
-
-const replacePhoneCountryCode = (phoneValue, previousCountry, nextCountry) => {
-  const normalizedValue = normalizePhoneCountryPrefix(phoneValue);
-  const nextCallingCode = getCountryCallingCode(nextCountry);
-  if (!normalizedValue) return `+${nextCallingCode}`;
-
-  const digits = normalizedValue.replace(/[^\d]/g, "");
-  if (!digits) return `+${nextCallingCode}`;
-
-  const previousCallingCode = previousCountry ? getCountryCallingCode(previousCountry) : "";
-  const nationalDigits = previousCallingCode && digits.startsWith(previousCallingCode)
-    ? digits.slice(previousCallingCode.length)
-    : digits;
-
-  return `+${nextCallingCode}${nationalDigits}`;
-};
-
-const detectPhoneCountry = (phoneValue, fallbackCountry = DEFAULT_PHONE_COUNTRY) => {
-  if (!phoneValue) return fallbackCountry;
-  const normalizedValue = normalizePhoneCountryPrefix(phoneValue);
-  const parsed = parsePhoneNumberFromString(normalizedValue);
-  return parsed?.country || fallbackCountry;
 };
 
 const UserRegistration = (params) => {
@@ -249,8 +225,9 @@ const UserRegistration = (params) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!formData.phone || !isValidPhoneNumber(formData.phone)) {
-      setPhoneError(formData.phone ? t("registration.invalidPhone") : t("registration.phoneRequired"));
+    const phoneValidation = validateRegistrationPhone(formData.phone, phoneCountry);
+    if (!phoneValidation.isValid) {
+      setPhoneError(t(phoneValidation.errorKey));
       return;
     }
     setPhoneError("");
@@ -258,6 +235,7 @@ const UserRegistration = (params) => {
 
     const updatedFormData = {
       ...formData,
+      phone: phoneValidation.normalizedPhone,
       password: isLogged ? "xx" : sha256.create().update(formData.email.toLowerCase() + formData.password).digest().toHex(),
       rePassword: "",
     };
