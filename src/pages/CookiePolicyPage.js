@@ -57,6 +57,12 @@ const CookiePolicyPage = () => {
                   {" – práva uživatele (řízení přístupů k funkcím)."}
                 </MDBListGroupItem>
               </MDBListGroup>
+
+              <MDBTypography className="text-start mt-3 mb-0">
+                {"Pokud máte dotazy, kontaktujte nás na "}
+                <a href="mailto:poradatel@ppvcup.cz">poradatel@ppvcup.cz</a>
+                {"."}
+              </MDBTypography>
             </MDBCardBody>
           </MDBCard>
         </MDBCol>
@@ -87,11 +93,6 @@ const CookiePolicyPage = () => {
         </MDBCol>
       </MDBRow>
 
-      <MDBTypography className="text-start">
-        {"Pokud máte dotazy, kontaktujte nás na "}
-        <a href="mailto:poradatel@ppvcup.cz">poradatel@ppvcup.cz</a>
-        {"."}
-      </MDBTypography>
     </MDBContainer>
   );
 };
