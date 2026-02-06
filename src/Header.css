@@ -42,6 +42,13 @@
   background-color: rgba(17, 24, 39, 0.08);
   border-radius: 6px;
 }
+
+/* "Návody" as slightly separated last item (not as far as Login) */
+.header-container .nav-link.nav-link-guides {
+  margin-left: 12px;
+  padding-left: 12px;
+  border-left: 1px solid rgba(17, 24, 39, 0.18);
+}
 /* Gradient overlay for carousel */
 .carousel-gradient-overlay {
   position: absolute;
@@ -160,6 +167,12 @@
 .carousel-menu-items .nav-link {
   color: #333;
   padding: 6px 0;
+}
+
+.carousel-menu-items .nav-link.nav-link-guides {
+  margin-top: 6px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(17, 24, 39, 0.15);
 }
 
 /* Mobile: keep only logo + caption visible */

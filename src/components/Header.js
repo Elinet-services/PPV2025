@@ -186,7 +186,7 @@ const Header = () => {
                   {navItems.filter(shouldShowNavItem).map((item) => (
                     <MDBNavbarItem key={item.path}>
                       <NavLink
-                        className="nav-link"
+                        className={`nav-link ${item.path === "/navody" ? "nav-link-guides" : ""}`}
                         to={item.path}
                         {...(item.external ? { target: "_blank" } : {})}
                         onClick={() => setShowNav(false)}
@@ -276,7 +276,7 @@ const Header = () => {
             {navItems.filter(shouldShowNavItem).map((item) => (
               <NavLink
                 key={item.path}
-                className='nav-link'
+                className={`nav-link ${item.path === "/navody" ? "nav-link-guides" : ""}`}
                 to={item.path}
                 {...(item.external ? { target: '_blank' } : {})}
                 onClick={() => setShowNav(false)}
