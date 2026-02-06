@@ -1,39 +1,12 @@
 import { useMemo, useState } from "react";
 import { MDBDatatable, MDBInput, MDBTabs, MDBTabsItem, MDBTabsLink, MDBContainer } from "mdb-react-ui-kit";
 import { useTranslation } from "react-i18next";
+import { sortRacersByPaymentAndOrder, toSortableIsoDate } from "../services/racerListSorting";
 
 import "./RacerList.css";
 
-const DEFAULT_SORT_FIELD = "paymentDate";
+const DEFAULT_SORT_FIELD = "index";
 const DEFAULT_SORT_ORDER = "asc";
-const EMPTY_DATE_SENTINEL = "9999-12-31";
-
-function toSortableIsoDate(value) {
-  if (!value) return "";
-
-  const str = String(value).trim();
-
-  const isoMatch = str.match(/^(\d{4})-(\d{2})-(\d{2})/);
-  if (isoMatch) return `${isoMatch[1]}-${isoMatch[2]}-${isoMatch[3]}`;
-
-  const czMatch = str.match(/^(\d{1,2})\.(\d{1,2})\.(\d{4})$/);
-  if (czMatch) {
-    const dd = czMatch[1].padStart(2, "0");
-    const mm = czMatch[2].padStart(2, "0");
-    const yyyy = czMatch[3];
-    return `${yyyy}-${mm}-${dd}`;
-  }
-
-  const d = new Date(str);
-  if (!Number.isNaN(d.getTime())) {
-    const yyyy = String(d.getFullYear());
-    const mm = String(d.getMonth() + 1).padStart(2, "0");
-    const dd = String(d.getDate()).padStart(2, "0");
-    return `${yyyy}-${mm}-${dd}`;
-  }
-
-  return "";
-}
 
 const RacerList = ({ racerList, loading = false }) => {
   const { t } = useTranslation();
@@ -52,16 +25,19 @@ const RacerList = ({ racerList, loading = false }) => {
         return Object.values(r).some((v) => v?.toString().toLowerCase().includes(q));
       })
       .filter((r) => {
+        const hasPayment = Boolean(toSortableIsoDate(r?.paymentDate));
         switch (activeTab) {
           case "club":
-            return r.paymentDate && r.gliderClass === "club";
+            return hasPayment && r.gliderClass === "club";
           case "combi":
-            return r.paymentDate && r.gliderClass === "combi";
+            return hasPayment && r.gliderClass === "combi";
           default:
             return true;
         }
       });
   }, [racerList, searchQuery, activeTab]);
+
+  const sortedRacers = useMemo(() => sortRacersByPaymentAndOrder(filteredBase), [filteredBase]);
 
   const datatableData = useMemo(() => {
     const columns = [
@@ -71,14 +47,13 @@ const RacerList = ({ racerList, loading = false }) => {
       { label: t("racerList.colClub"), field: "club", sort: true },
       { label: t("racerList.colGlider"), field: "glider", sort: true },
       { label: t("racerList.colImatriculation"), field: "imatriculation", sort: false },
-      { label: t("racerList.colStartCode"), field: "startCode", sort: false },
+      { label: t("racerList.colStartCode"), field: "startCode", sort: true },
       { label: t("racerList.colClass"), field: "gliderClass", sort: true, columnSelector: "glider-class-cell" },
       { label: t("racerList.colPaymentDate"), field: "paymentDate", sort: true },
     ];
 
-    const rows = filteredBase.map((r, idx) => {
+    const rows = sortedRacers.map((r, idx) => {
       const iso = r.paymentDate ? toSortableIsoDate(r.paymentDate) : "";
-      const paymentSort = iso || EMPTY_DATE_SENTINEL;
 
       return {
         index: idx + 1,
@@ -90,12 +65,11 @@ const RacerList = ({ racerList, loading = false }) => {
         startCode: r.startCode ?? "-",
         gliderClass: r.gliderClass ?? "-",
         paymentDate: iso || "-",
-        _paymentDateSort: paymentSort,
       };
     });
 
     return { columns, rows };
-  }, [filteredBase, t]);
+  }, [sortedRacers, t]);
 
   const format = (field, value) => {
     if (field !== "gliderClass") return undefined;
