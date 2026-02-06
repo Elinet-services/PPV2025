@@ -43,6 +43,12 @@
   border-radius: 6px;
 }
 
+/* Home icon in desktop navbar: match menu text height */
+.header-container .navbar-brand .home-nav-icon {
+  font-size: 1.05rem;
+  line-height: 1;
+}
+
 /* "Návody" as slightly separated last item (not as far as Login) */
 .header-container .navbar-nav .nav-item-guides {
   padding-left: 16px;

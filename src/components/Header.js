@@ -170,7 +170,7 @@ const Header = () => {
           <MDBRow className="w-100 align-items-center g-0">
             <MDBCol md="9" className="d-flex align-items-center">
               <NavLink className="navbar-brand d-none d-md-inline-block" to="/">
-                <MDBIcon fas icon="home" size="lg" />
+                <MDBIcon fas icon="house" className="home-nav-icon" />
               </NavLink>
 
               <MDBNavbarToggler
