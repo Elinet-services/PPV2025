@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { sha256 } from "node-forge";
 
 import { getEmail, processRequest } from "../services/connection";
+import { clearLocalizedValidityOnInput, handleLocalizedValidityOnInvalid } from "../services/formValidation";
 
 const initialFormState = {
   oldPassword: "",
@@ -14,6 +15,8 @@ const initialFormState = {
 const UserChangePassword = (params) => {
   const { t } = useTranslation();
   const [formData, setFormData] = useState(initialFormState);
+  const handleInvalidCapture = (event) => handleLocalizedValidityOnInvalid(event, t);
+  const handleInputCapture = (event) => clearLocalizedValidityOnInput(event);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -67,7 +70,7 @@ const UserChangePassword = (params) => {
           {t("changePassword.title")}
         </MDBTypography>
 
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} onInvalidCapture={handleInvalidCapture} onInputCapture={handleInputCapture}>
           <MDBRow className="g-3 align-items-end">
             <MDBCol md="4">
               <MDBInput

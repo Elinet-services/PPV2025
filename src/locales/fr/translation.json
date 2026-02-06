@@ -9,7 +9,12 @@
       "de": "Allemand",
       "fr": "Français"
     },
-    "userFallback": "Utilisateur"
+    "userFallback": "Utilisateur",
+    "loading": "Chargement...",
+    "validation": {
+      "required": "Ce champ est obligatoire.",
+      "invalidEmail": "Saisissez une adresse e-mail valide."
+    }
   },
   "nav": {
     "home": "Accueil",

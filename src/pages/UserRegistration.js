@@ -9,6 +9,7 @@ import { AppContext } from "../App";
 import ClubTypeahead from "../components/ClubTypeahead";
 import { AEROKLUBY } from "../constants/aeroclubs";
 import { domainName, getEmail, getToken, processRequest } from "../services/connection";
+import { clearLocalizedValidityOnInput, handleLocalizedValidityOnInvalid } from "../services/formValidation";
 import {
   DEFAULT_PHONE_COUNTRY,
   detectPhoneCountry,
@@ -49,6 +50,8 @@ const UserRegistration = (params) => {
   const [phoneCountry, setPhoneCountry] = useState(DEFAULT_PHONE_COUNTRY);
   const [raceListData, setRaceListData] = useState([]);
   const isPhoneActive = isPhoneFocused || Boolean(formData.phone);
+  const handleInvalidCapture = (event) => handleLocalizedValidityOnInvalid(event, t);
+  const handleInputCapture = (event) => clearLocalizedValidityOnInput(event);
 
   const setUserData = useCallback((domain, userParams) => {
     if (userParams === undefined) {
@@ -271,7 +274,7 @@ const UserRegistration = (params) => {
         </MDBRow>
       )}
 
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} onInvalidCapture={handleInvalidCapture} onInputCapture={handleInputCapture}>
         {isLogged && !isRegistered ? (
           <MDBRow className="mb-3">
             <MDBCol md="3">

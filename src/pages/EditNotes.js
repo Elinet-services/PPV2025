@@ -5,6 +5,7 @@ import { useTranslation } from "react-i18next";
 
 import { AppContext } from "../App";
 import { processRequest } from "../services/connection";
+import { clearLocalizedValidityOnInput, handleLocalizedValidityOnInvalid } from "../services/formValidation";
 
 const getNow = () => {
   const now = new Date();
@@ -17,6 +18,8 @@ const getNow = () => {
 const Notes = () => {
   const app = useContext(AppContext);
   const { t } = useTranslation();
+  const handleInvalidCapture = (event) => handleLocalizedValidityOnInvalid(event, t);
+  const handleInputCapture = (event) => clearLocalizedValidityOnInput(event);
 
   const [formData, setFormData] = useState({
     rowNr: 0,
@@ -168,7 +171,7 @@ const Notes = () => {
       <MDBRow>
         <div className="p-3"></div>
       </MDBRow>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} onInvalidCapture={handleInvalidCapture} onInputCapture={handleInputCapture}>
         <MDBRow>
           <MDBCol md="4">
             <MDBInput name="date" id="date" value={formData.dateTime} label={t("backoffice.notes.datetime")} disabled />

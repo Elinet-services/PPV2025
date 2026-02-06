@@ -9,7 +9,12 @@
       "de": "German",
       "fr": "French"
     },
-    "userFallback": "User"
+    "userFallback": "User",
+    "loading": "Loading...",
+    "validation": {
+      "required": "This field is required.",
+      "invalidEmail": "Enter a valid email address."
+    }
   },
   "nav": {
     "home": "Home",

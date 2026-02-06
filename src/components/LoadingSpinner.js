@@ -12,13 +12,17 @@ const LoadingSpinner = ({
   const parentRef = useRef(null);
 
   return (
-    <div ref={parentRef} className={className} style={{ height, width, zIndex, ...style }}>
+    <div ref={parentRef} className={className} style={{ position: "relative", height, width, zIndex, ...style }}>
       <MDBLoadingManagement
         backdropOpacity={0.1}
         spinnerElement={<MDBIcon className="loading-icon" fas icon="spinner" size="2x" spin />}
         parentRef={parentRef}
       />
-      {label ? <span className="visually-hidden">{label}</span> : null}
+      {label ? (
+        <div className="loading-label" role="status" aria-live="polite">
+          {label}
+        </div>
+      ) : null}
     </div>
   );
 };

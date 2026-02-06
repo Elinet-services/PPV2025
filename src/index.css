@@ -17,6 +17,17 @@ code {
   opacity: 0.1;
 }
 
+.loading-label {
+  position: absolute;
+  left: 50%;
+  top: calc(50% + 2rem);
+  transform: translateX(-50%);
+  color: #495057;
+  font-size: 0.9rem;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
 .collapse-content {
   display: flex;
   align-items: baseline;

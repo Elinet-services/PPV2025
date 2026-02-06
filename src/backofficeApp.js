@@ -1,6 +1,7 @@
 import { useContext, useState, useEffect, lazy, Suspense } from "react";
 import { Routes, Route } from "react-router-dom";
 import { MDBContainer } from "mdb-react-ui-kit";
+import { useTranslation } from "react-i18next";
 
 import Header from "./components/BackofficeHeader.js";
 import Footer from "./components/BackofficeFooter.js";
@@ -13,6 +14,7 @@ const EditNotes = lazy(() => import("./pages/EditNotes.js"));
 const UserLogin = lazy(() => import("./pages/UserLogin.js"));
 
 const BackofficeApp = () => {
+  const { t } = useTranslation();
   const app = useContext(AppContext);
   const [menuItems, setMenuItems] = useState([]);
 
@@ -35,7 +37,7 @@ const BackofficeApp = () => {
       <Header menuItems={menuItems} logout={app.logout} />
 
       <MDBContainer className="content-container no-logos">
-        <Suspense fallback={<LoadingSpinner className="my-5" height="100px" />}>
+        <Suspense fallback={<LoadingSpinner className="my-5" height="100px" label={t("common.loading")} />}>
           <Routes>
             <Route path="documents" element={<DocumentList />} />
             <Route path="racerlist" element={<RacerListPage />} /> {/* ✅ FIX */}

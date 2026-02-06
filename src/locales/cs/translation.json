@@ -9,7 +9,12 @@
       "de": "Deutsch",
       "fr": "Français"
     },
-    "userFallback": "Uživatel"
+    "userFallback": "Uživatel",
+    "loading": "Načítám...",
+    "validation": {
+      "required": "Toto pole je povinné.",
+      "invalidEmail": "Zadejte platnou e-mailovou adresu."
+    }
   },
   "nav": {
     "home": "Domů",

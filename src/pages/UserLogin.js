@@ -5,6 +5,7 @@ import { useTranslation } from "react-i18next";
 import { sha256 } from "node-forge";
 
 import { processRequest, resetCookies, setCookies } from "../services/connection";
+import { clearLocalizedValidityOnInput, handleLocalizedValidityOnInvalid } from "../services/formValidation";
 
 const initialFormState = {
   email: "",
@@ -16,6 +17,8 @@ const Login = (params) => {
   const [formData, setFormData] = useState(initialFormState);
   const [action, setAction] = useState("login");
   const navigate = useNavigate();
+  const handleInvalidCapture = (event) => handleLocalizedValidityOnInvalid(event, t);
+  const handleInputCapture = (event) => clearLocalizedValidityOnInput(event);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -62,7 +65,7 @@ const Login = (params) => {
     <MDBContainer className="my-5">
       {action === "login" ? (
         <section>
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit} onInvalidCapture={handleInvalidCapture} onInputCapture={handleInputCapture}>
             <MDBRow className="g-3 align-items-end">
               <MDBCol md="4">
                 <MDBInput
@@ -112,7 +115,7 @@ const Login = (params) => {
             {t("login.resetTitle")}
           </MDBTypography>
 
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit} onInvalidCapture={handleInvalidCapture} onInputCapture={handleInputCapture}>
             <MDBRow className="g-3 align-items-end">
               <MDBCol md="4">
                 <MDBInput

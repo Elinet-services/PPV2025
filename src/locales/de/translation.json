@@ -9,7 +9,12 @@
       "de": "Deutsch",
       "fr": "Französisch"
     },
-    "userFallback": "Benutzer"
+    "userFallback": "Benutzer",
+    "loading": "Wird geladen...",
+    "validation": {
+      "required": "Dieses Feld ist erforderlich.",
+      "invalidEmail": "Geben Sie eine gültige E-Mail-Adresse ein."
+    }
   },
   "nav": {
     "home": "Start",

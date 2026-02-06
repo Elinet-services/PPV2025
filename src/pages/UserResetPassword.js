@@ -5,6 +5,7 @@ import { useTranslation } from "react-i18next";
 import { sha256 } from "node-forge";
 
 import { processRequest } from "../services/connection";
+import { clearLocalizedValidityOnInput, handleLocalizedValidityOnInvalid } from "../services/formValidation";
 
 const initialFormState = {
   token: "",
@@ -16,6 +17,8 @@ const ResetPassword = (params) => {
   const { t } = useTranslation();
   const [formData, setFormData] = useState(initialFormState);
   const navigate = useNavigate();
+  const handleInvalidCapture = (event) => handleLocalizedValidityOnInvalid(event, t);
+  const handleInputCapture = (event) => clearLocalizedValidityOnInput(event);
 
   const resetToken = new URLSearchParams(useLocation().search).get("resetToken");
 
@@ -70,7 +73,7 @@ const ResetPassword = (params) => {
           {t("resetPassword.title")}
         </MDBTypography>
 
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} onInvalidCapture={handleInvalidCapture} onInputCapture={handleInputCapture}>
           <MDBRow className="g-3 align-items-end">
             <MDBCol md="4">
               <MDBInput
