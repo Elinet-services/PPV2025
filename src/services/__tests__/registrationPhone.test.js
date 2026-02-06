@@ -81,6 +81,16 @@ describe("registrationPhone helpers", () => {
     });
   });
 
+  test("validateRegistrationPhone: accepts possible UK number even when not strictly valid", () => {
+    const result = validateRegistrationPhone("+44 7700 900321", "GB");
+
+    expect(result).toEqual({
+      isValid: true,
+      errorKey: "",
+      normalizedPhone: "+447700900321",
+    });
+  });
+
   test("detectPhoneCountry: detects country from valid international value", () => {
     expect(detectPhoneCountry("+4915123456789", DEFAULT_PHONE_COUNTRY)).toBe("DE");
   });

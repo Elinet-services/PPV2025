@@ -137,3 +137,19 @@ test("submits valid UK phone and sends normalized value", async () => {
   expect(payload.phone).toBe("+447912345678");
   expect(screen.queryByText("Enter a valid phone number.")).not.toBeInTheDocument();
 });
+
+test("submits possible UK phone and sends normalized value", async () => {
+  const user = userEvent.setup();
+  processRequest.mockResolvedValueOnce({ isError: false, responseData: {} });
+  const { container } = renderUserRegistration();
+
+  await user.type(screen.getByLabelText("Phone"), "+44 7700 900321");
+  fireEvent.submit(container.querySelector("form"));
+
+  await waitFor(() => expect(processRequest).toHaveBeenCalledTimes(1));
+
+  const [payload, action] = processRequest.mock.calls[0];
+  expect(action).toBe("registration");
+  expect(payload.phone).toBe("+447700900321");
+  expect(screen.queryByText("Enter a valid phone number.")).not.toBeInTheDocument();
+});

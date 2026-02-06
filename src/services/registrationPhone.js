@@ -41,7 +41,7 @@ export const validateRegistrationPhone = (phoneValue, fallbackCountry = DEFAULT_
   }
 
   const parsed = parsePhoneNumberFromString(normalizedPhone, fallbackCountry);
-  if (!parsed || !parsed.isValid()) {
+  if (!parsed || (!parsed.isValid() && !parsed.isPossible())) {
     return {
       isValid: false,
       errorKey: "registration.invalidPhone",
