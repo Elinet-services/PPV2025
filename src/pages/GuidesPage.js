@@ -110,10 +110,7 @@ const GuidesPage = () => {
     <MDBContainer className="my-5">
       <MDBTypography className="mb-4 text-start">
         {"Stručné návody k přihlášení, resetu hesla a editaci přihlášky. "}
-        {"Většina odkazů vás přesměruje na příslušnou stránku aplikace."}
-      </MDBTypography>
-
-      <MDBTypography className="mb-4 text-start">
+        {"Většina odkazů vás přesměruje na příslušnou stránku aplikace. "}
         {"Pokud bude v nápovědě něco chybět nebo něco nebude fungovat, kontaktujte nás na "}
         <a href="mailto:poradatel@ppvcup.cz">poradatel@ppvcup.cz</a>
         {"."}
