@@ -32,13 +32,15 @@ const Login = (params) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const normalizedEmail = formData.email.trim().toLowerCase();
     resetCookies();
-
-    const sha = sha256.create().update(formData.email.toLowerCase() + formData.password);
 
     const updatedFormData = {
       ...formData,
-      password: action === "login" ? sha.digest().toHex() : "",
+      email: normalizedEmail,
+      password: action === "login"
+        ? sha256.create().update(normalizedEmail + formData.password).digest().toHex()
+        : "",
     };
 
     const response = await processRequest(
