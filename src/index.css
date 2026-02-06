@@ -43,6 +43,36 @@ li.nav-item a.nav-link.active {
   border-radius: 6px;
 }
 
+/* Actualities: enforce site-wide typography (some notes come with inline styles) */
+#actualities,
+#actualities .list-group-item {
+  font-family: inherit;
+  font-size: 1rem;
+  line-height: 1.45;
+}
+
+#actualities .actualities-meta {
+  font-family: inherit;
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0 0 0.5rem 0;
+}
+
+#actualities .actualities-body,
+#actualities .actualities-body * {
+  font-family: inherit !important;
+  font-size: inherit !important;
+  line-height: inherit !important;
+}
+
+#actualities .actualities-body p {
+  margin-bottom: 0.5rem;
+}
+
+#actualities .actualities-body p:last-child {
+  margin-bottom: 0;
+}
+
 /* Registration phone input (single field with floating label) */
 .registration-phone-field {
   position: relative;

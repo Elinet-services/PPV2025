@@ -57,10 +57,11 @@ const Actualities = ({ noteList }) => {
         <MDBListGroup>
           {filteredNoteList.map(({ date, header, bodyText }, index) => (
             <MDBListGroupItem key={index}>
-              <h6>
+              <h6 className="actualities-meta">
                 {formatDate(date)} - <b>{header}</b>
               </h6>
               <span
+                className="actualities-body"
                 dangerouslySetInnerHTML={{
                   __html: decodeURIComponent(bodyText),
                 }}
