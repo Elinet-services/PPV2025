@@ -1,6 +1,7 @@
 {
-  "short_name": "PPV2025",
-  "name": "Plachtařské závody PPV 2025",
+  "short_name": "PPVCUP",
+  "name": "Plachtarsky Pohar Vysociny 2026 (PPVCUP)",
+  "description": "Oficialni web PPVCUP 2026",
   "icons": [
     {
       "src": "favicon.ico",
@@ -8,8 +9,9 @@
       "type": "image/x-icon"
     }
   ],
-  "start_url": ".",
+  "start_url": "/",
+  "scope": "/",
   "display": "standalone",
-  "theme_color": "#000000",
+  "theme_color": "#0d6efd",
   "background_color": "#ffffff"
 }
