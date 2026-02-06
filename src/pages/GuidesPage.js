@@ -122,6 +122,7 @@ const GuidesPage = () => {
       <div className="mb-4">
         <MDBInput
           label="Vyhledat v nápovědě"
+          aria-label="Vyhledat v nápovědě"
           type="search"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
