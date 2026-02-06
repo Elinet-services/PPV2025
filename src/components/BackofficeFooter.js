@@ -4,7 +4,7 @@ const Footer = () => (
   <MDBContainer>
     <MDBFooter className="text-center bg-light text-muted py-2">
       <MDBContainer>
-        <div className="footer-credit-bar mt-0" style={{ marginTop: 3 }}>
+        <div className="footer-credit-bar mt-0" style={{ marginTop: 1.5 }}>
           <div className="text-center py-1">
             <small>
               {"Web realizovala společnost "}
