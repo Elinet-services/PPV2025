@@ -1,8 +1,10 @@
 import { useState } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
-import { MDBContainer, MDBRow, MDBCol, MDBInput, MDBBtn, MDBTypography } from "mdb-react-ui-kit";
+import { useLocation, useNavigate } from "react-router-dom";
+import { MDBBtn, MDBCol, MDBContainer, MDBInput, MDBRow, MDBTypography } from "mdb-react-ui-kit";
+import { useTranslation } from "react-i18next";
 import { sha256 } from "node-forge";
-import { processRequest } from "../services/connection.js";
+
+import { processRequest } from "../services/connection";
 
 const initialFormState = {
   token: "",
@@ -11,6 +13,7 @@ const initialFormState = {
 };
 
 const ResetPassword = (params) => {
+  const { t } = useTranslation();
   const [formData, setFormData] = useState(initialFormState);
   const navigate = useNavigate();
 
@@ -20,12 +23,12 @@ const ResetPassword = (params) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
     if (e.target.name === "password") {
       if (e.target.value.length === 0) e.target.setCustomValidity("");
-      else if (e.target.value.length < 8) e.target.setCustomValidity("Heslo mus\u00ed m\u00edt d\u00e9lku alespo\u0148 8 znak\u016f");
+      else if (e.target.value.length < 8) e.target.setCustomValidity(t("login.passwordMin8Error"));
       else e.target.setCustomValidity("");
     }
     if (e.target.name === "rePassword") {
       if (e.target.value.length === 0) e.target.setCustomValidity("");
-      else if (e.target.value !== formData.password) e.target.setCustomValidity("Hesla se neshoduj\u00ed");
+      else if (e.target.value !== formData.password) e.target.setCustomValidity(t("resetPassword.passwordsDontMatch"));
       else e.target.setCustomValidity("");
     }
   };
@@ -33,7 +36,9 @@ const ResetPassword = (params) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const sha = sha256.create().update(hexDecode(resetToken.substring(resetToken.indexOf("g") + 1)) + formData.password);
+    const sha = sha256
+      .create()
+      .update(hexDecode(resetToken.substring(resetToken.indexOf("g") + 1)) + formData.password);
 
     const updatedFormData = {
       ...formData,
@@ -62,7 +67,7 @@ const ResetPassword = (params) => {
     <MDBContainer className="my-5">
       <section>
         <MDBTypography tag="h4" className="mb-4 text-start">
-          {"Nastaven\u00ed hesla"}
+          {t("resetPassword.title")}
         </MDBTypography>
 
         <form onSubmit={handleSubmit}>
@@ -74,7 +79,7 @@ const ResetPassword = (params) => {
                 onChange={handleChange}
                 value={formData.password}
                 type="password"
-                label={"Heslo (min 8 znak\u016f)"}
+                label={t("resetPassword.passwordMin8")}
                 required
                 autoComplete="new-password"
               />
@@ -86,7 +91,7 @@ const ResetPassword = (params) => {
                 onChange={handleChange}
                 value={formData.rePassword}
                 type="password"
-                label={"Heslo pro kontrolu"}
+                label={t("resetPassword.passwordCheck")}
                 required
                 autoComplete="new-password"
               />
@@ -96,7 +101,7 @@ const ResetPassword = (params) => {
           <MDBRow className="g-3 mt-1">
             <MDBCol md="4">
               <MDBBtn type="submit" color="primary" className="w-100 px-4 login-btn">
-                {"Nastavit nov\u00e9 heslo"}
+                {t("resetPassword.setNewPassword")}
               </MDBBtn>
             </MDBCol>
           </MDBRow>

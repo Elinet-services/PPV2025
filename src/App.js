@@ -10,6 +10,7 @@ import {
   MDBAlert,
   MDBSpinner,
 } from "mdb-react-ui-kit";
+import { useTranslation } from "react-i18next";
 
 import UserApp from "./userApp";
 import BackofficeApp from "./backofficeApp.js";
@@ -26,6 +27,7 @@ import {
 export const AppContext = React.createContext(null);
 
 const App = () => {
+  const { t } = useTranslation();
   const [loading, setLoading] = useState(false);
   const [alertMessage, showAlerMessage] = useState(false);
   const [error, setError] = useState(false);
@@ -109,7 +111,7 @@ const App = () => {
         <MDBModalDialog size="lg">
           <MDBModalContent>
             <MDBModalHeader>
-              <MDBModalTitle>Odesílání do DB</MDBModalTitle>
+              <MDBModalTitle>{t("app.sendingToDb")}</MDBModalTitle>
             </MDBModalHeader>
             <MDBModalBody>
               <div className="text-center">

@@ -1,123 +1,110 @@
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import {
-  MDBContainer,
-  MDBInput,
-  MDBTypography,
-  MDBListGroup,
-  MDBListGroupItem,
-} from "mdb-react-ui-kit";
+import { MDBContainer, MDBInput, MDBListGroup, MDBListGroupItem, MDBTypography } from "mdb-react-ui-kit";
+import { useTranslation } from "react-i18next";
 
 const GuidesPage = () => {
+  const { t } = useTranslation();
   const [query, setQuery] = useState("");
 
   const blocks = useMemo(
     () => [
       {
         id: "login",
-        title: "Přihlášení",
+        title: t("guides.blocks.login.title"),
+        searchText: [t("guides.blocks.login.title"), t("guides.blocks.login.i1a"), t("guides.blocks.login.i1link"), t("guides.blocks.login.i2")].join(" "),
         items: [
           <>
-            {"Otevřete stránku "}
-            <Link to="/login">{"Přihlášení"}</Link>
-            {"."}
+            {`${t("guides.blocks.login.i1a")} `}
+            <Link to="/login">{t("guides.blocks.login.i1link")}</Link>
+            {` ${t("guides.blocks.login.i1b")}`}
           </>,
-          "Zadejte e‑mail a heslo a klikněte na „Přihlásit“.",
+          t("guides.blocks.login.i2"),
         ],
       },
       {
-        id: "editace",
-        title: "Editace přihlášky závodníka",
+        id: "edit",
+        title: t("guides.blocks.edit.title"),
+        searchText: [t("guides.blocks.edit.title"), t("guides.blocks.edit.i1"), t("guides.blocks.edit.i2"), t("guides.blocks.edit.i3a"), t("guides.blocks.edit.i3link")].join(" "),
         items: [
-          "Po přihlášení se v menu zobrazí položka „Editace přihlášky závodníka“.",
-          "Klikněte na ni, upravte údaje a změny uložte.",
+          t("guides.blocks.edit.i1"),
+          t("guides.blocks.edit.i2"),
           <>
-            {"Stránka editace je dostupná také přes "}
-            <Link to="/registration">{"Registraci / Editaci přihlášky"}</Link>
-            {" (po přihlášení)."}
+            {`${t("guides.blocks.edit.i3a")} `}
+            <Link to="/registration">{t("guides.blocks.edit.i3link")}</Link>
+            {` ${t("guides.blocks.edit.i3b")}`}
           </>,
         ],
       },
       {
-        id: "zapomenute",
-        title: "Zapomenuté heslo (odeslání odkazu)",
+        id: "forgot",
+        title: t("guides.blocks.forgot.title"),
+        searchText: [t("guides.blocks.forgot.title"), t("guides.blocks.forgot.i1a"), t("guides.blocks.forgot.i1link"), t("guides.blocks.forgot.i2"), t("guides.blocks.forgot.i3")].join(" "),
         items: [
           <>
-            {"Na stránce "}
-            <Link to="/login">{"Přihlášení"}</Link>
-            {" klikněte na „Zapomenuté heslo“."}
+            {`${t("guides.blocks.forgot.i1a")} `}
+            <Link to="/login">{t("guides.blocks.forgot.i1link")}</Link>
+            {` ${t("guides.blocks.forgot.i1b")}`}
           </>,
-          "Zadejte e‑mail a klikněte na „Odeslat odkaz“.",
-          "Do e‑mailu vám přijde zpráva s odkazem pro reset hesla.",
+          t("guides.blocks.forgot.i2"),
+          t("guides.blocks.forgot.i3"),
         ],
       },
       {
         id: "reset",
-        title: "Reset hesla (nastavení nového hesla)",
+        title: t("guides.blocks.reset.title"),
+        searchText: [t("guides.blocks.reset.title"), t("guides.blocks.reset.i1"), t("guides.blocks.reset.i2"), t("guides.blocks.reset.i3a"), t("guides.blocks.reset.i3link")].join(" "),
         items: [
-          "Otevřete odkaz z e‑mailu (vede na stránku „Nastavení hesla“).",
-          "Zadejte nové heslo (min. 8 znaků) a potvrďte ho ve druhém poli.",
+          t("guides.blocks.reset.i1"),
+          t("guides.blocks.reset.i2"),
           <>
-            {"Klikněte na „Nastavit nové heslo“. Poté se vraťte na "}
-            <Link to="/login">{"Přihlášení"}</Link>
-            {" a přihlaste se novým heslem."}
+            {`${t("guides.blocks.reset.i3a")} `}
+            <Link to="/login">{t("guides.blocks.reset.i3link")}</Link>
+            {` ${t("guides.blocks.reset.i3b")}`}
           </>,
         ],
       },
       {
-        id: "zmena",
-        title: "Změna hesla po přihlášení",
+        id: "change",
+        title: t("guides.blocks.change.title"),
+        searchText: [t("guides.blocks.change.title"), t("guides.blocks.change.i1a"), t("guides.blocks.change.i1link")].join(" "),
         items: [
           <>
-            {"Po přihlášení otevřete uživatelské menu a zvolte „Změna hesla“, nebo přejděte přímo na "}
-            <Link to="/changepassword">{"Změnu hesla"}</Link>
-            {"."}
+            {`${t("guides.blocks.change.i1a")} `}
+            <Link to="/changepassword">{t("guides.blocks.change.i1link")}</Link>
+            {t("guides.blocks.change.i1b")}
           </>,
         ],
       },
       {
-        id: "potize",
-        title: "Časté potíže (rychlá kontrola)",
-        items: [
-          "E‑mail zadávejte bez mezer (ideálně malými písmeny).",
-          "Nové heslo musí mít minimálně 8 znaků a obě pole se musí shodovat.",
-          "Použijte nejnovější e‑mail s odkazem na reset hesla (starší odkaz může být neplatný).",
-        ],
+        id: "issues",
+        title: t("guides.blocks.issues.title"),
+        searchText: [t("guides.blocks.issues.title"), t("guides.blocks.issues.i1"), t("guides.blocks.issues.i2"), t("guides.blocks.issues.i3")].join(" "),
+        items: [t("guides.blocks.issues.i1"), t("guides.blocks.issues.i2"), t("guides.blocks.issues.i3")],
       },
     ],
-    []
+    [t]
   );
 
   const visibleBlocks = useMemo(() => {
     const q = query.trim().toLowerCase();
     if (!q) return blocks;
 
-    return blocks.filter((block) => {
-      const haystack = [
-        block.title,
-        ...block.items.map((item) => (typeof item === "string" ? item : "")),
-      ]
-        .join(" ")
-        .toLowerCase();
-
-      return haystack.includes(q);
-    });
+    return blocks.filter((block) => block.searchText.toLowerCase().includes(q));
   }, [blocks, query]);
 
   return (
     <MDBContainer className="my-5">
       <MDBTypography className="mb-4 text-start">
-        {"Stručné návody k přihlášení, resetu hesla a editaci přihlášky. "}
-        {"Většina odkazů vás přesměruje na příslušnou stránku aplikace. "}
-        {"Pokud bude v nápovědě něco chybět nebo něco nebude fungovat, kontaktujte nás na "}
+        {`${t("guides.intro")} `}
         <a href="mailto:poradatel@ppvcup.cz">poradatel@ppvcup.cz</a>
         {"."}
       </MDBTypography>
 
       <div className="mb-4">
         <MDBInput
-          label="Vyhledat v nápovědě"
-          aria-label="Vyhledat v nápovědě"
+          label={t("guides.searchLabel")}
+          aria-label={t("guides.searchLabel")}
           type="search"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
@@ -126,8 +113,7 @@ const GuidesPage = () => {
 
       {visibleBlocks.length === 0 ? (
         <MDBTypography className="text-start">
-          {"Nic nenalezeno. Zkuste jiné heslo (např. „heslo“, „reset“, „editace“). "}
-          {"Případně nám napište na "}
+          {`${t("guides.noResultsPrefix")} `}
           <a href="mailto:poradatel@ppvcup.cz">poradatel@ppvcup.cz</a>
           {"."}
         </MDBTypography>
@@ -139,9 +125,7 @@ const GuidesPage = () => {
             </MDBTypography>
             <MDBListGroup className="mb-2">
               {block.items.map((item, index) => (
-                <MDBListGroupItem key={index}>
-                  {typeof item === "string" ? item : item}
-                </MDBListGroupItem>
+                <MDBListGroupItem key={`${block.id}-${index}`}>{item}</MDBListGroupItem>
               ))}
             </MDBListGroup>
           </div>

@@ -1,6 +1,6 @@
 [
-  { "label": "Dokumenty", "path": "?action=documentmanagement", "external": "true", "backoffice": "true" },
-  { "label": "Editace novinek", "path": "/backoffice/notes"},
-  { "label": "Seznam závodníků", "path": "/backoffice/racerlist"},
-  { "label": "Editace závodníků", "path": "?action=racermanagement", "external": "true", "backoffice": "true" }
+  { "labelKey": "menu.documents", "path": "?action=documentmanagement", "external": "true", "backoffice": "true" },
+  { "labelKey": "menu.editNews", "path": "/backoffice/notes"},
+  { "labelKey": "menu.racerList", "path": "/backoffice/racerlist"},
+  { "labelKey": "menu.editRacers", "path": "?action=racermanagement", "external": "true", "backoffice": "true" }
 ]

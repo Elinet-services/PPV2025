@@ -1,5 +1,7 @@
 User-agent: *
 Allow: /
 Disallow: /backoffice
+Disallow: /#/backoffice
 
 Sitemap: https://ppvcup.cz/sitemap.xml
+Host: ppvcup.cz

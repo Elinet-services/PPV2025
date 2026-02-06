@@ -1,12 +1,7 @@
 import { useMemo, useState } from "react";
-import {
-  MDBContainer,
-  MDBInput,
-  MDBTabs,
-  MDBTabsItem,
-  MDBTabsLink,
-  MDBDatatable,
-} from "mdb-react-ui-kit";
+import { MDBDatatable, MDBInput, MDBTabs, MDBTabsItem, MDBTabsLink, MDBContainer } from "mdb-react-ui-kit";
+import { useTranslation } from "react-i18next";
+
 import "./RacerList.css";
 
 const DEFAULT_SORT_FIELD = "paymentDate";
@@ -18,11 +13,9 @@ function toSortableIsoDate(value) {
 
   const str = String(value).trim();
 
-  // ISO: YYYY-MM-DD (nebo YYYY-MM-DDTHH:mm...)
   const isoMatch = str.match(/^(\d{4})-(\d{2})-(\d{2})/);
   if (isoMatch) return `${isoMatch[1]}-${isoMatch[2]}-${isoMatch[3]}`;
 
-  // CZ: DD.MM.YYYY / D.M.YYYY
   const czMatch = str.match(/^(\d{1,2})\.(\d{1,2})\.(\d{4})$/);
   if (czMatch) {
     const dd = czMatch[1].padStart(2, "0");
@@ -31,7 +24,6 @@ function toSortableIsoDate(value) {
     return `${yyyy}-${mm}-${dd}`;
   }
 
-  // fallback
   const d = new Date(str);
   if (!Number.isNaN(d.getTime())) {
     const yyyy = String(d.getFullYear());
@@ -43,7 +35,8 @@ function toSortableIsoDate(value) {
   return "";
 }
 
-const RacerList = ({ racerList, loading = false, lastUpdated = null }) => {
+const RacerList = ({ racerList, loading = false }) => {
+  const { t } = useTranslation();
   const [searchQuery, setSearchQuery] = useState("");
   const [activeTab, setActiveTab] = useState("all");
 
@@ -56,9 +49,7 @@ const RacerList = ({ racerList, loading = false, lastUpdated = null }) => {
       .filter((r) => r?.name && r?.surname)
       .filter((r) => {
         if (!q) return true;
-        return Object.values(r).some((v) =>
-          v?.toString().toLowerCase().includes(q)
-        );
+        return Object.values(r).some((v) => v?.toString().toLowerCase().includes(q));
       })
       .filter((r) => {
         switch (activeTab) {
@@ -67,22 +58,22 @@ const RacerList = ({ racerList, loading = false, lastUpdated = null }) => {
           case "combi":
             return r.paymentDate && r.gliderClass === "combi";
           default:
-            return true; // all
+            return true;
         }
       });
   }, [racerList, searchQuery, activeTab]);
 
   const datatableData = useMemo(() => {
     const columns = [
-      { label: "#", field: "index", sort: true },
-      { label: "Jméno", field: "name", sort: false },
-      { label: "Příjmení", field: "surname", sort: true },
-      { label: "Aeroklub", field: "club", sort: true },
-      { label: "Typ letadla", field: "glider", sort: true },
-      { label: "Imatrikulace", field: "imatriculation", sort: false },
-      { label: "Startovní znak", field: "startCode", sort: false },
-      { label: "Třída", field: "gliderClass", sort: true, columnSelector: "glider-class-cell" },
-      { label: "Datum platby", field: "paymentDate", sort: true },
+      { label: t("racerList.colNumber"), field: "index", sort: true },
+      { label: t("racerList.colName"), field: "name", sort: false },
+      { label: t("racerList.colSurname"), field: "surname", sort: true },
+      { label: t("racerList.colClub"), field: "club", sort: true },
+      { label: t("racerList.colGlider"), field: "glider", sort: true },
+      { label: t("racerList.colImatriculation"), field: "imatriculation", sort: false },
+      { label: t("racerList.colStartCode"), field: "startCode", sort: false },
+      { label: t("racerList.colClass"), field: "gliderClass", sort: true, columnSelector: "glider-class-cell" },
+      { label: t("racerList.colPaymentDate"), field: "paymentDate", sort: true },
     ];
 
     const rows = filteredBase.map((r, idx) => {
@@ -104,7 +95,7 @@ const RacerList = ({ racerList, loading = false, lastUpdated = null }) => {
     });
 
     return { columns, rows };
-  }, [filteredBase]);
+  }, [filteredBase, t]);
 
   const format = (field, value) => {
     if (field !== "gliderClass") return undefined;
@@ -124,38 +115,24 @@ const RacerList = ({ racerList, loading = false, lastUpdated = null }) => {
 
   return (
     <MDBContainer className="my-5">
-      <MDBInput
-        className="mb-3"
-        label="Vyhledávání"
-        value={searchQuery}
-        onChange={(e) => setSearchQuery(e.target.value)}
-      />
+      <MDBInput className="mb-3" label={t("racerList.search")} value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
 
       <MDBTabs pills fill className="mb-4">
         <MDBTabsItem>
-          <MDBTabsLink
-            onClick={() => setActiveTab("all")}
-            active={activeTab === "all"}
-          >
-            Všichni
+          <MDBTabsLink onClick={() => setActiveTab("all")} active={activeTab === "all"}>
+            {t("racerList.tabAll")}
           </MDBTabsLink>
         </MDBTabsItem>
 
         <MDBTabsItem>
-          <MDBTabsLink
-            onClick={() => setActiveTab("club")}
-            active={activeTab === "club"}
-          >
-            Klub
+          <MDBTabsLink onClick={() => setActiveTab("club")} active={activeTab === "club"}>
+            {t("racerList.tabClub")}
           </MDBTabsLink>
         </MDBTabsItem>
 
         <MDBTabsItem>
-          <MDBTabsLink
-            onClick={() => setActiveTab("combi")}
-            active={activeTab === "combi"}
-          >
-            Kombi
+          <MDBTabsLink onClick={() => setActiveTab("combi")} active={activeTab === "combi"}>
+            {t("racerList.tabCombi")}
           </MDBTabsLink>
         </MDBTabsItem>
       </MDBTabs>
@@ -172,11 +149,11 @@ const RacerList = ({ racerList, loading = false, lastUpdated = null }) => {
           entriesOptions={[50, 100, 200]}
           isLoading={loading}
           loaderClass="bg-primary"
-          loadingMessage="Načítám seznam…"
-          noFoundMessage="Nenalezeny žádné výsledky"
-          rowsText="Řádků na stránku:"
-          allText="Vše"
-          ofText="z"
+          loadingMessage={t("racerList.loading")}
+          noFoundMessage={t("racerList.noResults")}
+          rowsText={t("racerList.rowsText")}
+          allText={t("racerList.allText")}
+          ofText={t("racerList.ofText")}
           sortField={DEFAULT_SORT_FIELD}
           sortOrder={DEFAULT_SORT_ORDER}
           format={format}
@@ -187,4 +164,3 @@ const RacerList = ({ racerList, loading = false, lastUpdated = null }) => {
 };
 
 export default RacerList;
-

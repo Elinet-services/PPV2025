@@ -1,0 +1,234 @@
+{
+  "app": {
+    "sendingToDb": "Envoi vers la base de données"
+  },
+  "common": {
+    "language": {
+      "cs": "Tchèque",
+      "en": "Anglais",
+      "de": "Allemand",
+      "fr": "Français"
+    },
+    "userFallback": "Utilisateur"
+  },
+  "nav": {
+    "home": "Accueil",
+    "openMenu": "Ouvrir le menu",
+    "login": "Connexion",
+    "registrationEdit": "Modifier l'inscription"
+  },
+  "menu": {
+    "registration": "Inscription",
+    "documents": "Documents",
+    "racerList": "Liste des pilotes",
+    "guides": "Aide",
+    "changeDetails": "Modifier les données",
+    "backoffice": "Backoffice",
+    "changePassword": "Changer le mot de passe",
+    "logout": "Se déconnecter",
+    "editNews": "Modifier les actualités",
+    "editRacers": "Modifier les pilotes"
+  },
+  "footer": {
+    "raceDirector": "Directeur de compétition",
+    "meteorologist": "Météorologue",
+    "treasurer": "Trésorier",
+    "chiefJudge": "Juge principal",
+    "juryChair": "Président du jury",
+    "taskSetter": "Task Setter",
+    "websiteByPrefix": "Site réalisé par",
+    "cookies": "Cookies"
+  },
+  "login": {
+    "email": "E-mail",
+    "password": "Mot de passe",
+    "signIn": "Se connecter",
+    "forgotPassword": "Mot de passe oublié",
+    "resetTitle": "Récupération du mot de passe",
+    "sendLink": "Envoyer le lien",
+    "backToLogin": "Retour à la connexion",
+    "passwordMin8Error": "Le mot de passe doit contenir au moins 8 caractères"
+  },
+  "resetPassword": {
+    "title": "Définir le mot de passe",
+    "passwordMin8": "Mot de passe (min. 8 caractères)",
+    "passwordCheck": "Confirmer le mot de passe",
+    "setNewPassword": "Définir un nouveau mot de passe",
+    "passwordsDontMatch": "Les mots de passe ne correspondent pas"
+  },
+  "changePassword": {
+    "title": "Changer le mot de passe",
+    "oldPassword": "Ancien mot de passe",
+    "newPasswordMin8": "Nouveau mot de passe (min. 8 caractères)",
+    "newPasswordCheck": "Confirmer le nouveau mot de passe",
+    "setNewPassword": "Définir un nouveau mot de passe",
+    "passwordMin8Error": "Le mot de passe doit contenir au moins 8 caractères",
+    "sameAsPreviousError": "Le mot de passe est identique au précédent",
+    "passwordsDontMatch": "Les mots de passe ne correspondent pas"
+  },
+  "registration": {
+    "signInHintPrefix": "Si vous avez déjà volé avec nous,",
+    "signInHintLink": "connectez-vous",
+    "signInHintSuffix": ", vous pourrez réutiliser les données des années précédentes.",
+    "previousYears": "Années précédentes",
+    "firstName": "Prénom",
+    "lastName": "Nom",
+    "phone": "Téléphone",
+    "passwordMin8": "Mot de passe (min. 8 caractères)",
+    "passwordCheck": "Confirmer le mot de passe",
+    "aeroclub": "Aéroclub",
+    "gliderType": "Type de planeur",
+    "imatriculation": "Immatriculation",
+    "startCode": "Code de départ",
+    "gliderClassLabel": "Classe de planeur :",
+    "gliderClassClub": "Classe club",
+    "gliderClassCombi": "Classe combinée",
+    "toggleGliderClass": "Changer de classe",
+    "mainLogger": "Logger principal",
+    "backupLogger": "Logger de secours",
+    "submitRegistration": "Envoyer l'inscription",
+    "passwordMin8Error": "Le mot de passe doit contenir au moins 8 caractères",
+    "passwordsDontMatch": "Les mots de passe ne correspondent pas",
+    "fillMainLoggerFirst": "Renseignez d'abord le logger principal, puis le logger de secours.",
+    "invalidPhone": "Saisissez un numéro de téléphone valide.",
+    "phoneRequired": "Le téléphone est obligatoire."
+  },
+  "guides": {
+    "intro": "Guides rapides pour la connexion, la réinitialisation du mot de passe et l'édition de l'inscription. La plupart des liens vous redirigent vers la page correspondante de l'application. Si quelque chose manque dans l'aide ou ne fonctionne pas, contactez-nous à",
+    "searchLabel": "Rechercher dans l'aide",
+    "noResultsPrefix": "Aucun résultat. Essayez un autre mot-clé (ex. mot de passe, reset, édition). Ou contactez-nous à",
+    "blocks": {
+      "login": {
+        "title": "Connexion",
+        "i1a": "Ouvrez la page",
+        "i1link": "Connexion",
+        "i1b": ".",
+        "i2": "Saisissez votre e-mail et mot de passe puis cliquez sur « Se connecter »."
+      },
+      "edit": {
+        "title": "Édition de l'inscription",
+        "i1": "Après connexion, l'élément « Modifier l'inscription » apparaît dans le menu.",
+        "i2": "Cliquez dessus, modifiez les données et enregistrez.",
+        "i3a": "La page d'édition est aussi accessible via",
+        "i3link": "Inscription / Édition",
+        "i3b": "(après connexion)."
+      },
+      "forgot": {
+        "title": "Mot de passe oublié (envoi du lien)",
+        "i1a": "Sur la page",
+        "i1link": "Connexion",
+        "i1b": "cliquez sur « Mot de passe oublié ».",
+        "i2": "Saisissez votre e-mail et cliquez sur « Envoyer le lien ».",
+        "i3": "Vous recevrez un e-mail avec un lien de réinitialisation."
+      },
+      "reset": {
+        "title": "Réinitialisation du mot de passe (nouveau mot de passe)",
+        "i1": "Ouvrez le lien de l'e-mail (vers la page « Définir le mot de passe »).",
+        "i2": "Saisissez un nouveau mot de passe (min. 8 caractères) et confirmez-le dans le second champ.",
+        "i3a": "Cliquez sur « Définir un nouveau mot de passe ». Revenez ensuite à",
+        "i3link": "Connexion",
+        "i3b": "et connectez-vous avec le nouveau mot de passe."
+      },
+      "change": {
+        "title": "Changer le mot de passe après connexion",
+        "i1a": "Après connexion, ouvrez le menu utilisateur et choisissez « Changer le mot de passe », ou allez directement à",
+        "i1link": "Changer le mot de passe",
+        "i1b": "."
+      },
+      "issues": {
+        "title": "Problèmes fréquents (contrôle rapide)",
+        "i1": "Saisissez l'e-mail sans espaces (de préférence en minuscules).",
+        "i2": "Le nouveau mot de passe doit avoir au moins 8 caractères et les deux champs doivent être identiques.",
+        "i3": "Utilisez le lien du dernier e-mail de reset (les anciens liens peuvent être invalides)."
+      }
+    }
+  },
+  "cookieConsent": {
+    "title": "Cookies",
+    "text": "Nous utilisons des cookies nécessaires au fonctionnement du site (ex. connexion). Les cookies optionnels d'analyse/marketing ne sont pas utilisés actuellement ; s'ils sont ajoutés à l'avenir, vous pourrez les activer ici.",
+    "moreInfo": "Plus d'informations",
+    "rejectOptional": "Refuser les cookies optionnels",
+    "necessaryOnly": "Uniquement nécessaires",
+    "allowAll": "Tout autoriser"
+  },
+  "cookiePolicy": {
+    "title": "Cookies",
+    "summaryPrefix": "Ce site utilise des cookies nécessaires à son fonctionnement (ex. connexion et maintien de session). Les cookies optionnels (ex. analytiques ou marketing) ne sont actuellement pas utilisés. Si nous les ajoutons à l'avenir, vous pourrez les accepter/refuser dans la barre cookies. Pour toute question, contactez-nous à",
+    "usedTitle": "Cookies nécessaires utilisés par ce site",
+    "usedIntro": "Ces cookies sont nécessaires pour la connexion et l'utilisation du compte :",
+    "tokenDesc": "jeton de connexion (maintien de session après connexion).",
+    "emailDesc": "e-mail de l'utilisateur connecté (identification dans l'application).",
+    "roleDesc": "rôle utilisateur (ex. utilisateur/admin).",
+    "userNameDesc": "nom utilisateur affiché dans le menu.",
+    "rightsDesc": "droits utilisateur (gestion des accès).",
+    "consentTitle": "Paramètres de consentement",
+    "currentChoice": "Choix actuel",
+    "notSelected": "non sélectionné",
+    "changeChoice": "Modifier le choix des cookies"
+  },
+  "documents": {
+    "loading": "Chargement des documents...",
+    "name": "Nom du document",
+    "inserted": "Date d'ajout",
+    "description": "Description",
+    "action": "Action",
+    "download": "Télécharger"
+  },
+  "actualities": {
+    "latest": "Dernière actualité",
+    "all": "Toutes les actualités",
+    "loading": "Chargement des actualités..."
+  },
+  "racerList": {
+    "search": "Recherche",
+    "tabAll": "Tous",
+    "tabClub": "Club",
+    "tabCombi": "Combi",
+    "colNumber": "#",
+    "colName": "Prénom",
+    "colSurname": "Nom",
+    "colClub": "Aéroclub",
+    "colGlider": "Type de planeur",
+    "colImatriculation": "Immatriculation",
+    "colStartCode": "Code de départ",
+    "colClass": "Classe",
+    "colPaymentDate": "Date de paiement",
+    "loading": "Chargement de la liste…",
+    "noResults": "Aucun résultat trouvé",
+    "rowsText": "Lignes par page :",
+    "allText": "Tout",
+    "ofText": "sur"
+  },
+  "weather": {
+    "loadError": "Échec du chargement des données météo.",
+    "loading": "Chargement des données météo...",
+    "noData": "Aucune donnée météo disponible.",
+    "title": "LKHB Meteo",
+    "updateTime": "Heure de mise à jour",
+    "windDirectionSpeed": "Direction et force du vent",
+    "windGusts": "Rafales",
+    "qnh": "QNH",
+    "regionalQnh": "QNH régional",
+    "airTemp": "Température de l'air",
+    "dewPoint": "Point de rosée",
+    "humidity": "Humidité",
+    "rain": "Précipitations",
+    "sunrise": "Lever du soleil",
+    "sunset": "Coucher du soleil"
+  },
+  "backoffice": {
+    "notes": {
+      "row": "Ligne",
+      "published": "Publié",
+      "datetime": "Date et heure",
+      "caption": "Description",
+      "noDocumentFound": "Document introuvable",
+      "all": "Tout",
+      "rows": "Lignes",
+      "of": "sur",
+      "newMessage": "Nouveau message",
+      "publish": "Publier",
+      "save": "Enregistrer"
+    }
+  }
+}

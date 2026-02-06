@@ -1,0 +1,234 @@
+{
+  "app": {
+    "sendingToDb": "Sending to database"
+  },
+  "common": {
+    "language": {
+      "cs": "Czech",
+      "en": "English",
+      "de": "German",
+      "fr": "French"
+    },
+    "userFallback": "User"
+  },
+  "nav": {
+    "home": "Home",
+    "openMenu": "Open menu",
+    "login": "Sign in",
+    "registrationEdit": "Entry edit"
+  },
+  "menu": {
+    "registration": "Registration",
+    "documents": "Documents",
+    "racerList": "Competitor list",
+    "guides": "Help",
+    "changeDetails": "Edit details",
+    "backoffice": "Backoffice",
+    "changePassword": "Change password",
+    "logout": "Sign out",
+    "editNews": "Edit news",
+    "editRacers": "Edit competitors"
+  },
+  "footer": {
+    "raceDirector": "Competition Director",
+    "meteorologist": "Meteorologist",
+    "treasurer": "Treasurer",
+    "chiefJudge": "Chief Judge",
+    "juryChair": "Jury President",
+    "taskSetter": "Task Setter",
+    "websiteByPrefix": "Website by",
+    "cookies": "Cookies"
+  },
+  "login": {
+    "email": "Email",
+    "password": "Password",
+    "signIn": "Sign in",
+    "forgotPassword": "Forgot password",
+    "resetTitle": "Password recovery",
+    "sendLink": "Send link",
+    "backToLogin": "Back to sign in",
+    "passwordMin8Error": "Password must be at least 8 characters long"
+  },
+  "resetPassword": {
+    "title": "Set password",
+    "passwordMin8": "Password (min 8 characters)",
+    "passwordCheck": "Confirm password",
+    "setNewPassword": "Set new password",
+    "passwordsDontMatch": "Passwords do not match"
+  },
+  "changePassword": {
+    "title": "Change password",
+    "oldPassword": "Current password",
+    "newPasswordMin8": "New password (min 8 characters)",
+    "newPasswordCheck": "Confirm new password",
+    "setNewPassword": "Set new password",
+    "passwordMin8Error": "Password must be at least 8 characters long",
+    "sameAsPreviousError": "Password is the same as the previous one",
+    "passwordsDontMatch": "Passwords do not match"
+  },
+  "registration": {
+    "signInHintPrefix": "If you have flown with us before,",
+    "signInHintLink": "sign in",
+    "signInHintSuffix": "to reuse data from previous years.",
+    "previousYears": "Previous years",
+    "firstName": "First name",
+    "lastName": "Last name",
+    "phone": "Phone",
+    "passwordMin8": "Password (min 8 characters)",
+    "passwordCheck": "Confirm password",
+    "aeroclub": "Aeroclub",
+    "gliderType": "Glider type",
+    "imatriculation": "Registration mark",
+    "startCode": "Competition number",
+    "gliderClassLabel": "Glider class:",
+    "gliderClassClub": "Club class",
+    "gliderClassCombi": "Combined class",
+    "toggleGliderClass": "Switch glider class",
+    "mainLogger": "Primary logger",
+    "backupLogger": "Backup logger",
+    "submitRegistration": "Submit registration",
+    "passwordMin8Error": "Password must be at least 8 characters long",
+    "passwordsDontMatch": "Passwords do not match",
+    "fillMainLoggerFirst": "Fill in the primary logger first, then the backup one.",
+    "invalidPhone": "Enter a valid phone number.",
+    "phoneRequired": "Phone number is required."
+  },
+  "guides": {
+    "intro": "Short guides for sign in, password reset and entry editing. Most links redirect you to the relevant app page. If anything is missing in help or not working, contact us at",
+    "searchLabel": "Search in help",
+    "noResultsPrefix": "No results found. Try another keyword (for example: password, reset, edit). Or write to",
+    "blocks": {
+      "login": {
+        "title": "Sign in",
+        "i1a": "Open the",
+        "i1link": "Sign in",
+        "i1b": "page.",
+        "i2": "Enter your email and password, then click “Sign in”."
+      },
+      "edit": {
+        "title": "Entry editing",
+        "i1": "After signing in, the “Entry edit” item appears in the menu.",
+        "i2": "Click it, update your data and save changes.",
+        "i3a": "The edit page is also available via",
+        "i3link": "Registration / Entry edit",
+        "i3b": "(after signing in)."
+      },
+      "forgot": {
+        "title": "Forgot password (send link)",
+        "i1a": "On the",
+        "i1link": "Sign in",
+        "i1b": "page, click “Forgot password”.",
+        "i2": "Enter your email and click “Send link”.",
+        "i3": "You will receive an email with a password reset link."
+      },
+      "reset": {
+        "title": "Password reset (set a new password)",
+        "i1": "Open the link from your email (it leads to the “Set password” page).",
+        "i2": "Enter a new password (min. 8 characters) and confirm it in the second field.",
+        "i3a": "Click “Set new password”. Then return to",
+        "i3link": "Sign in",
+        "i3b": "and sign in with the new password."
+      },
+      "change": {
+        "title": "Change password after sign in",
+        "i1a": "After signing in, open the user menu and select “Change password”, or go directly to",
+        "i1link": "Change password",
+        "i1b": "."
+      },
+      "issues": {
+        "title": "Common issues (quick check)",
+        "i1": "Enter email without spaces (ideally lowercase).",
+        "i2": "New password must be at least 8 characters and both fields must match.",
+        "i3": "Use the latest reset email link (older links may be invalid)."
+      }
+    }
+  },
+  "cookieConsent": {
+    "title": "Cookies",
+    "text": "We use necessary cookies for website functionality (e.g. sign in). Optional analytics/marketing cookies are not currently used. If added in the future, you will be able to allow them here.",
+    "moreInfo": "More information",
+    "rejectOptional": "Reject optional cookies",
+    "necessaryOnly": "Necessary only",
+    "allowAll": "Allow all"
+  },
+  "cookiePolicy": {
+    "title": "Cookies",
+    "summaryPrefix": "This website uses necessary cookies required for functionality (e.g. sign in and session persistence). Optional cookies (e.g. analytics or marketing) are currently not used. If we add them in the future, you will be able to allow/reject them in the cookie bar. If you have any questions, contact us at",
+    "usedTitle": "Necessary cookies used by this website",
+    "usedIntro": "These cookies are required for sign in and account usage:",
+    "tokenDesc": "authentication token (keeps session after sign in).",
+    "emailDesc": "signed-in user email (identification in app).",
+    "roleDesc": "user role (e.g. user/admin).",
+    "userNameDesc": "user name shown in menu.",
+    "rightsDesc": "user permissions (access control).",
+    "consentTitle": "Consent settings",
+    "currentChoice": "Current choice",
+    "notSelected": "not selected",
+    "changeChoice": "Change cookie choice"
+  },
+  "documents": {
+    "loading": "Loading documents...",
+    "name": "Document name",
+    "inserted": "Date added",
+    "description": "Description",
+    "action": "Action",
+    "download": "Download"
+  },
+  "actualities": {
+    "latest": "Latest update",
+    "all": "All updates",
+    "loading": "Loading updates..."
+  },
+  "racerList": {
+    "search": "Search",
+    "tabAll": "All",
+    "tabClub": "Club",
+    "tabCombi": "Combi",
+    "colNumber": "#",
+    "colName": "Name",
+    "colSurname": "Surname",
+    "colClub": "Aeroclub",
+    "colGlider": "Glider type",
+    "colImatriculation": "Registration mark",
+    "colStartCode": "Competition number",
+    "colClass": "Class",
+    "colPaymentDate": "Payment date",
+    "loading": "Loading list…",
+    "noResults": "No results found",
+    "rowsText": "Rows per page:",
+    "allText": "All",
+    "ofText": "of"
+  },
+  "weather": {
+    "loadError": "Failed to load weather data.",
+    "loading": "Loading weather data...",
+    "noData": "Weather data is not available.",
+    "title": "LKHB Meteo",
+    "updateTime": "Update time",
+    "windDirectionSpeed": "Wind direction and speed",
+    "windGusts": "Wind gusts",
+    "qnh": "QNH",
+    "regionalQnh": "Regional QNH",
+    "airTemp": "Air temperature",
+    "dewPoint": "Dew point",
+    "humidity": "Humidity",
+    "rain": "Rain",
+    "sunrise": "Sunrise",
+    "sunset": "Sunset"
+  },
+  "backoffice": {
+    "notes": {
+      "row": "Row",
+      "published": "Published",
+      "datetime": "Date and time",
+      "caption": "Caption",
+      "noDocumentFound": "Document not found",
+      "all": "All",
+      "rows": "Rows",
+      "of": "of",
+      "newMessage": "New message",
+      "publish": "Publish",
+      "save": "Save"
+    }
+  }
+}

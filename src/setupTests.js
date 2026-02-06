@@ -1,4 +1,5 @@
 import "@testing-library/jest-dom";
+import i18n from "./i18n";
 
 // Some UI libs expect matchMedia to exist (jsdom doesn't implement it).
 Object.defineProperty(window, "matchMedia", {
@@ -33,3 +34,7 @@ if (!("ResizeObserver" in window)) {
   window.ResizeObserver = NoopObserver;
 }
 if (!("ResizeObserver" in global)) global.ResizeObserver = window.ResizeObserver;
+
+beforeEach(() => {
+  i18n.changeLanguage("cs");
+});

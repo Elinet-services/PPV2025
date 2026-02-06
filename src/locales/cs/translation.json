@@ -1,0 +1,234 @@
+{
+  "app": {
+    "sendingToDb": "Odesílání do DB"
+  },
+  "common": {
+    "language": {
+      "cs": "Čeština",
+      "en": "English",
+      "de": "Deutsch",
+      "fr": "Français"
+    },
+    "userFallback": "Uživatel"
+  },
+  "nav": {
+    "home": "Domů",
+    "openMenu": "Otevřít menu",
+    "login": "Přihlášení",
+    "registrationEdit": "Editace přihlášky závodníka"
+  },
+  "menu": {
+    "registration": "Registrace",
+    "documents": "Dokumenty",
+    "racerList": "Seznam závodníků",
+    "guides": "Nápověda",
+    "changeDetails": "Změna údajů",
+    "backoffice": "Backoffice",
+    "changePassword": "Změna hesla",
+    "logout": "Odhlásit",
+    "editNews": "Editace novinek",
+    "editRacers": "Editace závodníků"
+  },
+  "footer": {
+    "raceDirector": "Ředitel závodu",
+    "meteorologist": "Meteorolog",
+    "treasurer": "Hospodář",
+    "chiefJudge": "Hlavní rozhodčí",
+    "juryChair": "Předseda jury",
+    "taskSetter": "Task setter",
+    "websiteByPrefix": "Web realizovala společnost",
+    "cookies": "Cookies"
+  },
+  "login": {
+    "email": "Email",
+    "password": "Heslo",
+    "signIn": "Přihlásit",
+    "forgotPassword": "Zapomenuté heslo",
+    "resetTitle": "Obnovení hesla",
+    "sendLink": "Odeslat odkaz",
+    "backToLogin": "Zpět na přihlášení",
+    "passwordMin8Error": "Heslo musí mít délku alespoň 8 znaků"
+  },
+  "resetPassword": {
+    "title": "Nastavení hesla",
+    "passwordMin8": "Heslo (min 8 znaků)",
+    "passwordCheck": "Heslo pro kontrolu",
+    "setNewPassword": "Nastavit nové heslo",
+    "passwordsDontMatch": "Hesla se neshodují"
+  },
+  "changePassword": {
+    "title": "Změna hesla",
+    "oldPassword": "Staré heslo",
+    "newPasswordMin8": "Nové heslo (min 8 znaků)",
+    "newPasswordCheck": "Nové heslo pro kontrolu",
+    "setNewPassword": "Nastavit nové heslo",
+    "passwordMin8Error": "Heslo musí mít délku alespoň 8 znaků",
+    "sameAsPreviousError": "Heslo je stejné jako předchozí",
+    "passwordsDontMatch": "Hesla se neshodují"
+  },
+  "registration": {
+    "signInHintPrefix": "Pokud jste s námi již létali,",
+    "signInHintLink": "přihlaste",
+    "signInHintSuffix": "se, budete moci použít údaje z předchozích ročníků.",
+    "previousYears": "Předchozí ročníky",
+    "firstName": "Jméno",
+    "lastName": "Příjmení",
+    "phone": "Telefon",
+    "passwordMin8": "Heslo (min 8 znaků)",
+    "passwordCheck": "Heslo pro kontrolu",
+    "aeroclub": "Aeroklub",
+    "gliderType": "Typ letadla",
+    "imatriculation": "Imatrikulace",
+    "startCode": "Startovní znak",
+    "gliderClassLabel": "Třída větroně:",
+    "gliderClassClub": "Klubová třída",
+    "gliderClassCombi": "Kombinovaná třída",
+    "toggleGliderClass": "Přepnout třídu větroně",
+    "mainLogger": "Hlavní logger",
+    "backupLogger": "Záložní logger",
+    "submitRegistration": "Odeslat registraci",
+    "passwordMin8Error": "Heslo musí mít délku alespoň 8 znaků",
+    "passwordsDontMatch": "Hesla se neshodují",
+    "fillMainLoggerFirst": "Nejdříve vyplňte hlavní logger, poté záložní.",
+    "invalidPhone": "Zadejte platné telefonní číslo.",
+    "phoneRequired": "Telefon je povinný."
+  },
+  "guides": {
+    "intro": "Stručné návody k přihlášení, resetu hesla a editaci přihlášky. Většina odkazů vás přesměruje na příslušnou stránku aplikace. Pokud bude v nápovědě něco chybět nebo něco nebude fungovat, kontaktujte nás na",
+    "searchLabel": "Vyhledat v nápovědě",
+    "noResultsPrefix": "Nic nenalezeno. Zkuste jiné heslo (např. „heslo“, „reset“, „editace“). Případně nám napište na",
+    "blocks": {
+      "login": {
+        "title": "Přihlášení",
+        "i1a": "Otevřete stránku",
+        "i1link": "Přihlášení",
+        "i1b": ".",
+        "i2": "Zadejte e-mail a heslo a klikněte na „Přihlásit“."
+      },
+      "edit": {
+        "title": "Editace přihlášky závodníka",
+        "i1": "Po přihlášení se v menu zobrazí položka „Editace přihlášky závodníka“.",
+        "i2": "Klikněte na ni, upravte údaje a změny uložte.",
+        "i3a": "Stránka editace je dostupná také přes",
+        "i3link": "Registraci / Editaci přihlášky",
+        "i3b": "(po přihlášení)."
+      },
+      "forgot": {
+        "title": "Zapomenuté heslo (odeslání odkazu)",
+        "i1a": "Na stránce",
+        "i1link": "Přihlášení",
+        "i1b": "klikněte na „Zapomenuté heslo“.",
+        "i2": "Zadejte e-mail a klikněte na „Odeslat odkaz“.",
+        "i3": "Do e-mailu vám přijde zpráva s odkazem pro reset hesla."
+      },
+      "reset": {
+        "title": "Reset hesla (nastavení nového hesla)",
+        "i1": "Otevřete odkaz z e-mailu (vede na stránku „Nastavení hesla“).",
+        "i2": "Zadejte nové heslo (min. 8 znaků) a potvrďte ho ve druhém poli.",
+        "i3a": "Klikněte na „Nastavit nové heslo“. Poté se vraťte na",
+        "i3link": "Přihlášení",
+        "i3b": "a přihlaste se novým heslem."
+      },
+      "change": {
+        "title": "Změna hesla po přihlášení",
+        "i1a": "Po přihlášení otevřete uživatelské menu a zvolte „Změna hesla“, nebo přejděte přímo na",
+        "i1link": "Změnu hesla",
+        "i1b": "."
+      },
+      "issues": {
+        "title": "Časté potíže (rychlá kontrola)",
+        "i1": "E-mail zadávejte bez mezer (ideálně malými písmeny).",
+        "i2": "Nové heslo musí mít minimálně 8 znaků a obě pole se musí shodovat.",
+        "i3": "Použijte nejnovější e-mail s odkazem na reset hesla (starší odkaz může být neplatný)."
+      }
+    }
+  },
+  "cookieConsent": {
+    "title": "Cookies",
+    "text": "Používáme nezbytné cookies pro funkčnost webu (např. přihlášení). Volitelné cookies pro měření / marketing nepoužíváme, pokud je v budoucnu přidáme, budete je zde moci povolit.",
+    "moreInfo": "Více informací",
+    "rejectOptional": "Odmítnout volitelné cookies",
+    "necessaryOnly": "Pouze nezbytné",
+    "allowAll": "Povolit vše"
+  },
+  "cookiePolicy": {
+    "title": "Cookies",
+    "summaryPrefix": "Tento web používá nezbytné cookies potřebné pro jeho funkčnost (např. přihlášení a udržení relace). Volitelné cookies (např. analytické nebo marketingové) aktuálně nepoužíváme. Pokud je v budoucnu přidáme, budete je moci povolit/odmítnout v cookie liště. Pokud máte dotazy, kontaktujte nás na",
+    "usedTitle": "Nezbytné cookies používané tímto webem",
+    "usedIntro": "Tyto cookies jsou potřeba pro přihlášení a práci s účtem:",
+    "tokenDesc": "přihlašovací token (udržení relace po přihlášení).",
+    "emailDesc": "e-mail přihlášeného uživatele (pro identifikaci v aplikaci).",
+    "roleDesc": "role uživatele (např. uživatel/admin).",
+    "userNameDesc": "jméno uživatele pro zobrazení v menu.",
+    "rightsDesc": "práva uživatele (řízení přístupů k funkcím).",
+    "consentTitle": "Nastavení souhlasu",
+    "currentChoice": "Aktuální volba",
+    "notSelected": "nezvoleno",
+    "changeChoice": "Změnit volbu cookies"
+  },
+  "documents": {
+    "loading": "Načítám dokumenty...",
+    "name": "Název dokumentu",
+    "inserted": "Datum vložení",
+    "description": "Popis",
+    "action": "Akce",
+    "download": "Stáhnout"
+  },
+  "actualities": {
+    "latest": "Poslední aktualita",
+    "all": "Všechny aktuality",
+    "loading": "Načítám aktuality..."
+  },
+  "racerList": {
+    "search": "Vyhledávání",
+    "tabAll": "Všichni",
+    "tabClub": "Klub",
+    "tabCombi": "Kombi",
+    "colNumber": "#",
+    "colName": "Jméno",
+    "colSurname": "Příjmení",
+    "colClub": "Aeroklub",
+    "colGlider": "Typ letadla",
+    "colImatriculation": "Imatrikulace",
+    "colStartCode": "Startovní znak",
+    "colClass": "Třída",
+    "colPaymentDate": "Datum platby",
+    "loading": "Načítám seznam…",
+    "noResults": "Nenalezeny žádné výsledky",
+    "rowsText": "Řádků na stránku:",
+    "allText": "Vše",
+    "ofText": "z"
+  },
+  "weather": {
+    "loadError": "Nepodařilo se načíst data o počasí.",
+    "loading": "Načítám data o počasí...",
+    "noData": "Nejsou dostupná data o počasí.",
+    "title": "LKHB Meteo",
+    "updateTime": "Čas aktualizace",
+    "windDirectionSpeed": "Směr a síla větru",
+    "windGusts": "Nárazy větru",
+    "qnh": "QNH",
+    "regionalQnh": "Regionální QNH",
+    "airTemp": "Teplota vzduchu",
+    "dewPoint": "Rosný bod",
+    "humidity": "Vlhkost",
+    "rain": "Srážky",
+    "sunrise": "Východ slunce",
+    "sunset": "Západ slunce"
+  },
+  "backoffice": {
+    "notes": {
+      "row": "Řádek",
+      "published": "Publikováno",
+      "datetime": "Datum a čas",
+      "caption": "Popisek",
+      "noDocumentFound": "Dokument nenalezen",
+      "all": "Vše",
+      "rows": "Řádek",
+      "of": "z",
+      "newMessage": "Nová zpráva",
+      "publish": "Publikovat",
+      "save": "Uložit"
+    }
+  }
+}

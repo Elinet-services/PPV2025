@@ -1,0 +1,234 @@
+{
+  "app": {
+    "sendingToDb": "Senden an Datenbank"
+  },
+  "common": {
+    "language": {
+      "cs": "Tschechisch",
+      "en": "Englisch",
+      "de": "Deutsch",
+      "fr": "Französisch"
+    },
+    "userFallback": "Benutzer"
+  },
+  "nav": {
+    "home": "Start",
+    "openMenu": "Menü öffnen",
+    "login": "Anmelden",
+    "registrationEdit": "Anmeldung bearbeiten"
+  },
+  "menu": {
+    "registration": "Registrierung",
+    "documents": "Dokumente",
+    "racerList": "Teilnehmerliste",
+    "guides": "Hilfe",
+    "changeDetails": "Daten ändern",
+    "backoffice": "Backoffice",
+    "changePassword": "Passwort ändern",
+    "logout": "Abmelden",
+    "editNews": "Neuigkeiten bearbeiten",
+    "editRacers": "Teilnehmer bearbeiten"
+  },
+  "footer": {
+    "raceDirector": "Wettbewerbsleiter",
+    "meteorologist": "Meteorologe",
+    "treasurer": "Kassenwart",
+    "chiefJudge": "Hauptrichter",
+    "juryChair": "Juryvorsitz",
+    "taskSetter": "Task Setter",
+    "websiteByPrefix": "Web erstellt von",
+    "cookies": "Cookies"
+  },
+  "login": {
+    "email": "E-Mail",
+    "password": "Passwort",
+    "signIn": "Anmelden",
+    "forgotPassword": "Passwort vergessen",
+    "resetTitle": "Passwort wiederherstellen",
+    "sendLink": "Link senden",
+    "backToLogin": "Zurück zur Anmeldung",
+    "passwordMin8Error": "Passwort muss mindestens 8 Zeichen lang sein"
+  },
+  "resetPassword": {
+    "title": "Passwort festlegen",
+    "passwordMin8": "Passwort (mind. 8 Zeichen)",
+    "passwordCheck": "Passwort bestätigen",
+    "setNewPassword": "Neues Passwort setzen",
+    "passwordsDontMatch": "Passwörter stimmen nicht überein"
+  },
+  "changePassword": {
+    "title": "Passwort ändern",
+    "oldPassword": "Altes Passwort",
+    "newPasswordMin8": "Neues Passwort (mind. 8 Zeichen)",
+    "newPasswordCheck": "Neues Passwort bestätigen",
+    "setNewPassword": "Neues Passwort setzen",
+    "passwordMin8Error": "Passwort muss mindestens 8 Zeichen lang sein",
+    "sameAsPreviousError": "Passwort ist gleich wie das vorherige",
+    "passwordsDontMatch": "Passwörter stimmen nicht überein"
+  },
+  "registration": {
+    "signInHintPrefix": "Wenn Sie bereits bei uns geflogen sind,",
+    "signInHintLink": "melden Sie sich an",
+    "signInHintSuffix": ", damit Sie Daten aus früheren Jahren verwenden können.",
+    "previousYears": "Frühere Jahre",
+    "firstName": "Vorname",
+    "lastName": "Nachname",
+    "phone": "Telefon",
+    "passwordMin8": "Passwort (mind. 8 Zeichen)",
+    "passwordCheck": "Passwort bestätigen",
+    "aeroclub": "Aeroklub",
+    "gliderType": "Flugzeugtyp",
+    "imatriculation": "Kennzeichen",
+    "startCode": "Startnummer",
+    "gliderClassLabel": "Segelflugzeugklasse:",
+    "gliderClassClub": "Clubklasse",
+    "gliderClassCombi": "Kombiklasse",
+    "toggleGliderClass": "Klasse umschalten",
+    "mainLogger": "Hauptlogger",
+    "backupLogger": "Ersatzlogger",
+    "submitRegistration": "Registrierung absenden",
+    "passwordMin8Error": "Passwort muss mindestens 8 Zeichen lang sein",
+    "passwordsDontMatch": "Passwörter stimmen nicht überein",
+    "fillMainLoggerFirst": "Zuerst Hauptlogger ausfüllen, dann Ersatzlogger.",
+    "invalidPhone": "Geben Sie eine gültige Telefonnummer ein.",
+    "phoneRequired": "Telefonnummer ist erforderlich."
+  },
+  "guides": {
+    "intro": "Kurzanleitungen für Anmeldung, Passwort-Reset und Bearbeitung der Anmeldung. Die meisten Links führen Sie zur entsprechenden Seite der App. Wenn in der Hilfe etwas fehlt oder nicht funktioniert, kontaktieren Sie uns unter",
+    "searchLabel": "In Hilfe suchen",
+    "noResultsPrefix": "Nichts gefunden. Versuchen Sie ein anderes Stichwort (z. B. Passwort, Reset, Bearbeiten). Oder schreiben Sie an",
+    "blocks": {
+      "login": {
+        "title": "Anmeldung",
+        "i1a": "Öffnen Sie die Seite",
+        "i1link": "Anmeldung",
+        "i1b": ".",
+        "i2": "Geben Sie E-Mail und Passwort ein und klicken Sie auf „Anmelden“."
+      },
+      "edit": {
+        "title": "Anmeldung bearbeiten",
+        "i1": "Nach der Anmeldung erscheint im Menü der Punkt „Anmeldung bearbeiten“.",
+        "i2": "Klicken Sie darauf, bearbeiten Sie Ihre Daten und speichern Sie die Änderungen.",
+        "i3a": "Die Bearbeitungsseite ist auch über",
+        "i3link": "Registrierung / Anmeldung bearbeiten",
+        "i3b": "(nach Anmeldung) erreichbar."
+      },
+      "forgot": {
+        "title": "Passwort vergessen (Link senden)",
+        "i1a": "Auf der Seite",
+        "i1link": "Anmeldung",
+        "i1b": "klicken Sie auf „Passwort vergessen“.",
+        "i2": "Geben Sie Ihre E-Mail ein und klicken Sie auf „Link senden“.",
+        "i3": "Sie erhalten eine E-Mail mit einem Link zum Zurücksetzen des Passworts."
+      },
+      "reset": {
+        "title": "Passwort-Reset (neues Passwort setzen)",
+        "i1": "Öffnen Sie den Link aus der E-Mail (führt zur Seite „Passwort festlegen“).",
+        "i2": "Geben Sie ein neues Passwort ein (mind. 8 Zeichen) und bestätigen Sie es im zweiten Feld.",
+        "i3a": "Klicken Sie auf „Neues Passwort setzen“. Gehen Sie dann zurück zu",
+        "i3link": "Anmeldung",
+        "i3b": "und melden Sie sich mit dem neuen Passwort an."
+      },
+      "change": {
+        "title": "Passwort nach Anmeldung ändern",
+        "i1a": "Nach der Anmeldung öffnen Sie das Benutzermenü und wählen „Passwort ändern“ oder gehen direkt zu",
+        "i1link": "Passwort ändern",
+        "i1b": "."
+      },
+      "issues": {
+        "title": "Häufige Probleme (Schnellcheck)",
+        "i1": "E-Mail ohne Leerzeichen eingeben (am besten klein geschrieben).",
+        "i2": "Neues Passwort muss mindestens 8 Zeichen haben und beide Felder müssen übereinstimmen.",
+        "i3": "Verwenden Sie den neuesten Reset-Link aus der E-Mail (ältere Links können ungültig sein)."
+      }
+    }
+  },
+  "cookieConsent": {
+    "title": "Cookies",
+    "text": "Wir verwenden notwendige Cookies für die Funktion der Website (z. B. Anmeldung). Optionale Analyse-/Marketing-Cookies verwenden wir derzeit nicht; falls wir sie später hinzufügen, können Sie sie hier aktivieren.",
+    "moreInfo": "Mehr Informationen",
+    "rejectOptional": "Optionale Cookies ablehnen",
+    "necessaryOnly": "Nur notwendige",
+    "allowAll": "Alle erlauben"
+  },
+  "cookiePolicy": {
+    "title": "Cookies",
+    "summaryPrefix": "Diese Website verwendet notwendige Cookies für ihre Funktion (z. B. Anmeldung und Sitzungsverwaltung). Optionale Cookies (z. B. Analyse oder Marketing) verwenden wir derzeit nicht. Falls wir sie in Zukunft hinzufügen, können Sie sie in der Cookie-Leiste erlauben/ablehnen. Bei Fragen kontaktieren Sie uns unter",
+    "usedTitle": "Notwendige Cookies auf dieser Website",
+    "usedIntro": "Diese Cookies sind für Anmeldung und Kontoarbeit erforderlich:",
+    "tokenDesc": "Anmeldetoken (Sitzung nach Anmeldung erhalten).",
+    "emailDesc": "E-Mail des angemeldeten Benutzers (Identifikation in der App).",
+    "roleDesc": "Benutzerrolle (z. B. Benutzer/Admin).",
+    "userNameDesc": "Benutzername zur Anzeige im Menü.",
+    "rightsDesc": "Benutzerrechte (Zugriffssteuerung).",
+    "consentTitle": "Einwilligungseinstellungen",
+    "currentChoice": "Aktuelle Auswahl",
+    "notSelected": "nicht gewählt",
+    "changeChoice": "Cookie-Auswahl ändern"
+  },
+  "documents": {
+    "loading": "Dokumente werden geladen...",
+    "name": "Dokumentname",
+    "inserted": "Eingefügt am",
+    "description": "Beschreibung",
+    "action": "Aktion",
+    "download": "Herunterladen"
+  },
+  "actualities": {
+    "latest": "Letzte Aktualität",
+    "all": "Alle Aktualitäten",
+    "loading": "Aktualitäten werden geladen..."
+  },
+  "racerList": {
+    "search": "Suche",
+    "tabAll": "Alle",
+    "tabClub": "Club",
+    "tabCombi": "Kombi",
+    "colNumber": "#",
+    "colName": "Vorname",
+    "colSurname": "Nachname",
+    "colClub": "Aeroklub",
+    "colGlider": "Flugzeugtyp",
+    "colImatriculation": "Kennzeichen",
+    "colStartCode": "Startnummer",
+    "colClass": "Klasse",
+    "colPaymentDate": "Zahlungsdatum",
+    "loading": "Liste wird geladen…",
+    "noResults": "Keine Ergebnisse gefunden",
+    "rowsText": "Zeilen pro Seite:",
+    "allText": "Alle",
+    "ofText": "von"
+  },
+  "weather": {
+    "loadError": "Wetterdaten konnten nicht geladen werden.",
+    "loading": "Wetterdaten werden geladen...",
+    "noData": "Keine Wetterdaten verfügbar.",
+    "title": "LKHB Meteo",
+    "updateTime": "Aktualisierungszeit",
+    "windDirectionSpeed": "Windrichtung und -stärke",
+    "windGusts": "Windböen",
+    "qnh": "QNH",
+    "regionalQnh": "Regionales QNH",
+    "airTemp": "Lufttemperatur",
+    "dewPoint": "Taupunkt",
+    "humidity": "Luftfeuchtigkeit",
+    "rain": "Niederschlag",
+    "sunrise": "Sonnenaufgang",
+    "sunset": "Sonnenuntergang"
+  },
+  "backoffice": {
+    "notes": {
+      "row": "Zeile",
+      "published": "Veröffentlicht",
+      "datetime": "Datum und Uhrzeit",
+      "caption": "Beschreibung",
+      "noDocumentFound": "Dokument nicht gefunden",
+      "all": "Alle",
+      "rows": "Zeilen",
+      "of": "von",
+      "newMessage": "Neue Nachricht",
+      "publish": "Veröffentlichen",
+      "save": "Speichern"
+    }
+  }
+}
