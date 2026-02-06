@@ -20,7 +20,7 @@ const CookiePolicyPage = () => {
 
       <MDBTypography className="text-start mb-4">
         {
-          "Tento web používá nezbytné cookies potřebné pro jeho funkčnost (např. přihlášení a udržení relace). Volitelné cookies (např. analytické nebo marketingové) aktuálně nepoužíváme. Pokud je v budoucnu přidáme, budete je moci povolit/odmítnout v cookie liště."
+          "Tento web používá nezbytné cookies potřebné pro jeho funkčnost (např. přihlášení a udržení relace). Volitelné cookies (např. analytické nebo marketingové) aktuálně nepoužíváme. Pokud je v budoucnu přidáme, budete je moci povolit/odmítnout v cookie liště. Pokud máte dotazy, kontaktujte nás na poradatel@ppvcup.cz."
         }
       </MDBTypography>
 
@@ -58,11 +58,6 @@ const CookiePolicyPage = () => {
                 </MDBListGroupItem>
               </MDBListGroup>
 
-              <MDBTypography className="text-start mt-3 mb-0">
-                {"Pokud máte dotazy, kontaktujte nás na "}
-                <a href="mailto:poradatel@ppvcup.cz">poradatel@ppvcup.cz</a>
-                {"."}
-              </MDBTypography>
             </MDBCardBody>
           </MDBCard>
         </MDBCol>
