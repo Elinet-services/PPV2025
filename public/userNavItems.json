@@ -4,6 +4,6 @@
     { "label": "Registrace", "path": "/registration" },
     { "label": "Dokumenty", "path": "/documents" },
     { "label": "Seznam závodníků", "path": "/racerlist" },
-    { "label": "Návody", "path": "/navody" }
+    { "label": "Nápověda", "path": "/navody" }
   ]
 }

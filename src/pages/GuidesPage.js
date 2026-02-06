@@ -10,7 +10,7 @@ const GuidesPage = () => {
   return (
     <MDBContainer className="my-5">
       <MDBTypography tag="h4" className="mb-3 text-start">
-        {"Návody"}
+        {"Nápověda"}
       </MDBTypography>
 
       <MDBTypography className="mb-4 text-start">
@@ -118,4 +118,3 @@ const GuidesPage = () => {
 };
 
 export default GuidesPage;
-
