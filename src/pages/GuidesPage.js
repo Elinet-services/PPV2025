@@ -18,6 +18,12 @@ const GuidesPage = () => {
         {"Většina odkazů vás přesměruje na příslušnou stránku aplikace."}
       </MDBTypography>
 
+      <MDBTypography className="mb-4 text-start">
+        {"Pokud bude v nápovědě něco chybět nebo něco nebude fungovat, kontaktujte nás na "}
+        <a href="mailto:poradatel@ppvcup.cz">poradatel@ppvcup.cz</a>
+        {"."}
+      </MDBTypography>
+
       <MDBTypography tag="h5" className="mt-4 mb-2 text-start">
         {"1) Přihlášení"}
       </MDBTypography>
