@@ -46,6 +46,20 @@ const Footer = () => (
           </ul>
         </MDBCol>
       </MDBRow>
+
+      <div className="text-center mt-2">
+        <small>
+          {"Web realizovala společnost "}
+          <a
+            href="https://elinet.cz/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {"Elinet services s.r.o."}
+          </a>
+          {"."}
+        </small>
+      </div>
     </MDBContainer>
   </MDBFooter>
   </MDBContainer>
