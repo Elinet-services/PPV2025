@@ -37,6 +37,12 @@ li.nav-item a.nav-link.active {
   margin-bottom: 1.5rem !important;
 }
 
+/* Footer credit strip: slightly darker than bg-light */
+.footer-credit-bar {
+  background-color: #eef0f2;
+  border-radius: 6px;
+}
+
 /* Registration phone input (single field with floating label) */
 .registration-phone-field {
   position: relative;
