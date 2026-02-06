@@ -153,10 +153,19 @@ export async function processRequest(formData, action, setLoading, setMessage, s
         }
     })
     .then((data) => {
-        console.log(data);
+        if (!data || typeof data !== 'object') {
+            isError = true;
+            responseMessage = "Neočekávaná odpověď serveru";
+            responseData = {};
+            return;
+        }
         isError         = data.isError;
         responseMessage = data.message;
         responseData    = data.responseData;
+
+        if (isError) {
+            console.warn(`Request "${action}" failed`, data);
+        }
     })
     .catch((e) => {
         console.log(e.message)

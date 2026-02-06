@@ -1,15 +1,60 @@
-/* Mobile: schovat #, Jméno, Aeroklub, Startovní znak */
+/* Vertically center all body cells */
+.racer-datatable table tbody td {
+  vertical-align: middle;
+}
+
+/* Class header (8th column) */
+.racer-datatable table th:nth-child(8),
+.racer-datatable table td:nth-child(8) {
+  text-align: center;
+}
+
+/* Start code column (7th column) */
+.racer-datatable table th:nth-child(7),
+.racer-datatable table td:nth-child(7) {
+  text-align: center;
+}
+
+/* Class cell container */
+.racer-datatable .mdb-datatable-glider-class-cell {
+  position: relative;
+  text-align: center;
+  vertical-align: middle;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+}
+
+/* Class badge rendered inside cell */
+.racer-datatable .mdb-datatable-glider-class-cell::before {
+  content: var(--glider-badge-label, "");
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 5.5rem;
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 0.85rem;
+  line-height: 1.2;
+  color: #fff;
+  background-color: var(--glider-badge-bg, #6c757d);
+  text-transform: lowercase;
+  pointer-events: none;
+}
+
+/* Mobile: hide #, First Name, Club, Start Code */
 @media (max-width: 575.98px) {
-  /* # (1. sloupec) */
+  /* # (1st column) */
   .racer-datatable table th:nth-child(1),
   .racer-datatable table td:nth-child(1),
-  /* Jméno (2. sloupec) */
+  /* First Name (2nd column) */
   .racer-datatable table th:nth-child(2),
   .racer-datatable table td:nth-child(2),
-  /* Aeroklub (4. sloupec) */
+  /* Club (4th column) */
   .racer-datatable table th:nth-child(4),
   .racer-datatable table td:nth-child(4),
-  /* Startovní znak (7. sloupec) */
+  /* Start Code (7th column) */
   .racer-datatable table th:nth-child(7),
   .racer-datatable table td:nth-child(7) {
     display: none;

@@ -5,6 +5,19 @@
   overflow: hidden;
 }
 
+/* Backoffice header: allow user submenu dropdown to overflow container */
+.backoffice-header-container,
+.backoffice-header-container .navbar,
+.backoffice-header-container .container-fluid,
+.backoffice-header-container .row,
+.backoffice-header-container .navbar-collapse {
+  overflow: visible;
+}
+
+.backoffice-header-container .dropdown-menu {
+  z-index: 1200;
+}
+
 .navbar-toggler {
   z-index: 1050 !important;
   position: relative;

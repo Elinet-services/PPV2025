@@ -81,7 +81,7 @@ const RacerList = ({ racerList, loading = false, lastUpdated = null }) => {
       { label: "Typ letadla", field: "glider", sort: true },
       { label: "Imatrikulace", field: "imatriculation", sort: false },
       { label: "Startovní znak", field: "startCode", sort: false },
-      { label: "Třída", field: "gliderClass", sort: true },
+      { label: "Třída", field: "gliderClass", sort: true, columnSelector: "glider-class-cell" },
       { label: "Datum platby", field: "paymentDate", sort: true },
     ];
 
@@ -111,17 +111,14 @@ const RacerList = ({ racerList, loading = false, lastUpdated = null }) => {
 
     const v = String(value || "").toLowerCase();
     const isClub = v === "club";
+    const isCombi = v === "combi";
 
     return {
-      display: "inline-block",
-      padding: "0.2rem 0.6rem",
-      borderRadius: "999px",
-      fontWeight: 600,
-      fontSize: "0.85rem",
-      lineHeight: 1.2,
-      color: "#fff",
-      backgroundColor: isClub ? "#198754" : "#0d6efd",
-      textTransform: "lowercase",
+      "--glider-badge-label": `"${v}"`,
+      "--glider-badge-bg": isClub ? "#198754" : isCombi ? "#0d6efd" : "#6c757d",
+      textAlign: "center",
+      verticalAlign: "middle",
+      color: "transparent",
     };
   };
 
@@ -190,3 +187,4 @@ const RacerList = ({ racerList, loading = false, lastUpdated = null }) => {
 };
 
 export default RacerList;
+

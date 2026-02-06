@@ -18,10 +18,10 @@ const Actualities = ({ noteList }) => {
     (a, b) => new Date(b.date) - new Date(a.date)
   );
 
-  // ✅ Buď všechny, nebo jen 5 nejnovějších
+  // ✅ Buď všechny, nebo jen poslední aktualita
   const filteredNoteList = allNoteList
     ? sortedNoteList
-    : sortedNoteList.slice(0, 5);
+    : sortedNoteList.slice(0, 1);
 
   useEffect(() => {
     if (!noteList || noteList.length === 0) return;
@@ -36,7 +36,7 @@ const Actualities = ({ noteList }) => {
             onClick={() => setAllNoteList(false)}
             active={allNoteList === false}
           >
-            Poslední aktuality
+            Poslední aktualita
           </MDBTabsLink>
         </MDBTabsItem>
         <MDBTabsItem>

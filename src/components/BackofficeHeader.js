@@ -31,7 +31,7 @@ const Header = ({ menuItems, logout }) => {
   }, []);
   
   return (
-    <MDBContainer className="header-container">
+    <MDBContainer className="header-container backoffice-header-container">
 
         {/* Navigační menu */}
         <MDBNavbar expand="lg" light bgColor="light">

@@ -23,26 +23,41 @@ import { getToken, getUserName } from '../services/connection.js';
 import { AppContext } from '../App.js';
 
 const carouselItems = [
-  { id: 1, img: "/img/1_pic.jpg", caption: "První snímek" },
-  { id: 2, img: "/img/2_pic.jpg", caption: "Druhý snímek" },
-  { id: 3, img: "/img/3_pic.jpg", caption: "Třetí snímek" }
+  { id: 1, img: "/img/1_pic.jpg", caption: "PrvnĂ­ snĂ­mek" },
+  { id: 2, img: "/img/2_pic.jpg", caption: "DruhĂ˝ snĂ­mek" },
+  { id: 3, img: "/img/3_pic.jpg", caption: "TĹ™etĂ­ snĂ­mek" }
 ];
 
-// Fallback, kdyby se JSON nepodařilo načíst (můžeš nechat null a pak zobrazit hned)
-const FALLBACK_PUBLIC_FROM = null; // např. "2026-01-28T10:08:00+01:00"
+// Fallback, kdyby se JSON nepodaĹ™ilo naÄŤĂ­st (mĹŻĹľeĹˇ nechat null a pak zobrazit hned)
+const FALLBACK_PUBLIC_FROM = null; // napĹ™. "2026-01-28T10:08:00+01:00"
+const REGISTRATION_EDIT_LABEL = "Editace p\u0159ihl\u00e1\u0161ky z\u00e1vodn\u00edka";
+const LOGIN_SUBLABEL = "(\u00faprava p\u0159ihl\u00e1\u0161ky)";
 
 const Header = () => {
   const app = useContext(AppContext);
   const navigate = useNavigate();
 
-  const [userMenuItems, setUserMenuItems] = useState([]); // položky menu pro uživatele (po přihlášení)
-  const [navItems, setNavItems] = useState([]);           // veřejné položky menu
+  const [userMenuItems, setUserMenuItems] = useState([]); // poloĹľky menu pro uĹľivatele (po pĹ™ihlĂˇĹˇenĂ­)
+  const [navItems, setNavItems] = useState([]);           // veĹ™ejnĂ© poloĹľky menu
   const [showNav, setShowNav] = useState(false);
 
   const [publicFromIso, setPublicFromIso] = useState(FALLBACK_PUBLIC_FROM);
   const [showPublic, setShowPublic] = useState(false);
+  const isLoggedIn = getToken().length > 0;
 
-  // Fetch user menu items based on user rights (dropdown po přihlášení)
+  const getNavItemLabel = (item) => {
+    if (isLoggedIn && item.path === "/registration") {
+      return REGISTRATION_EDIT_LABEL;
+    }
+    return item.label;
+  };
+
+  const shouldShowNavItem = (item) => {
+    if (showPublic) return true;
+    return isLoggedIn && item.path === "/registration";
+  };
+
+  // Fetch user menu items based on user rights (dropdown po pĹ™ihlĂˇĹˇenĂ­)
   useEffect(() => {
     fetch("/userMenuItems.json")
       .then((res) => res.json())
@@ -56,27 +71,27 @@ const Header = () => {
       });
   }, [app.userRights]);
 
-  // Načti nav config + položky z userNavItems.json
+  // NaÄŤti nav config + poloĹľky z userNavItems.json
   useEffect(() => {
     const loadNavConfig = async () => {
       const res = await fetch("/userNavItems.json");
       const data = await res.json();
 
-      // očekáváme nový formát: { publicFrom, items: [...] }
+      // oÄŤekĂˇvĂˇme novĂ˝ formĂˇt: { publicFrom, items: [...] }
       if (data && typeof data === "object" && Array.isArray(data.items)) {
         setPublicFromIso(data.publicFrom ?? FALLBACK_PUBLIC_FROM);
         setNavItems(data.items);
         return;
       }
 
-      // fallback pro starý formát (pole položek) – v tom případě se nic nečeká a zobrazí se hned
+      // fallback pro starĂ˝ formĂˇt (pole poloĹľek) â€“ v tom pĹ™Ă­padÄ› se nic neÄŤekĂˇ a zobrazĂ­ se hned
       if (Array.isArray(data)) {
         setPublicFromIso(null);
         setNavItems(data);
         return;
       }
 
-      // když je to něco jiného, raději nic
+      // kdyĹľ je to nÄ›co jinĂ©ho, radÄ›ji nic
       setPublicFromIso(FALLBACK_PUBLIC_FROM);
       setNavItems([]);
     };
@@ -87,12 +102,12 @@ const Header = () => {
     });
   }, []);
 
-  // Časové řízení viditelnosti (menu + Přihlášení)
+  // ÄŚasovĂ© Ĺ™Ă­zenĂ­ viditelnosti (menu + PĹ™ihlĂˇĹˇenĂ­)
   useEffect(() => {
     let timerId;
 
     const updateVisibility = () => {
-      // Když není publicFromIso nastavený, bereme to jako "zobraz hned"
+      // KdyĹľ nenĂ­ publicFromIso nastavenĂ˝, bereme to jako "zobraz hned"
       if (!publicFromIso) {
         setShowPublic(true);
         return;
@@ -121,7 +136,7 @@ const Header = () => {
       <a href="/" className="carousel-logo-link">
         <img
           src="/img/ppv 2025 png.png"
-          alt="Plachtařský Pohár Vysočiny 2026"
+          alt="PlachtaĹ™skĂ˝ PohĂˇr VysoÄŤiny 2026"
           className="carousel-logo"
           decoding="async"
         />
@@ -149,7 +164,7 @@ const Header = () => {
           </MDBCarouselItem>
         ))}
       </MDBCarousel>
-      {/* Navigašní menu (desktop) */}
+      {/* NavigaĹˇnĂ­ menu (desktop) */}
       <MDBNavbar expand="lg" light bgColor="light" className="d-none d-md-block">
         <MDBContainer fluid>
           <MDBRow className="w-100 align-items-center g-0">
@@ -168,7 +183,7 @@ const Header = () => {
 
               <MDBCollapse id="navbarNav" open={showNav} navbar className="flex-grow-1">
                 <MDBNavbarNav className="mb-2 mb-lg-0">
-                  {showPublic && navItems.map((item) => (
+                  {navItems.filter(shouldShowNavItem).map((item) => (
                     <MDBNavbarItem key={item.path}>
                       <NavLink
                         className="nav-link"
@@ -176,7 +191,7 @@ const Header = () => {
                         {...(item.external ? { target: "_blank" } : {})}
                         onClick={() => setShowNav(false)}
                       >
-                        {item.label}
+                        {getNavItemLabel(item)}
                       </NavLink>
                     </MDBNavbarItem>
                   ))}
@@ -185,14 +200,16 @@ const Header = () => {
             </MDBCol>
 
             <MDBCol md="3" className="d-flex justify-content-end">
-              {getToken().length === 0 ? (
+              {!isLoggedIn ? (
                 showPublic ? (
                   <NavLink
                     className="nav-link"
                     to="/login"
                     onClick={() => setShowNav(false)}
                   >
-                    {"P\u0159ihl\u00e1\u0161en\u00ed"}
+                    <>
+                      {"P\u0159ihl\u00e1\u0161en\u00ed"} <small>{LOGIN_SUBLABEL}</small>
+                    </>
                   </NavLink>
                 ) : null
               ) : (
@@ -226,13 +243,13 @@ const Header = () => {
           </MDBRow>
         </MDBContainer>
       </MDBNavbar>
-      {/* Navigašní menu (hamburger v carouselu) */}
+      {/* NavigaĹˇnĂ­ menu (hamburger v carouselu) */}
       <div className="carousel-menu d-md-none">
         <MDBBtn
           color="light"
           size="sm"
           className="carousel-menu-toggle"
-          aria-label="Otevřít menu"
+          aria-label="OtevĹ™Ă­t menu"
           onClick={() => setShowNav(!showNav)}
         >
           <MDBIcon icon="bars" fas />
@@ -256,7 +273,7 @@ const Header = () => {
               Home
             </NavLink>
 
-            {showPublic && navItems.map((item) => (
+            {navItems.filter(shouldShowNavItem).map((item) => (
               <NavLink
                 key={item.path}
                 className='nav-link'
@@ -264,24 +281,26 @@ const Header = () => {
                 {...(item.external ? { target: '_blank' } : {})}
                 onClick={() => setShowNav(false)}
               >
-                {item.label}
+                {getNavItemLabel(item)}
               </NavLink>
             ))}
 
-            {getToken().length === 0 ? (
+            {!isLoggedIn ? (
               showPublic ? (
                 <NavLink
                   className="nav-link mt-2"
                   to="/login"
                   onClick={() => setShowNav(false)}
                 >
-                  Přihlášení
+                  <>
+                    {"P\u0159ihl\u00e1\u0161en\u00ed"} <small>{LOGIN_SUBLABEL}</small>
+                  </>
                 </NavLink>
               ) : null
             ) : (
               <MDBDropdown>
                 <MDBDropdownToggle tag='a' className='nav-link' role='button'>
-                  <MDBIcon icon='user' className='ms-2' /> {getUserName() || 'Uživatel'}
+                  <MDBIcon icon='user' className='ms-2' /> {getUserName() || 'UĹľivatel'}
                 </MDBDropdownToggle>
                 <MDBDropdownMenu>
                   {userMenuItems.map((item) => (

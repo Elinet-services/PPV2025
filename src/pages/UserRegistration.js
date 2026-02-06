@@ -1,7 +1,7 @@
 import { useContext, useState, useEffect, useCallback } from "react";
 import { Link } from "react-router-dom";
-import { MDBContainer, MDBRow, MDBCol, MDBInput, MDBBtn, MDBSelect } from "mdb-react-ui-kit";
-import { getCountries } from "react-phone-number-input";
+import { MDBContainer, MDBRow, MDBCol, MDBInput, MDBBtn, MDBSelect, MDBSwitch } from "mdb-react-ui-kit";
+import PhoneInput from "react-phone-number-input";
 import { isValidPhoneNumber, parsePhoneNumberFromString, getCountryCallingCode } from "libphonenumber-js";
 import { sha256 } from "node-forge";
 import {processRequest, domainName, getToken, getEmail} from '../services/connection.js';
@@ -28,6 +28,39 @@ const initialFormState = {
   password: "",
   rePassword: ""
 };
+const DEFAULT_PHONE_COUNTRY = "CZ";
+
+const normalizePhoneCountryPrefix = (phoneValue) => {
+  if (!phoneValue) return "";
+  return String(phoneValue).replace(/^\+0+/, "+");
+};
+
+const replacePhoneCountryCode = (phoneValue, previousCountry, nextCountry) => {
+  const normalizedValue = normalizePhoneCountryPrefix(phoneValue);
+  const nextCallingCode = getCountryCallingCode(nextCountry);
+  if (!normalizedValue) {
+    return `+${nextCallingCode}`;
+  }
+
+  const digits = normalizedValue.replace(/[^\d]/g, "");
+  if (!digits) {
+    return `+${nextCallingCode}`;
+  }
+
+  const previousCallingCode = previousCountry ? getCountryCallingCode(previousCountry) : "";
+  const nationalDigits = previousCallingCode && digits.startsWith(previousCallingCode)
+    ? digits.slice(previousCallingCode.length)
+    : digits;
+
+  return `+${nextCallingCode}${nationalDigits}`;
+};
+
+const detectPhoneCountry = (phoneValue, fallbackCountry = DEFAULT_PHONE_COUNTRY) => {
+  if (!phoneValue) return fallbackCountry;
+  const normalizedValue = normalizePhoneCountryPrefix(phoneValue);
+  const parsed = parsePhoneNumberFromString(normalizedValue);
+  return parsed?.country || fallbackCountry;
+};
 
 const UserRegistration = (params) => {
   const app = useContext(AppContext);
@@ -35,23 +68,30 @@ const UserRegistration = (params) => {
   const [isLogged, setLogged] = useState(getToken().length > 0);
   const [isRegistered, setRegistered] = useState(false);
   const [userParameters, setUserParameters] = useState({});
-  const [phoneCountry, setPhoneCountry] = useState("CZ");
-  const [phoneNational, setPhoneNational] = useState("");
+  const [phoneError, setPhoneError] = useState("");
+  const [isPhoneFocused, setPhoneFocused] = useState(false);
+  const [phoneCountry, setPhoneCountry] = useState(DEFAULT_PHONE_COUNTRY);
   const [raceListData, setRaceListData] = useState([]);
+  const isPhoneActive = isPhoneFocused || Boolean(formData.phone);
 
   //  --------------------------
   const setUserData = useCallback((domain, userParams) => {
     if (userParams === undefined) {
       setFormData(initialFormState);
+      setPhoneError("");
+      setPhoneFocused(false);
+      setPhoneCountry(DEFAULT_PHONE_COUNTRY);
       return;
     }
+    const nextPhoneValue = normalizePhoneCountryPrefix(userParams.phone || "");
+    const nextPhoneCountry = detectPhoneCountry(nextPhoneValue, DEFAULT_PHONE_COUNTRY);
 
     setFormData({
       domain: domain,
       name: userParams.name || '',
       surname: userParams.surname || '',
       email: getEmail(),
-      phone: userParams.phone || '',
+      phone: nextPhoneValue,
       club: userParams.club || '',
       glider: userParams.glider || '',
       imatriculation: userParams.imatriculation || '',
@@ -64,7 +104,10 @@ const UserRegistration = (params) => {
       password: '',
       rePassword: ''
     });
-  }, [setFormData]);
+    setPhoneError("");
+    setPhoneFocused(false);
+    setPhoneCountry(nextPhoneCountry);
+  }, [setFormData, setPhoneError, setPhoneFocused, setPhoneCountry]);
 
   //  -------------------------------------------------------------------------------
   //  prijme data z DB
@@ -103,6 +146,9 @@ const UserRegistration = (params) => {
     } else {
       setRegistered(false);
       setFormData(initialFormState);
+      setPhoneError("");
+      setPhoneFocused(false);
+      setPhoneCountry(DEFAULT_PHONE_COUNTRY);
       setUserParameters({});
       setRaceListData([]);
     }
@@ -115,6 +161,9 @@ const UserRegistration = (params) => {
       setLogged(false);
       setRegistered(false);
       setFormData(initialFormState);
+      setPhoneError("");
+      setPhoneFocused(false);
+      setPhoneCountry(DEFAULT_PHONE_COUNTRY);
     }
   }, [app.userRights]);
 
@@ -150,40 +199,35 @@ const UserRegistration = (params) => {
     }
   };
 
-  const updatePhoneValue = (country, nationalRaw) => {
-    const digits = (nationalRaw || "").replace(/[^\d]/g, "");
-    if (!digits) {
-      setFormData((prev) => ({ ...prev, phone: "" }));
-      return;
-    }
-    const code = getCountryCallingCode(country || "CZ");
-    setFormData((prev) => ({ ...prev, phone: `+${code}${digits}` }));
+  const handlePhoneChange = (value) => {
+    const normalizedPhone = normalizePhoneCountryPrefix(value || "");
+    setFormData((prevData) => ({ ...prevData, phone: normalizedPhone }));
+    setPhoneCountry(detectPhoneCountry(normalizedPhone, phoneCountry));
+    if (phoneError) setPhoneError("");
   };
 
-  const handlePhoneNationalChange = (e) => {
-    const nextRaw = e.target.value || "";
-    setPhoneNational(nextRaw);
-    updatePhoneValue(phoneCountry, nextRaw);
-  };
-
-  const handlePhoneCountryChange = (country) => {
-    const nextCountry = country || "CZ";
+  const handlePhoneCountryChange = (nextCountry) => {
+    if (!nextCountry) return;
+    setFormData((prevData) => ({
+      ...prevData,
+      phone: replacePhoneCountryCode(prevData.phone, phoneCountry, nextCountry)
+    }));
     setPhoneCountry(nextCountry);
-    updatePhoneValue(nextCountry, phoneNational);
+    if (phoneError) setPhoneError("");
   };
 
-  useEffect(() => {
-    if (!formData.phone) {
-      if (phoneNational !== "") setPhoneNational("");
-      return;
-    }
-    const parsed = parsePhoneNumberFromString(formData.phone);
-    if (!parsed) return;
-    const nextCountry = parsed.country || phoneCountry;
-    const nextNational = parsed.nationalNumber || "";
-    if (nextCountry !== phoneCountry) setPhoneCountry(nextCountry);
-    if (nextNational !== phoneNational) setPhoneNational(nextNational);
-  }, [formData.phone, phoneCountry, phoneNational]);
+  const handlePhoneFieldFocus = () => {
+    setPhoneFocused(true);
+  };
+
+  const handlePhoneFieldBlur = (e) => {
+    const fieldWrapper = e.currentTarget;
+    window.requestAnimationFrame(() => {
+      if (!fieldWrapper.contains(document.activeElement)) {
+        setPhoneFocused(false);
+      }
+    });
+  };
 
   const handleSelectChange = (name, value) => {
     if (name === 'domain') {
@@ -217,13 +261,10 @@ const UserRegistration = (params) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formData.phone || !isValidPhoneNumber(formData.phone)) {
-      const phoneInput = document.getElementById("phone") || document.getElementById("phone-mobile");
-      if (phoneInput) {
-        phoneInput.setCustomValidity(formData.phone ? "Zadejte platné telefonní číslo." : "Telefon je povinný.");
-        phoneInput.reportValidity();
-      }
+      setPhoneError(formData.phone ? "Zadejte platné telefonní číslo." : "Telefon je povinný.");
       return;
     }
+    setPhoneError("");
     if (!checkFilledDeviceFields(1, e) || !checkFilledDeviceFields(2, e)) return;
 
     const updatedFormData = {
@@ -237,6 +278,10 @@ const UserRegistration = (params) => {
     if (!response.isError) {
         if (!isLogged)
           setFormData(initialFormState);
+        if (!isLogged) {
+          setPhoneCountry(DEFAULT_PHONE_COUNTRY);
+        }
+        setPhoneError("");
     }
     params.setLoading(false);
   };
@@ -275,31 +320,25 @@ const UserRegistration = (params) => {
           <MDBCol md="5">
             <MDBInput label="Email" type="email" name="email" value={formData.email} onChange={handleChange} autoComplete="email" required readonly={isLogged} />
           </MDBCol>
-          <MDBCol md="3" className="d-none d-md-block">
-            <div className="d-flex gap-2 align-items-end">
-              <select
-                className="form-select phone-country-select phone-country-select--compact"
-                value={phoneCountry}
-                onChange={(e) => handlePhoneCountryChange(e.target.value)}
-              >
-                {getCountries().map((code) => (
-                  <option key={code} value={code}>
-                    {code}
-                  </option>
-                ))}
-              </select>
-              <div className="flex-grow-1">
-                <MDBInput
-                  id="phone"
-                  name="phone"
-                  label="Telefon"
-                  type="tel"
-                  value={phoneNational}
-                  onChange={handlePhoneNationalChange}
-                  autoComplete="tel"
-                />
-              </div>
+          <MDBCol md="3">
+            <div
+              className={`registration-phone-field${isPhoneActive ? " is-active" : ""}${isPhoneFocused ? " is-focused" : ""}${phoneError ? " is-invalid" : ""}`}
+              onFocusCapture={handlePhoneFieldFocus}
+              onBlurCapture={handlePhoneFieldBlur}
+            >
+              <label className="registration-phone-label" htmlFor="phone">Telefon</label>
+              <PhoneInput
+                id="phone"
+                className="registration-phone-input"
+                defaultCountry={DEFAULT_PHONE_COUNTRY}
+                countryCallingCodeEditable={isPhoneFocused}
+                international={isPhoneActive}
+                value={formData.phone || undefined}
+                onChange={handlePhoneChange}
+                onCountryChange={handlePhoneCountryChange}
+              />
             </div>
+            {phoneError ? <div className="invalid-feedback d-block">{phoneError}</div> : null}
           </MDBCol>
         </MDBRow>
 
@@ -333,35 +372,6 @@ const UserRegistration = (params) => {
           </>
         )}
 
-        <MDBRow className="mt-3 d-md-none">
-          <MDBCol md="3">
-            <div className="d-flex gap-2 align-items-end">
-              <select
-                className="form-select phone-country-select phone-country-select--compact"
-                value={phoneCountry}
-                onChange={(e) => handlePhoneCountryChange(e.target.value)}
-              >
-                {getCountries().map((code) => (
-                  <option key={code} value={code}>
-                    {code}
-                  </option>
-                ))}
-              </select>
-              <div className="flex-grow-1">
-                <MDBInput
-                  id="phone-mobile"
-                  name="phone"
-                  label="Telefon"
-                  type="tel"
-                  value={phoneNational}
-                  onChange={handlePhoneNationalChange}
-                  autoComplete="tel"
-                />
-              </div>
-            </div>
-          </MDBCol>
-        </MDBRow>
-
         <MDBRow className="mt-3">
           <MDBCol md="5">
             <ClubTypeahead
@@ -389,27 +399,25 @@ const UserRegistration = (params) => {
           <MDBCol md="12">
             <div className="d-flex align-items-center gap-3 flex-wrap">
               <label className="form-label mb-0">Třída větroně:</label>
-              <div className="btn-group glider-class-group" role="group" aria-label="Třída větroně">
-                {(
-                  formData.gliderClass === "club"
-                    ? [
-                        { key: "club", label: "Klubová třída" },
-                        { key: "combi", label: "Kombinovaná třída" },
-                      ]
-                    : [
-                        { key: "combi", label: "Kombinovaná třída" },
-                        { key: "club", label: "Klubová třída" },
-                      ]
-                ).map((item) => (
-                  <button
-                    key={item.key}
-                    type="button"
-                    className={`btn ${formData.gliderClass === item.key ? "btn-primary" : "btn-outline-primary"}`}
-                    onClick={() => setFormData((prevData) => ({ ...prevData, gliderClass: item.key }))}
-                  >
-                    {item.label}
-                  </button>
-                ))}
+              <div className="d-flex align-items-center gap-2 glider-class-switch-wrap">
+                <span className={`glider-class-switch-label ${formData.gliderClass === "club" ? "active" : ""}`}>
+                  Klubová třída
+                </span>
+                <MDBSwitch
+                  id="gliderClassSwitch"
+                  className="mb-0 glider-class-switch"
+                  aria-label="Přepnout třídu větroně"
+                  checked={formData.gliderClass === "combi"}
+                  onChange={(e) =>
+                    setFormData((prevData) => ({
+                      ...prevData,
+                      gliderClass: e.target.checked ? "combi" : "club",
+                    }))
+                  }
+                />
+                <span className={`glider-class-switch-label ${formData.gliderClass === "combi" ? "active" : ""}`}>
+                  Kombinovaná třída
+                </span>
               </div>
             </div>
           </MDBCol>
