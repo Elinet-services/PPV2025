@@ -11,6 +11,7 @@ const HomePage = lazy(() => import("./pages/HomePage"));
 const DocumentList = lazy(() => import("./pages/DocumentList.js"));
 const RacerListPage = lazy(() => import("./pages/RacerListPage"));
 const GuidesPage = lazy(() => import("./pages/GuidesPage.js"));
+const CookiePolicyPage = lazy(() => import("./pages/CookiePolicyPage.js"));
 const UserLogin = lazy(() => import("./pages/UserLogin.js"));
 const UserRegistration = lazy(() => import("./pages/UserRegistration.js"));
 const UserResetPassword = lazy(() => import("./pages/UserResetPassword.js"));
@@ -61,6 +62,7 @@ const UserApp = () => {
           <Routes>
             <Route path="/" element={<HomePage noteList={noteList} />} />
             <Route path="/navody" element={<GuidesPage />} />
+            <Route path="/cookies" element={<CookiePolicyPage />} />
             <Route
               path="/documents"
               element={<DocumentList documentList={documentList} />}

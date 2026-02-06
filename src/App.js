@@ -13,6 +13,7 @@ import {
 
 import UserApp from "./userApp";
 import BackofficeApp from "./backofficeApp.js";
+import CookieConsent from "./components/CookieConsent";
 import {
   getRights,
   processRequest,
@@ -149,6 +150,7 @@ const App = () => {
           processRequest,
         }}
       >
+        <CookieConsent />
         <Routes>
           <Route path="/backoffice/*" element={<BackofficeApp />} />
           <Route path="/*" element={<UserApp />} />

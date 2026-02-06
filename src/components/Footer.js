@@ -57,6 +57,8 @@ const Footer = () => (
           >
             {"Elinet services s.r.o."}
           </a>
+          {" · "}
+          <a href="#/cookies">{"Cookies"}</a>
           {"."}
         </small>
       </div>
