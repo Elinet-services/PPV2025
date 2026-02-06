@@ -9,10 +9,6 @@ import {
 const GuidesPage = () => {
   return (
     <MDBContainer className="my-5">
-      <MDBTypography tag="h4" className="mb-3 text-start">
-        {"Nápověda"}
-      </MDBTypography>
-
       <MDBTypography className="mb-4 text-start">
         {"Stručné návody k přihlášení, resetu hesla a editaci přihlášky."}{" "}
         {"Většina odkazů vás přesměruje na příslušnou stránku aplikace."}
