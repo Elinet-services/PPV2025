@@ -169,10 +169,6 @@ const Header = () => {
         <MDBContainer fluid>
           <MDBRow className="w-100 align-items-center g-0">
             <MDBCol md="9" className="d-flex align-items-center">
-              <NavLink className="navbar-brand d-none d-md-inline-block" to="/">
-                <MDBIcon fas icon="house" className="home-nav-icon" />
-              </NavLink>
-
               <MDBNavbarToggler
                 aria-label={"Otev\u0159\u00edt menu"}
                 onClick={() => setShowNav(!showNav)}
@@ -183,6 +179,17 @@ const Header = () => {
 
               <MDBCollapse id="navbarNav" open={showNav} navbar className="flex-grow-1">
                 <MDBNavbarNav className="mb-2 mb-lg-0">
+                  <MDBNavbarItem>
+                    <NavLink
+                      className="nav-link"
+                      to="/"
+                      aria-label="Home"
+                      onClick={() => setShowNav(false)}
+                    >
+                      <MDBIcon fas icon="house" className="home-nav-icon" />
+                    </NavLink>
+                  </MDBNavbarItem>
+
                   {navItems.filter(shouldShowNavItem).map((item) => (
                     <MDBNavbarItem
                       key={item.path}

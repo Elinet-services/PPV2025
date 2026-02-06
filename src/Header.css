@@ -44,7 +44,7 @@
 }
 
 /* Home icon in desktop navbar: match menu text height */
-.header-container .navbar-brand .home-nav-icon {
+.header-container .home-nav-icon {
   font-size: 1.05rem;
   line-height: 1;
 }
