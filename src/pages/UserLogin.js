@@ -65,10 +65,6 @@ const Login = (params) => {
     <MDBContainer className="my-5">
       {action === "login" ? (
         <section>
-          <MDBTypography tag="h4" className="mb-4 text-start">
-            {"P\u0159ihl\u00e1\u0161en\u00ed"}
-          </MDBTypography>
-
           <form onSubmit={handleSubmit}>
             <MDBRow className="g-3 align-items-end">
               <MDBCol md="4">

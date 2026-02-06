@@ -45,7 +45,7 @@ test("nápověda search filters blocks", async ({ page }) => {
 test("login page switches to forgot password form", async ({ page }) => {
   await page.goto("/#/login");
 
-  await expect(page.getByRole("heading", { name: /Přihlášení/ })).toBeVisible();
+  await expect(page.getByLabel("Email")).toBeVisible();
   await page.getByRole("button", { name: "Zapomenuté heslo" }).click();
   await expect(page.getByRole("heading", { name: /Obnovení hesla/ })).toBeVisible();
   await expect(page.getByRole("button", { name: "Odeslat odkaz" })).toBeVisible();
