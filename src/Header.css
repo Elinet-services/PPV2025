@@ -45,9 +45,10 @@
 
 /* "Návody" as slightly separated last item (not as far as Login) */
 .header-container .nav-link.nav-link-guides {
-  margin-left: 12px;
-  padding-left: 12px;
+  margin-left: 22px;
+  padding-left: 16px;
   border-left: 1px solid rgba(17, 24, 39, 0.18);
+  font-size: 0.95rem;
 }
 /* Gradient overlay for carousel */
 .carousel-gradient-overlay {
@@ -173,6 +174,8 @@
   margin-top: 6px;
   padding-top: 10px;
   border-top: 1px solid rgba(17, 24, 39, 0.15);
+  padding-left: 10px;
+  font-size: 0.95rem;
 }
 
 /* Mobile: keep only logo + caption visible */
