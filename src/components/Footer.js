@@ -36,7 +36,7 @@ const Footer = () => (
         <MDBCol lg="2" md="6" className="mb-4">
           <h6 className="text-uppercase">Předseda jury</h6>
           <ul className="list-unstyled">
-            <li><small><b>Karel Douda</b></small></li>
+            <li><small>&nbsp;</small></li>
           </ul>
         </MDBCol>
         <MDBCol lg="2" md="6" className="mb-4">
