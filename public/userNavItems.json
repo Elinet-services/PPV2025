@@ -1,6 +1,7 @@
-{
+﻿{
   "publicFrom": "2026-02-01T13:10:00+01:00",
   "items": [
+    { "label": "Návody", "path": "/navody" },
     { "label": "Registrace", "path": "/registration" },
     { "label": "Dokumenty", "path": "/documents" },
     { "label": "Seznam závodníků", "path": "/racerlist" }
