@@ -17,32 +17,24 @@ function renderGuides() {
 }
 
 test("search shows whole matching block", async () => {
+  const user = userEvent.setup();
   renderGuides();
 
-  expect(screen.getByRole("heading", { name: "Přihlášení" })).toBeInTheDocument();
-  expect(
-    screen.getByRole("heading", { name: "Reset hesla (nastavení nového hesla)" })
-  ).toBeInTheDocument();
+  expect(screen.getByRole("heading", { name: /^přihlášení$/i })).toBeInTheDocument();
+  expect(screen.getByRole("heading", { name: /^reset hesla \(nastavení nového hesla\)$/i })).toBeInTheDocument();
 
-  await userEvent.type(screen.getByLabelText("Vyhledat v nápovědě"), "reset");
+  await user.type(screen.getByLabelText(/vyhledat v nápovědě/i), "reset");
 
-  expect(
-    screen.queryByRole("heading", { name: "Přihlášení" })
-  ).not.toBeInTheDocument();
-  expect(
-    screen.getByRole("heading", { name: "Reset hesla (nastavení nového hesla)" })
-  ).toBeInTheDocument();
+  expect(screen.queryByRole("heading", { name: /^přihlášení$/i })).not.toBeInTheDocument();
+  expect(screen.getByRole("heading", { name: /^reset hesla \(nastavení nového hesla\)$/i })).toBeInTheDocument();
 
-  expect(
-    screen.getByText(
-      "Zadejte nové heslo (min. 8 znaků) a potvrďte ho ve druhém poli."
-    )
-  ).toBeInTheDocument();
+  expect(screen.getByText(/Zadejte nové heslo/i)).toBeInTheDocument();
 });
 
 test("search shows not-found message", async () => {
+  const user = userEvent.setup();
   renderGuides();
 
-  await userEvent.type(screen.getByLabelText("Vyhledat v nápovědě"), "neexistuje");
-  expect(screen.getByText(/Nic nenalezeno/)).toBeInTheDocument();
+  await user.type(screen.getByLabelText(/vyhledat v nápovědě/i), "neexistuje");
+  expect(screen.getByText(/Nic nenalezeno/i)).toBeInTheDocument();
 });

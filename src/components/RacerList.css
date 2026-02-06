@@ -1,3 +1,15 @@
+/* Enable horizontal scrolling when the datatable does not fit viewport */
+.racer-datatable {
+  width: 100%;
+  overflow-x: auto;
+  overflow-y: visible;
+  -webkit-overflow-scrolling: touch;
+}
+
+.racer-datatable table {
+  min-width: 980px;
+}
+
 /* Vertically center all body cells */
 .racer-datatable table tbody td {
   vertical-align: middle;
@@ -45,6 +57,10 @@
 
 /* Mobile: hide #, First Name, Club, Start Code */
 @media (max-width: 575.98px) {
+  .racer-datatable table {
+    min-width: 760px;
+  }
+
   /* # (1st column) */
   .racer-datatable table th:nth-child(1),
   .racer-datatable table td:nth-child(1),

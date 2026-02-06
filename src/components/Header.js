@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import "../Header.css";
@@ -32,11 +32,31 @@ const carouselItems = [
 ];
 
 const FALLBACK_PUBLIC_FROM = null;
+const HEADER_CAROUSEL_ID = "header-carousel";
+
+const CAROUSEL_CONTROL_LABELS = {
+  cs: {
+    prev: "Předchozí snímek",
+    next: "Další snímek",
+  },
+  en: {
+    prev: "Previous slide",
+    next: "Next slide",
+  },
+  de: {
+    prev: "Vorherige Folie",
+    next: "Nächste Folie",
+  },
+  fr: {
+    prev: "Diapositive précédente",
+    next: "Diapositive suivante",
+  },
+};
 
 const Header = () => {
   const app = useContext(AppContext);
   const navigate = useNavigate();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
 
   const [userMenuItems, setUserMenuItems] = useState([]);
   const [navItems, setNavItems] = useState([]);
@@ -45,6 +65,19 @@ const Header = () => {
   const [showPublic, setShowPublic] = useState(false);
 
   const isLoggedIn = getToken().length > 0;
+  const currentLanguage = (i18n.resolvedLanguage || i18n.language || "cs").split("-")[0];
+  const carouselLabels = useMemo(
+    () => CAROUSEL_CONTROL_LABELS[currentLanguage] || CAROUSEL_CONTROL_LABELS.cs,
+    [currentLanguage]
+  );
+
+  const moveCarousel = useCallback((direction) => {
+    const carousel = document.getElementById(HEADER_CAROUSEL_ID);
+    if (!carousel) return;
+    const selector = direction === "prev" ? ".carousel-control-prev" : ".carousel-control-next";
+    const control = carousel.querySelector(selector);
+    if (control instanceof HTMLElement) control.click();
+  }, []);
 
   const getItemLabel = (item) => {
     if (isLoggedIn && item.path === "/registration") {
@@ -147,7 +180,7 @@ const Header = () => {
 
       <img src="/img/CarouselText.png" alt="PPV 2026" className="carousel-caption-image" decoding="async" />
 
-      <MDBCarousel showIndicators showControls fade interval={11000}>
+      <MDBCarousel id={HEADER_CAROUSEL_ID} showIndicators showControls fade interval={11000}>
         {carouselItems.map((slide) => (
           <MDBCarouselItem key={slide.id} itemId={slide.id}>
             <img
@@ -161,6 +194,31 @@ const Header = () => {
           </MDBCarouselItem>
         ))}
       </MDBCarousel>
+
+      <div className="carousel-svg-controls" role="group" aria-label="Carousel controls">
+        <button
+          type="button"
+          className="carousel-svg-control carousel-svg-control-prev"
+          aria-label={carouselLabels.prev}
+          onClick={() => moveCarousel("prev")}
+        >
+          <svg viewBox="0 0 48 48" aria-hidden="true" focusable="false">
+            <circle cx="24" cy="24" r="20" className="carousel-svg-control-circle" />
+            <path d="M27 16L19 24L27 32" className="carousel-svg-control-arrow" />
+          </svg>
+        </button>
+        <button
+          type="button"
+          className="carousel-svg-control carousel-svg-control-next"
+          aria-label={carouselLabels.next}
+          onClick={() => moveCarousel("next")}
+        >
+          <svg viewBox="0 0 48 48" aria-hidden="true" focusable="false">
+            <circle cx="24" cy="24" r="20" className="carousel-svg-control-circle" />
+            <path d="M21 16L29 24L21 32" className="carousel-svg-control-arrow" />
+          </svg>
+        </button>
+      </div>
 
       <MDBNavbar expand="lg" light bgColor="light" className="d-none d-md-block">
         <MDBContainer fluid>

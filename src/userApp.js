@@ -1,9 +1,10 @@
 import { useContext, useState, useEffect, lazy, Suspense } from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
-import { MDBContainer, MDBSpinner } from "mdb-react-ui-kit";
+import { MDBContainer } from "mdb-react-ui-kit";
 
 import Header from "./components/Header";
 import Footer from "./components/Footer";
+import LoadingSpinner from "./components/LoadingSpinner";
 import { AppContext } from "./App.js";
 import { fetchData } from "./services/connection.js";
 
@@ -58,7 +59,7 @@ const UserApp = () => {
       <Header />
 
       <MDBContainer className={`content-container ${isHome ? "has-logos" : "no-logos"}`}>
-        <Suspense fallback={<div className="text-center my-5"><MDBSpinner role="status" /></div>}>
+        <Suspense fallback={<LoadingSpinner className="my-5" height="100px" />}>
           <Routes>
             <Route path="/" element={<HomePage noteList={noteList} />} />
             <Route path="/navody" element={<GuidesPage />} />

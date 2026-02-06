@@ -35,7 +35,7 @@
     "treasurer": "Trésorier",
     "chiefJudge": "Juge principal",
     "juryChair": "Président du jury",
-    "taskSetter": "Task Setter",
+    "taskSetter": "Traceur d'épreuves",
     "websiteByPrefix": "Site réalisé par",
     "cookies": "Cookies"
   },
@@ -106,11 +106,11 @@
         "i2": "Saisissez votre e-mail et mot de passe puis cliquez sur « Se connecter »."
       },
       "edit": {
-        "title": "Édition de l'inscription",
+        "title": "Modifier l'inscription",
         "i1": "Après connexion, l'élément « Modifier l'inscription » apparaît dans le menu.",
         "i2": "Cliquez dessus, modifiez les données et enregistrez.",
         "i3a": "La page d'édition est aussi accessible via",
-        "i3link": "Inscription / Édition",
+        "i3link": "Inscription / Modifier l'inscription",
         "i3b": "(après connexion)."
       },
       "forgot": {

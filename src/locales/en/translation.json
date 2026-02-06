@@ -15,7 +15,7 @@
     "home": "Home",
     "openMenu": "Open menu",
     "login": "Sign in",
-    "registrationEdit": "Entry edit"
+    "registrationEdit": "Edit entry"
   },
   "menu": {
     "registration": "Registration",
@@ -26,7 +26,7 @@
     "backoffice": "Backoffice",
     "changePassword": "Change password",
     "logout": "Sign out",
-    "editNews": "Edit news",
+    "editNews": "Edit updates",
     "editRacers": "Edit competitors"
   },
   "footer": {
@@ -69,7 +69,7 @@
   "registration": {
     "signInHintPrefix": "If you have flown with us before,",
     "signInHintLink": "sign in",
-    "signInHintSuffix": "to reuse data from previous years.",
+    "signInHintSuffix": " to reuse data from previous years.",
     "previousYears": "Previous years",
     "firstName": "First name",
     "lastName": "Last name",
@@ -106,11 +106,11 @@
         "i2": "Enter your email and password, then click “Sign in”."
       },
       "edit": {
-        "title": "Entry editing",
-        "i1": "After signing in, the “Entry edit” item appears in the menu.",
+        "title": "Edit entry",
+        "i1": "After signing in, the \"Edit entry\" item appears in the menu.",
         "i2": "Click it, update your data and save changes.",
         "i3a": "The edit page is also available via",
-        "i3link": "Registration / Entry edit",
+        "i3link": "Registration / Edit entry",
         "i3b": "(after signing in)."
       },
       "forgot": {

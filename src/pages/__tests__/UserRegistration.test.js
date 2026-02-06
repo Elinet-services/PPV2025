@@ -104,6 +104,7 @@ beforeEach(async () => {
 test("shows required phone error on submit when phone is empty", async () => {
   const { container } = renderUserRegistration();
 
+  // Keep submit synthetic event here to bypass browser required-field gate.
   fireEvent.submit(container.querySelector("form"));
 
   expect(await screen.findByText("Phone number is required.")).toBeInTheDocument();
@@ -111,9 +112,10 @@ test("shows required phone error on submit when phone is empty", async () => {
 });
 
 test("shows invalid phone error for malformed UK number", async () => {
+  const user = userEvent.setup();
   const { container } = renderUserRegistration();
 
-  await userEvent.type(screen.getByLabelText("Phone"), "+44 45678978");
+  await user.type(screen.getByLabelText("Phone"), "+44 45678978");
   fireEvent.submit(container.querySelector("form"));
 
   expect(await screen.findByText("Enter a valid phone number.")).toBeInTheDocument();
@@ -121,10 +123,11 @@ test("shows invalid phone error for malformed UK number", async () => {
 });
 
 test("submits valid UK phone and sends normalized value", async () => {
+  const user = userEvent.setup();
   processRequest.mockResolvedValueOnce({ isError: false, responseData: {} });
   const { container } = renderUserRegistration();
 
-  await userEvent.type(screen.getByLabelText("Phone"), "+44 7912 345678");
+  await user.type(screen.getByLabelText("Phone"), "+44 7912 345678");
   fireEvent.submit(container.querySelector("form"));
 
   await waitFor(() => expect(processRequest).toHaveBeenCalledTimes(1));

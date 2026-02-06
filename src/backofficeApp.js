@@ -1,9 +1,10 @@
 import { useContext, useState, useEffect, lazy, Suspense } from "react";
 import { Routes, Route } from "react-router-dom";
-import { MDBContainer, MDBSpinner } from "mdb-react-ui-kit";
+import { MDBContainer } from "mdb-react-ui-kit";
 
 import Header from "./components/BackofficeHeader.js";
 import Footer from "./components/BackofficeFooter.js";
+import LoadingSpinner from "./components/LoadingSpinner";
 import { AppContext } from "./App.js";
 
 const DocumentList = lazy(() => import("./pages/DocumentList.js"));
@@ -34,7 +35,7 @@ const BackofficeApp = () => {
       <Header menuItems={menuItems} logout={app.logout} />
 
       <MDBContainer className="content-container no-logos">
-        <Suspense fallback={<div className="text-center my-5"><MDBSpinner role="status" /></div>}>
+        <Suspense fallback={<LoadingSpinner className="my-5" height="100px" />}>
           <Routes>
             <Route path="documents" element={<DocumentList />} />
             <Route path="racerlist" element={<RacerListPage />} /> {/* ✅ FIX */}

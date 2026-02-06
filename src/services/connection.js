@@ -6,6 +6,24 @@ export const source = document.location.hostname;
 
 const cookieTokenTimeout = 120;
 const cookieTimeout = 1200;
+const SUPPORTED_LANGUAGES = new Set(["cs", "en", "de", "fr"]);
+const SERVER_MESSAGE_MAP = {
+  REQUEST_FAILED: "requestFailed",
+  REQUEST_ERROR: "requestError",
+  CRITICAL_ERROR: "criticalError",
+  UNEXPECTED_RESPONSE: "unexpectedResponse",
+};
+const ACTION_SUCCESS_MESSAGE_KEY = {
+  login: "loginSuccess",
+  registration: "registrationSaved",
+  edit: "registrationUpdated",
+  forgotpassword: "forgotPasswordSent",
+  resetpassword: "passwordResetDone",
+  changepassword: "passwordChanged",
+  registrationsubmit: "registrationConfirmed",
+  logout: "loggedOut",
+  savenote: "noteSaved",
+};
 
 const fallbackMessages = {
   cs: {
@@ -13,37 +31,99 @@ const fallbackMessages = {
     requestError: "Chyba při odesílání požadavku",
     criticalError: "Kritická chyba",
     unexpectedResponse: "Neočekávaná odpověď serveru",
+    loginSuccess: "Uživatel byl přihlášen.",
+    registrationSaved: "Registrace byla úspěšně uložena.",
+    registrationUpdated: "Údaje přihlášky byly úspěšně upraveny.",
+    forgotPasswordSent: "Žádost o reset hesla přijata. Zkontrolujte prosím Váš email a dokončete změnu hesla.",
+    passwordResetDone: "Heslo bylo úspěšně nastaveno.",
+    passwordChanged: "Heslo bylo úspěšně změněno.",
+    registrationConfirmed: "Přihláška byla úspěšně potvrzena.",
+    loggedOut: "Byli jste úspěšně odhlášeni.",
+    noteSaved: "Aktualita byla úspěšně uložena.",
   },
   en: {
     requestFailed: "Request could not be sent",
     requestError: "Error while sending request",
     criticalError: "Critical error",
     unexpectedResponse: "Unexpected server response",
+    loginSuccess: "User signed in successfully.",
+    registrationSaved: "Registration was saved successfully.",
+    registrationUpdated: "Entry details were updated successfully.",
+    forgotPasswordSent: "Password reset request accepted. Please check your email and complete the password change.",
+    passwordResetDone: "Password was set successfully.",
+    passwordChanged: "Password was changed successfully.",
+    registrationConfirmed: "Entry was confirmed successfully.",
+    loggedOut: "You have been signed out successfully.",
+    noteSaved: "Update was saved successfully.",
   },
   de: {
     requestFailed: "Anfrage konnte nicht gesendet werden",
     requestError: "Fehler beim Senden der Anfrage",
     criticalError: "Kritischer Fehler",
     unexpectedResponse: "Unerwartete Serverantwort",
+    loginSuccess: "Der Benutzer wurde erfolgreich angemeldet.",
+    registrationSaved: "Die Registrierung wurde erfolgreich gespeichert.",
+    registrationUpdated: "Die Anmeldedaten wurden erfolgreich aktualisiert.",
+    forgotPasswordSent:
+      "Anfrage zum Zurücksetzen des Passworts wurde angenommen. Bitte prüfen Sie Ihre E-Mails und schließen Sie die Passwortänderung ab.",
+    passwordResetDone: "Das Passwort wurde erfolgreich gesetzt.",
+    passwordChanged: "Das Passwort wurde erfolgreich geändert.",
+    registrationConfirmed: "Die Anmeldung wurde erfolgreich bestätigt.",
+    loggedOut: "Sie wurden erfolgreich abgemeldet.",
+    noteSaved: "Die Aktualität wurde erfolgreich gespeichert.",
   },
   fr: {
     requestFailed: "La requête n'a pas pu être envoyée",
     requestError: "Erreur lors de l'envoi de la requête",
     criticalError: "Erreur critique",
     unexpectedResponse: "Réponse serveur inattendue",
+    loginSuccess: "L'utilisateur a été connecté avec succès.",
+    registrationSaved: "L'inscription a été enregistrée avec succès.",
+    registrationUpdated: "Les données d'inscription ont été mises à jour avec succès.",
+    forgotPasswordSent:
+      "La demande de réinitialisation du mot de passe a été acceptée. Veuillez vérifier votre e-mail et terminer la modification du mot de passe.",
+    passwordResetDone: "Le mot de passe a été défini avec succès.",
+    passwordChanged: "Le mot de passe a été modifié avec succès.",
+    registrationConfirmed: "L'inscription a été confirmée avec succès.",
+    loggedOut: "Vous avez été déconnecté avec succès.",
+    noteSaved: "L'actualité a été enregistrée avec succès.",
   },
 };
 
+export function normalizeUiLanguage(language) {
+  const normalized = String(language || "")
+    .toLowerCase()
+    .split("-")[0];
+
+  return SUPPORTED_LANGUAGES.has(normalized) ? normalized : "";
+}
+
 function getUiLanguage() {
-  const lang = (typeof document !== "undefined" ? document.documentElement?.lang : "cs") || "cs";
-  const normalized = lang.toLowerCase();
-  if (["cs", "en", "de", "fr"].includes(normalized)) return normalized;
+  const htmlLanguage = normalizeUiLanguage(typeof document !== "undefined" ? document.documentElement?.lang : "");
+  if (htmlLanguage) return htmlLanguage;
+
+  const storedLanguage = normalizeUiLanguage(typeof localStorage !== "undefined" ? localStorage.getItem("ppv_lang") : "");
+  if (storedLanguage) return storedLanguage;
+
   return "cs";
 }
 
 function msg(key) {
   const lang = getUiLanguage();
   return fallbackMessages[lang]?.[key] || fallbackMessages.cs[key] || "";
+}
+
+function resolveServerMessage(message) {
+  const text = typeof message === "string" ? message.trim() : "";
+  if (!text) return "";
+
+  const [code, ...rest] = text.split(":");
+  const mapped = SERVER_MESSAGE_MAP[code];
+  if (!mapped) return text;
+
+  const localized = msg(mapped);
+  const details = rest.join(":").trim();
+  return details ? `${localized}: ${details}` : localized;
 }
 
 export function setDomainName(aDomainName) {
@@ -196,7 +276,13 @@ export async function processRequest(formData, action, setLoading, setMessage, s
     }
 
     isError = Boolean(data.isError);
-    responseMessage = data.message || "";
+    responseMessage = resolveServerMessage(data.message);
+    if (!isError) {
+      const successMessageKey = ACTION_SUCCESS_MESSAGE_KEY[action];
+      if (successMessageKey) {
+        responseMessage = msg(successMessageKey);
+      }
+    }
     responseData = data.responseData || {};
 
     if (isError && logFailure) {

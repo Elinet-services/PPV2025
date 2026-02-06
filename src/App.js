@@ -8,13 +8,13 @@ import {
   MDBModalTitle,
   MDBModalBody,
   MDBAlert,
-  MDBSpinner,
 } from "mdb-react-ui-kit";
 import { useTranslation } from "react-i18next";
 
 import UserApp from "./userApp";
 import BackofficeApp from "./backofficeApp.js";
 import CookieConsent from "./components/CookieConsent";
+import LoadingSpinner from "./components/LoadingSpinner";
 import {
   getRights,
   processRequest,
@@ -114,9 +114,7 @@ const App = () => {
               <MDBModalTitle>{t("app.sendingToDb")}</MDBModalTitle>
             </MDBModalHeader>
             <MDBModalBody>
-              <div className="text-center">
-                <MDBSpinner role="status" />
-              </div>
+              <LoadingSpinner height="120px" label={t("app.sendingToDb")} />
             </MDBModalBody>
           </MDBModalContent>
         </MDBModalDialog>

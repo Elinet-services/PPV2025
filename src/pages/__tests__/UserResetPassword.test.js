@@ -26,6 +26,7 @@ beforeEach(() => {
 });
 
 test("reset password: parses resetToken and hashes password with decoded salt", async () => {
+  const user = userEvent.setup();
   const navigateMock = jest.fn();
   useNavigate.mockReturnValue(navigateMock);
 
@@ -48,9 +49,9 @@ test("reset password: parses resetToken and hashes password with decoded salt", 
     />
   );
 
-  await userEvent.type(screen.getByLabelText("Heslo (min 8 znaků)"), "noveheslo");
-  await userEvent.type(screen.getByLabelText("Heslo pro kontrolu"), "noveheslo");
-  await userEvent.click(screen.getByRole("button", { name: "Nastavit nové heslo" }));
+  await user.type(screen.getByLabelText(/heslo \(min 8 znaků\)/i), "noveheslo");
+  await user.type(screen.getByLabelText(/heslo pro kontrolu/i), "noveheslo");
+  await user.click(screen.getByRole("button", { name: /nastavit nové heslo/i }));
 
   const expectedHash = sha256.create().update(salt + "noveheslo").digest().toHex();
 

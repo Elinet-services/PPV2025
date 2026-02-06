@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
-import { MDBContainer, MDBSpinner, MDBTable, MDBTableBody, MDBTableHead } from "mdb-react-ui-kit";
+import { MDBContainer, MDBTable, MDBTableBody, MDBTableHead } from "mdb-react-ui-kit";
 import { useTranslation } from "react-i18next";
+import LoadingSpinner from "./LoadingSpinner";
 
 const Weather = () => {
   const { t } = useTranslation();
@@ -57,9 +58,7 @@ const Weather = () => {
   if (loading) {
     return (
       <MDBContainer className="text-center">
-        <MDBSpinner role="status">
-          <span className="visually-hidden">{t("weather.loading")}</span>
-        </MDBSpinner>
+        <LoadingSpinner height="120px" label={t("weather.loading")} />
       </MDBContainer>
     );
   }
@@ -74,7 +73,7 @@ const Weather = () => {
 
   return (
     <MDBContainer>
-      <h4 className="mb-4">{t("weather.title")}</h4>
+      <h4 className="mb-4 weather-title">{t("weather.title")}</h4>
       <MDBTable small>
         <MDBTableHead></MDBTableHead>
         <MDBTableBody>

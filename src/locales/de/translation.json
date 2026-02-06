@@ -26,7 +26,7 @@
     "backoffice": "Backoffice",
     "changePassword": "Passwort ändern",
     "logout": "Abmelden",
-    "editNews": "Neuigkeiten bearbeiten",
+    "editNews": "Aktualitäten bearbeiten",
     "editRacers": "Teilnehmer bearbeiten"
   },
   "footer": {
@@ -35,7 +35,7 @@
     "treasurer": "Kassenwart",
     "chiefJudge": "Hauptrichter",
     "juryChair": "Juryvorsitz",
-    "taskSetter": "Task Setter",
+    "taskSetter": "Aufgabensteller",
     "websiteByPrefix": "Web erstellt von",
     "cookies": "Cookies"
   },
@@ -77,7 +77,7 @@
     "passwordMin8": "Passwort (mind. 8 Zeichen)",
     "passwordCheck": "Passwort bestätigen",
     "aeroclub": "Aeroklub",
-    "gliderType": "Flugzeugtyp",
+    "gliderType": "Segelflugzeugtyp",
     "imatriculation": "Kennzeichen",
     "startCode": "Startnummer",
     "gliderClassLabel": "Segelflugzeugklasse:",
@@ -188,7 +188,7 @@
     "colName": "Vorname",
     "colSurname": "Nachname",
     "colClub": "Aeroklub",
-    "colGlider": "Flugzeugtyp",
+    "colGlider": "Segelflugzeugtyp",
     "colImatriculation": "Kennzeichen",
     "colStartCode": "Startnummer",
     "colClass": "Klasse",

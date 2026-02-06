@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
-import { MDBBtn, MDBContainer, MDBSpinner, MDBTable, MDBTableBody, MDBTableHead } from "mdb-react-ui-kit";
+import { MDBBtn, MDBContainer, MDBTable, MDBTableBody, MDBTableHead } from "mdb-react-ui-kit";
 import { useTranslation } from "react-i18next";
 
+import LoadingSpinner from "../components/LoadingSpinner";
 import { formatDate } from "../services/connection";
 
 const Documents = ({ documentList }) => {
@@ -16,9 +17,7 @@ const Documents = ({ documentList }) => {
   return (
     <MDBContainer className="my-5">
       {loading ? (
-        <MDBSpinner role="status" className="text-left my-4">
-          <span className="visually-hidden">{t("documents.loading")}</span>
-        </MDBSpinner>
+        <LoadingSpinner className="my-4" height="100px" label={t("documents.loading")} />
       ) : (
         <MDBTable striped>
           <MDBTableHead>

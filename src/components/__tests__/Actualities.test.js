@@ -33,6 +33,7 @@ beforeEach(async () => {
 });
 
 test("translates an actuality on demand and toggles back to original", async () => {
+  const user = userEvent.setup();
   translateText.mockResolvedValueOnce("Translated header");
   translateHtml.mockResolvedValueOnce("<p>Translated body</p>");
 
@@ -41,7 +42,7 @@ test("translates an actuality on demand and toggles back to original", async () 
   expect(screen.getByText("Original header")).toBeInTheDocument();
   expect(screen.getByText("Original body")).toBeInTheDocument();
 
-  await userEvent.click(screen.getByRole("button", { name: "Translate" }));
+  await user.click(screen.getByRole("button", { name: "Translate" }));
 
   await waitFor(() => expect(screen.getByText("Translated header")).toBeInTheDocument());
   expect(screen.getByText("Translated body")).toBeInTheDocument();
@@ -50,7 +51,7 @@ test("translates an actuality on demand and toggles back to original", async () 
   expect(translateText.mock.calls[0][0]).toBe("Original header");
   expect(translateHtml.mock.calls[0][0]).toBe("<p>Original body</p>");
 
-  await userEvent.click(screen.getByRole("button", { name: "Original" }));
+  await user.click(screen.getByRole("button", { name: "Original" }));
 
   await waitFor(() => expect(screen.getByText("Original header")).toBeInTheDocument());
   expect(screen.getByText("Original body")).toBeInTheDocument();
@@ -58,13 +59,14 @@ test("translates an actuality on demand and toggles back to original", async () 
 });
 
 test("shows translation error and keeps original content when translation fails", async () => {
+  const user = userEvent.setup();
   const consoleErrorSpy = jest.spyOn(console, "error").mockImplementation(() => {});
   translateText.mockRejectedValueOnce(new Error("translate failed"));
   translateHtml.mockResolvedValueOnce("<p>unused</p>");
 
   render(<Actualities noteList={[createNote()]} />);
 
-  await userEvent.click(screen.getByRole("button", { name: "Translate" }));
+  await user.click(screen.getByRole("button", { name: "Translate" }));
 
   await waitFor(() => expect(screen.getByText("Translation failed.")).toBeInTheDocument());
   expect(screen.getByText("Original header")).toBeInTheDocument();
@@ -75,6 +77,7 @@ test("shows translation error and keeps original content when translation fails"
 });
 
 test("renders only the latest actuality by default and shows all after tab switch", async () => {
+  const user = userEvent.setup();
   render(
     <Actualities
       noteList={[
@@ -97,8 +100,20 @@ test("renders only the latest actuality by default and shows all after tab switc
   expect(screen.getByText("Latest")).toBeInTheDocument();
   expect(screen.queryByText("Older")).not.toBeInTheDocument();
 
-  await userEvent.click(screen.getByText("All updates"));
+  await user.click(screen.getByText("All updates"));
 
   expect(screen.getByText("Latest")).toBeInTheDocument();
   expect(screen.getByText("Older")).toBeInTheDocument();
+});
+
+test("hides translation button in Czech locale", async () => {
+  normalizeLanguage.mockReturnValue("cs");
+  await i18n.changeLanguage("cs");
+
+  render(<Actualities noteList={[createNote()]} />);
+
+  expect(screen.queryByRole("button", { name: /přeložit/i })).not.toBeInTheDocument();
+  expect(screen.queryByRole("button", { name: /translate/i })).not.toBeInTheDocument();
+  expect(screen.queryByText(/přeložit/i)).not.toBeInTheDocument();
+  expect(screen.queryByText(/translate/i)).not.toBeInTheDocument();
 });

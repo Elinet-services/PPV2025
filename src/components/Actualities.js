@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
-import { MDBBtn, MDBListGroup, MDBListGroupItem, MDBSpinner, MDBTabs, MDBTabsItem, MDBTabsLink } from "mdb-react-ui-kit";
+import { MDBBtn, MDBListGroup, MDBListGroupItem, MDBTabs, MDBTabsItem, MDBTabsLink } from "mdb-react-ui-kit";
 import { useTranslation } from "react-i18next";
 
 import { formatDate } from "../services/connection";
 import { normalizeLanguage, translateHtml, translateText } from "../services/translation";
+import LoadingSpinner from "./LoadingSpinner";
 
 const TRANSLATE_UI = {
   cs: {
@@ -19,16 +20,16 @@ const TRANSLATE_UI = {
     error: "Translation failed.",
   },
   de: {
-    translate: "Ubersetzen",
+    translate: "\u00dcbersetzen",
     original: "Original",
-    translating: "Ubersetze...",
-    error: "Ubersetzung fehlgeschlagen.",
+    translating: "\u00dcbersetze...",
+    error: "\u00dcbersetzung fehlgeschlagen.",
   },
   fr: {
     translate: "Traduire",
     original: "Original",
     translating: "Traduction...",
-    error: "Echec de la traduction.",
+    error: "\u00c9chec de la traduction.",
   },
 };
 
@@ -50,6 +51,7 @@ const Actualities = ({ noteList }) => {
 
   const currentLanguage = normalizeLanguage(i18n.resolvedLanguage || i18n.language);
   const translateUi = TRANSLATE_UI[currentLanguage] || TRANSLATE_UI.en;
+  const showTranslateControls = currentLanguage !== "cs";
 
   const sortedNoteList = [...noteList].sort((a, b) => new Date(b.date) - new Date(a.date));
   const filteredNoteList = allNoteList ? sortedNoteList : sortedNoteList.slice(0, 1);
@@ -73,6 +75,8 @@ const Actualities = ({ noteList }) => {
   const getTranslationKey = (note, index) => `${currentLanguage}:${getNoteKey(note, index)}`;
 
   const handleTranslateNote = async (note, index) => {
+    if (!showTranslateControls) return;
+
     const translationKey = getTranslationKey(note, index);
     const bodyText = decodeBodyText(note.bodyText);
 
@@ -127,9 +131,7 @@ const Actualities = ({ noteList }) => {
       </MDBTabs>
 
       {loading ? (
-        <MDBSpinner role="status" className="text-left my-4">
-          <span className="visually-hidden">{t("actualities.loading")}</span>
-        </MDBSpinner>
+        <LoadingSpinner className="my-4" height="100px" label={t("actualities.loading")} />
       ) : (
         <MDBListGroup>
           {filteredNoteList.map((note, index) => {
@@ -149,17 +151,21 @@ const Actualities = ({ noteList }) => {
                   <span>
                     {formatDate(note.date)} - <b>{headerToRender}</b>
                   </span>
-                  <MDBBtn
-                    color={isTranslated ? "secondary" : "light"}
-                    size="sm"
-                    onClick={() => (isTranslated ? handleShowOriginal(note, index) : handleTranslateNote(note, index))}
-                    disabled={isTranslating}
-                  >
-                    {isTranslating ? translateUi.translating : isTranslated ? translateUi.original : translateUi.translate}
-                  </MDBBtn>
+                  {showTranslateControls ? (
+                    <MDBBtn
+                      color={isTranslated ? "secondary" : "light"}
+                      size="sm"
+                      onClick={() => (isTranslated ? handleShowOriginal(note, index) : handleTranslateNote(note, index))}
+                      disabled={isTranslating}
+                    >
+                      {isTranslating ? translateUi.translating : isTranslated ? translateUi.original : translateUi.translate}
+                    </MDBBtn>
+                  ) : null}
                 </h6>
 
-                {hasTranslationError ? <small className="text-danger d-block mb-2">{translateUi.error}</small> : null}
+                {showTranslateControls && hasTranslationError ? (
+                  <small className="text-danger d-block mb-2">{translateUi.error}</small>
+                ) : null}
 
                 <span className="actualities-body" dangerouslySetInnerHTML={{ __html: bodyToRender }} />
               </MDBListGroupItem>
