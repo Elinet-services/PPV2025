@@ -1,7 +1,10 @@
 import { useState } from "react";
-import { MDBContainer, MDBRow, MDBCol, MDBInput, MDBBtn, MDBTypography } from "mdb-react-ui-kit";
+import { MDBBtn, MDBCol, MDBContainer, MDBInput, MDBRow, MDBTypography } from "mdb-react-ui-kit";
+import { useTranslation } from "react-i18next";
 import { sha256 } from "node-forge";
-import { processRequest, getEmail } from "../services/connection.js";
+
+import { getEmail, processRequest } from "../services/connection";
+import { clearLocalizedValidityOnInput, handleLocalizedValidityOnInvalid } from "../services/formValidation";
 
 const initialFormState = {
   oldPassword: "",
@@ -10,24 +13,27 @@ const initialFormState = {
 };
 
 const UserChangePassword = (params) => {
+  const { t } = useTranslation();
   const [formData, setFormData] = useState(initialFormState);
+  const handleInvalidCapture = (event) => handleLocalizedValidityOnInvalid(event, t);
+  const handleInputCapture = (event) => clearLocalizedValidityOnInput(event);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
     if (e.target.name === "oldPassword") {
       if (e.target.value.length === 0) e.target.setCustomValidity("");
-      else if (e.target.value.length < 8) e.target.setCustomValidity("Heslo mus\u00ed m\u00edt d\u00e9lku alespo\u0148 8 znak\u016f");
+      else if (e.target.value.length < 8) e.target.setCustomValidity(t("changePassword.passwordMin8Error"));
       else e.target.setCustomValidity("");
     }
     if (e.target.name === "password") {
       if (e.target.value.length === 0) e.target.setCustomValidity("");
-      else if (e.target.value.length < 8) e.target.setCustomValidity("Heslo mus\u00ed m\u00edt d\u00e9lku alespo\u0148 8 znak\u016f");
-      else if (e.target.value === formData.oldPassword) e.target.setCustomValidity("Heslo je stejn\u00e9 jako p\u0159edchoz\u00ed");
+      else if (e.target.value.length < 8) e.target.setCustomValidity(t("changePassword.passwordMin8Error"));
+      else if (e.target.value === formData.oldPassword) e.target.setCustomValidity(t("changePassword.sameAsPreviousError"));
       else e.target.setCustomValidity("");
     }
     if (e.target.name === "rePassword") {
       if (e.target.value.length === 0) e.target.setCustomValidity("");
-      else if (e.target.value !== formData.password) e.target.setCustomValidity("Hesla se neshoduj\u00ed");
+      else if (e.target.value !== formData.password) e.target.setCustomValidity(t("changePassword.passwordsDontMatch"));
       else e.target.setCustomValidity("");
     }
   };
@@ -61,10 +67,10 @@ const UserChangePassword = (params) => {
     <MDBContainer className="my-5">
       <section>
         <MDBTypography tag="h4" className="mb-4 text-start">
-          {"Zm\u011bna hesla"}
+          {t("changePassword.title")}
         </MDBTypography>
 
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} onInvalidCapture={handleInvalidCapture} onInputCapture={handleInputCapture}>
           <MDBRow className="g-3 align-items-end">
             <MDBCol md="4">
               <MDBInput
@@ -73,7 +79,7 @@ const UserChangePassword = (params) => {
                 onChange={handleChange}
                 value={formData.oldPassword}
                 type="password"
-                label={"Star\u00e9 heslo"}
+                label={t("changePassword.oldPassword")}
                 required
                 autoComplete="current-password"
               />
@@ -85,7 +91,7 @@ const UserChangePassword = (params) => {
                 onChange={handleChange}
                 value={formData.password}
                 type="password"
-                label={"Nov\u00e9 heslo (min 8 znak\u016f)"}
+                label={t("changePassword.newPasswordMin8")}
                 required
                 autoComplete="new-password"
               />
@@ -97,7 +103,7 @@ const UserChangePassword = (params) => {
                 onChange={handleChange}
                 value={formData.rePassword}
                 type="password"
-                label={"Nov\u00e9 heslo pro kontrolu"}
+                label={t("changePassword.newPasswordCheck")}
                 required
                 autoComplete="new-password"
               />
@@ -107,7 +113,7 @@ const UserChangePassword = (params) => {
           <MDBRow className="g-3 mt-1">
             <MDBCol md="4">
               <MDBBtn type="submit" color="primary" className="w-100 px-4 login-btn">
-                {"Nastavit nov\u00e9 heslo"}
+                {t("changePassword.setNewPassword")}
               </MDBBtn>
             </MDBCol>
           </MDBRow>

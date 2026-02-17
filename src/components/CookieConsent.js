@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { MDBBtn, MDBCard, MDBCardBody, MDBTypography } from "mdb-react-ui-kit";
+import { useTranslation } from "react-i18next";
 
 const STORAGE_KEY = "ppv_cookie_consent_v1";
 const CONSENT_EVENT = "ppv-cookie-consent-changed";
@@ -32,6 +33,7 @@ export function clearCookieConsent() {
 }
 
 const CookieConsent = () => {
+  const { t } = useTranslation();
   const [consent, setConsent] = useState(null);
 
   useEffect(() => {
@@ -56,36 +58,32 @@ const CookieConsent = () => {
       <MDBCard className="cookie-consent-card shadow-3">
         <MDBCardBody>
           <MDBTypography tag="h6" className="mb-2 text-start">
-            {"Cookies"}
+            {t("cookieConsent.title")}
           </MDBTypography>
           <MDBTypography className="mb-3 text-start">
-            {
-              "Používáme nezbytné cookies pro funkčnost webu (např. přihlášení). Volitelné cookies pro měření / marketing nepoužíváme, pokud je v budoucnu přidáme, budete je zde moci povolit."
-            }{" "}
-            <Link to="/cookies">{"Více informací"}</Link>
-            {"."}
+            {t("cookieConsent.text")} <Link to="/cookies">{t("cookieConsent.moreInfo")}</Link>.
           </MDBTypography>
 
           <div className="d-flex flex-wrap gap-2 justify-content-end">
             <MDBBtn
               color="light"
               type="button"
-              aria-label="Odmítnout volitelné cookies"
+              aria-label={t("cookieConsent.rejectOptional")}
               onClick={() => {
                 setCookieConsent("necessary");
               }}
             >
-              {"Pouze nezbytné"}
+              {t("cookieConsent.necessaryOnly")}
             </MDBBtn>
             <MDBBtn
               color="primary"
               type="button"
-              aria-label="Povolit cookies"
+              aria-label={t("cookieConsent.allowAll")}
               onClick={() => {
                 setCookieConsent("all");
               }}
             >
-              {"Povolit vše"}
+              {t("cookieConsent.allowAll")}
             </MDBBtn>
           </div>
         </MDBCardBody>

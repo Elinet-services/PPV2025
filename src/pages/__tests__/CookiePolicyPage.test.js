@@ -12,9 +12,10 @@ jest.mock("../../components/CookieConsent", () => ({
 const { clearCookieConsent } = require("../../components/CookieConsent");
 
 test("renders cookie policy summary, cookie list, and consent change button", async () => {
+  const user = userEvent.setup();
   render(<CookiePolicyPage />);
 
-  expect(screen.getByRole("heading", { name: "Cookies" })).toBeInTheDocument();
+  expect(screen.getByRole("heading", { level: 4, name: /^cookies$/i })).toBeInTheDocument();
   expect(screen.getByText(/Tento web používá nezbytné cookies/i)).toBeInTheDocument();
 
   expect(screen.getByText("token")).toBeInTheDocument();
@@ -23,6 +24,6 @@ test("renders cookie policy summary, cookie list, and consent change button", as
   expect(screen.getByText("userName")).toBeInTheDocument();
   expect(screen.getByText("rights")).toBeInTheDocument();
 
-  await userEvent.click(screen.getByRole("button", { name: "Změnit volbu cookies" }));
+  await user.click(screen.getByRole("button", { name: /změnit volbu cookies/i }));
   expect(clearCookieConsent).toHaveBeenCalledTimes(1);
 });

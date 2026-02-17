@@ -1,15 +1,11 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import {
-  MDBContainer,
-  MDBRow,
-  MDBCol,
-  MDBInput,
-  MDBBtn,
-  MDBTypography,
-} from "mdb-react-ui-kit";
+import { MDBBtn, MDBCol, MDBContainer, MDBInput, MDBRow, MDBTypography } from "mdb-react-ui-kit";
+import { useTranslation } from "react-i18next";
 import { sha256 } from "node-forge";
-import { processRequest, setCookies, resetCookies } from "../services/connection.js";
+
+import { processRequest, resetCookies, setCookies } from "../services/connection";
+import { clearLocalizedValidityOnInput, handleLocalizedValidityOnInvalid } from "../services/formValidation";
 
 const initialFormState = {
   email: "",
@@ -17,15 +13,18 @@ const initialFormState = {
 };
 
 const Login = (params) => {
+  const { t } = useTranslation();
   const [formData, setFormData] = useState(initialFormState);
   const [action, setAction] = useState("login");
   const navigate = useNavigate();
+  const handleInvalidCapture = (event) => handleLocalizedValidityOnInvalid(event, t);
+  const handleInputCapture = (event) => clearLocalizedValidityOnInput(event);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
     if (e.target.name === "password") {
       if (e.target.value.length === 0) e.target.setCustomValidity("");
-      else if (e.target.value.length < 8) e.target.setCustomValidity("Heslo mus\u00ed m\u00edt d\u00e9lku alespo\u0148 8 znak\u016f");
+      else if (e.target.value.length < 8) e.target.setCustomValidity(t("login.passwordMin8Error"));
       else e.target.setCustomValidity("");
     }
   };
@@ -38,9 +37,10 @@ const Login = (params) => {
     const updatedFormData = {
       ...formData,
       email: normalizedEmail,
-      password: action === "login"
-        ? sha256.create().update(normalizedEmail + formData.password).digest().toHex()
-        : "",
+      password:
+        action === "login"
+          ? sha256.create().update(normalizedEmail + formData.password).digest().toHex()
+          : "",
     };
 
     const response = await processRequest(
@@ -65,7 +65,7 @@ const Login = (params) => {
     <MDBContainer className="my-5">
       {action === "login" ? (
         <section>
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit} onInvalidCapture={handleInvalidCapture} onInputCapture={handleInputCapture}>
             <MDBRow className="g-3 align-items-end">
               <MDBCol md="4">
                 <MDBInput
@@ -74,7 +74,7 @@ const Login = (params) => {
                   onChange={handleChange}
                   value={formData.email}
                   type="email"
-                  label="Email"
+                  label={t("login.email")}
                   required
                   autoComplete="email"
                 />
@@ -86,7 +86,7 @@ const Login = (params) => {
                   onChange={handleChange}
                   value={formData.password}
                   type="password"
-                  label="Heslo"
+                  label={t("login.password")}
                   required
                   autoComplete="current-password"
                 />
@@ -94,7 +94,7 @@ const Login = (params) => {
               <MDBCol md="4">
                 <div className="d-flex gap-2">
                   <MDBBtn type="submit" color="primary" className="w-100 px-4 login-btn">
-                    {"P\u0159ihl\u00e1sit"}
+                    {t("login.signIn")}
                   </MDBBtn>
                   <MDBBtn
                     type="button"
@@ -102,7 +102,7 @@ const Login = (params) => {
                     className="w-100 px-4 login-btn"
                     onClick={() => setAction("forgotpassword")}
                   >
-                    {"Zapomenut\u00e9 heslo"}
+                    {t("login.forgotPassword")}
                   </MDBBtn>
                 </div>
               </MDBCol>
@@ -112,10 +112,10 @@ const Login = (params) => {
       ) : (
         <section>
           <MDBTypography tag="h4" className="mb-4 text-start">
-            {"Obnoven\u00ed hesla"}
+            {t("login.resetTitle")}
           </MDBTypography>
 
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit} onInvalidCapture={handleInvalidCapture} onInputCapture={handleInputCapture}>
             <MDBRow className="g-3 align-items-end">
               <MDBCol md="4">
                 <MDBInput
@@ -124,7 +124,7 @@ const Login = (params) => {
                   onChange={handleChange}
                   value={formData.email}
                   type="email"
-                  label="Email"
+                  label={t("login.email")}
                   required
                   autoComplete="email"
                 />
@@ -132,7 +132,7 @@ const Login = (params) => {
               <MDBCol md="4">
                 <div className="d-flex gap-2">
                   <MDBBtn type="submit" color="primary" className="w-100 px-4 login-btn">
-                    {"Odeslat odkaz"}
+                    {t("login.sendLink")}
                   </MDBBtn>
                   <MDBBtn
                     type="button"
@@ -140,7 +140,7 @@ const Login = (params) => {
                     className="w-100 px-4 login-btn"
                     onClick={() => setAction("login")}
                   >
-                    {"Zp\u011bt na p\u0159ihl\u00e1\u0161en\u00ed"}
+                    {t("login.backToLogin")}
                   </MDBBtn>
                 </div>
               </MDBCol>

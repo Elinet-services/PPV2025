@@ -1,53 +1,97 @@
-import { useContext, useState, useEffect } from 'react';
-import { NavLink, useNavigate } from 'react-router-dom';
-import '../Header.css';
+import { useCallback, useContext, useEffect, useMemo, useState } from "react";
+import { NavLink, useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+import "../Header.css";
 import {
-  MDBContainer,
-  MDBRow,
-  MDBCol,
+  MDBBtn,
   MDBCarousel,
   MDBCarouselItem,
-  MDBBtn,
-  MDBNavbar,
-  MDBNavbarNav,
-  MDBNavbarItem,
-  MDBNavbarToggler,
-  MDBIcon,
+  MDBCol,
   MDBCollapse,
+  MDBContainer,
   MDBDropdown,
-  MDBDropdownToggle,
+  MDBDropdownItem,
   MDBDropdownMenu,
-  MDBDropdownItem
-} from 'mdb-react-ui-kit';
-import { getToken, getUserName } from '../services/connection.js';
-import { AppContext } from '../App.js';
+  MDBDropdownToggle,
+  MDBIcon,
+  MDBNavbar,
+  MDBNavbarItem,
+  MDBNavbarNav,
+  MDBNavbarToggler,
+  MDBRow,
+} from "mdb-react-ui-kit";
+
+import { AppContext } from "../App";
+import LanguageSwitcher from "./LanguageSwitcher";
+import { getToken, getUserName } from "../services/connection";
 
 const carouselItems = [
-  { id: 1, img: "/img/1_pic.jpg", caption: "PrvnĂ­ snĂ­mek" },
-  { id: 2, img: "/img/2_pic.jpg", caption: "DruhĂ˝ snĂ­mek" },
-  { id: 3, img: "/img/3_pic.jpg", caption: "TĹ™etĂ­ snĂ­mek" }
+  { id: 1, img: "/img/1_pic.jpg" },
+  { id: 2, img: "/img/2_pic.jpg" },
+  { id: 3, img: "/img/3_pic.jpg" },
 ];
 
-// Fallback, kdyby se JSON nepodaĹ™ilo naÄŤĂ­st (mĹŻĹľeĹˇ nechat null a pak zobrazit hned)
-const FALLBACK_PUBLIC_FROM = null; // napĹ™. "2026-01-28T10:08:00+01:00"
-const REGISTRATION_EDIT_LABEL = "Editace p\u0159ihl\u00e1\u0161ky z\u00e1vodn\u00edka";
-const LOGIN_SUBLABEL = "(\u00faprava p\u0159ihl\u00e1\u0161ky)";
+const FALLBACK_PUBLIC_FROM = null;
+const HEADER_CAROUSEL_ID = "header-carousel";
+
+const CAROUSEL_CONTROL_LABELS = {
+  cs: {
+    prev: "Předchozí snímek",
+    next: "Další snímek",
+  },
+  en: {
+    prev: "Previous slide",
+    next: "Next slide",
+  },
+  de: {
+    prev: "Vorherige Folie",
+    next: "Nächste Folie",
+  },
+  fr: {
+    prev: "Diapositive précédente",
+    next: "Diapositive suivante",
+  },
+};
 
 const Header = () => {
   const app = useContext(AppContext);
   const navigate = useNavigate();
+  const { t, i18n } = useTranslation();
 
-  const [userMenuItems, setUserMenuItems] = useState([]); // poloĹľky menu pro uĹľivatele (po pĹ™ihlĂˇĹˇenĂ­)
-  const [navItems, setNavItems] = useState([]);           // veĹ™ejnĂ© poloĹľky menu
+  const [userMenuItems, setUserMenuItems] = useState([]);
+  const [navItems, setNavItems] = useState([]);
   const [showNav, setShowNav] = useState(false);
-
   const [publicFromIso, setPublicFromIso] = useState(FALLBACK_PUBLIC_FROM);
   const [showPublic, setShowPublic] = useState(false);
-  const isLoggedIn = getToken().length > 0;
 
-  const getNavItemLabel = (item) => {
+  const isLoggedIn = getToken().length > 0;
+  const currentLanguage = (i18n.resolvedLanguage || i18n.language || "cs").split("-")[0];
+  const carouselLabels = useMemo(
+    () => CAROUSEL_CONTROL_LABELS[currentLanguage] || CAROUSEL_CONTROL_LABELS.cs,
+    [currentLanguage]
+  );
+
+  const moveCarousel = useCallback((direction) => {
+    const carousel = document.getElementById(HEADER_CAROUSEL_ID);
+    if (!carousel) return;
+    const selector = direction === "prev" ? ".carousel-control-prev" : ".carousel-control-next";
+    const control = carousel.querySelector(selector);
+    if (control instanceof HTMLElement) control.click();
+  }, []);
+
+  const getItemLabel = (item) => {
     if (isLoggedIn && item.path === "/registration") {
-      return REGISTRATION_EDIT_LABEL;
+      return t("nav.registrationEdit");
+    }
+    if (item.labelKey) {
+      return t(item.labelKey);
+    }
+    return item.label;
+  };
+
+  const getMenuLabel = (item) => {
+    if (item.labelKey) {
+      return t(item.labelKey);
     }
     return item.label;
   };
@@ -57,41 +101,36 @@ const Header = () => {
     return isLoggedIn && item.path === "/registration";
   };
 
-  // Fetch user menu items based on user rights (dropdown po pĹ™ihlĂˇĹˇenĂ­)
   useEffect(() => {
     fetch("/userMenuItems.json")
       .then((res) => res.json())
       .then((data) => {
-        const filteredItems = data.filter(item => {
+        const filteredItems = data.filter((item) => {
           if (item.addDivider) return true;
-          if (app.userRights.indexOf(item.right) === -1) return false;
-          return true;
+          return app.userRights.indexOf(item.right) !== -1;
         });
         setUserMenuItems(filteredItems);
-      });
+      })
+      .catch(() => setUserMenuItems([]));
   }, [app.userRights]);
 
-  // NaÄŤti nav config + poloĹľky z userNavItems.json
   useEffect(() => {
     const loadNavConfig = async () => {
       const res = await fetch("/userNavItems.json");
       const data = await res.json();
 
-      // oÄŤekĂˇvĂˇme novĂ˝ formĂˇt: { publicFrom, items: [...] }
       if (data && typeof data === "object" && Array.isArray(data.items)) {
         setPublicFromIso(data.publicFrom ?? FALLBACK_PUBLIC_FROM);
         setNavItems(data.items);
         return;
       }
 
-      // fallback pro starĂ˝ formĂˇt (pole poloĹľek) â€“ v tom pĹ™Ă­padÄ› se nic neÄŤekĂˇ a zobrazĂ­ se hned
       if (Array.isArray(data)) {
         setPublicFromIso(null);
         setNavItems(data);
         return;
       }
 
-      // kdyĹľ je to nÄ›co jinĂ©ho, radÄ›ji nic
       setPublicFromIso(FALLBACK_PUBLIC_FROM);
       setNavItems([]);
     };
@@ -102,12 +141,10 @@ const Header = () => {
     });
   }, []);
 
-  // ÄŚasovĂ© Ĺ™Ă­zenĂ­ viditelnosti (menu + PĹ™ihlĂˇĹˇenĂ­)
   useEffect(() => {
     let timerId;
 
     const updateVisibility = () => {
-      // KdyĹľ nenĂ­ publicFromIso nastavenĂ˝, bereme to jako "zobraz hned"
       if (!publicFromIso) {
         setShowPublic(true);
         return;
@@ -119,7 +156,7 @@ const Header = () => {
       setShowPublic(nowMs >= showAt);
 
       if (showAt > nowMs) {
-        timerId = window.setTimeout(updateVisibility, (showAt - nowMs) + 50);
+        timerId = window.setTimeout(updateVisibility, showAt - nowMs + 50);
       }
     };
 
@@ -132,26 +169,19 @@ const Header = () => {
 
   return (
     <MDBContainer className="header-container">
-      {/* Logo */}
       <a href="/" className="carousel-logo-link">
         <img
           src="/img/ppv 2025 png.png"
-          alt="PlachtaĹ™skĂ˝ PohĂˇr VysoÄŤiny 2026"
+          alt="Plachtařský Pohár Vysočiny 2026"
           className="carousel-logo"
           decoding="async"
         />
       </a>
 
-      <img
-        src="/img/CarouselText.png"
-        alt="PPV 2026"
-        className="carousel-caption-image"
-        decoding="async"
-      />
+      <img src="/img/CarouselText.png" alt="PPV 2026" className="carousel-caption-image" decoding="async" />
 
-      {/* Carousel */}
-      <MDBCarousel showIndicators showControls fade interval={11000}>
-        {carouselItems.map(slide => (
+      <MDBCarousel id={HEADER_CAROUSEL_ID} showIndicators showControls fade interval={11000}>
+        {carouselItems.map((slide) => (
           <MDBCarouselItem key={slide.id} itemId={slide.id}>
             <img
               src={slide.img}
@@ -160,17 +190,42 @@ const Header = () => {
               loading={slide.id === 1 ? "eager" : "lazy"}
               decoding="async"
             />
-            <div className='carousel-gradient-overlay' />
+            <div className="carousel-gradient-overlay" />
           </MDBCarouselItem>
         ))}
       </MDBCarousel>
-      {/* NavigaĹˇnĂ­ menu (desktop) */}
+
+      <div className="carousel-svg-controls" role="group" aria-label="Carousel controls">
+        <button
+          type="button"
+          className="carousel-svg-control carousel-svg-control-prev"
+          aria-label={carouselLabels.prev}
+          onClick={() => moveCarousel("prev")}
+        >
+          <svg viewBox="0 0 48 48" aria-hidden="true" focusable="false">
+            <circle cx="24" cy="24" r="20" className="carousel-svg-control-circle" />
+            <path d="M27 16L19 24L27 32" className="carousel-svg-control-arrow" />
+          </svg>
+        </button>
+        <button
+          type="button"
+          className="carousel-svg-control carousel-svg-control-next"
+          aria-label={carouselLabels.next}
+          onClick={() => moveCarousel("next")}
+        >
+          <svg viewBox="0 0 48 48" aria-hidden="true" focusable="false">
+            <circle cx="24" cy="24" r="20" className="carousel-svg-control-circle" />
+            <path d="M21 16L29 24L21 32" className="carousel-svg-control-arrow" />
+          </svg>
+        </button>
+      </div>
+
       <MDBNavbar expand="lg" light bgColor="light" className="d-none d-md-block">
         <MDBContainer fluid>
           <MDBRow className="w-100 align-items-center g-0">
             <MDBCol md="9" className="d-flex align-items-center">
               <MDBNavbarToggler
-                aria-label={"Otev\u0159\u00edt menu"}
+                aria-label={t("nav.openMenu")}
                 onClick={() => setShowNav(!showNav)}
                 aria-controls="navbarSupportedContent"
               >
@@ -180,28 +235,20 @@ const Header = () => {
               <MDBCollapse id="navbarNav" open={showNav} navbar className="flex-grow-1">
                 <MDBNavbarNav className="mb-2 mb-lg-0">
                   <MDBNavbarItem>
-                    <NavLink
-                      className="nav-link"
-                      to="/"
-                      aria-label="Home"
-                      onClick={() => setShowNav(false)}
-                    >
+                    <NavLink className="nav-link" to="/" aria-label={t("nav.home")} onClick={() => setShowNav(false)}>
                       <MDBIcon fas icon="house" className="home-nav-icon" />
                     </NavLink>
                   </MDBNavbarItem>
 
                   {navItems.filter(shouldShowNavItem).map((item) => (
-                    <MDBNavbarItem
-                      key={item.path}
-                      className={item.path === "/navody" ? "nav-item-guides ms-auto" : ""}
-                    >
+                    <MDBNavbarItem key={item.path} className={item.path === "/navody" ? "nav-item-guides ms-auto" : ""}>
                       <NavLink
                         className={`nav-link ${item.path === "/navody" ? "nav-link-guides" : ""}`}
                         to={item.path}
                         {...(item.external ? { target: "_blank" } : {})}
                         onClick={() => setShowNav(false)}
                       >
-                        {getNavItemLabel(item)}
+                        {getItemLabel(item)}
                       </NavLink>
                     </MDBNavbarItem>
                   ))}
@@ -209,78 +256,67 @@ const Header = () => {
               </MDBCollapse>
             </MDBCol>
 
-            <MDBCol md="3" className="d-flex justify-content-end">
+            <MDBCol md="3" className="d-flex justify-content-end align-items-center gap-2">
               {!isLoggedIn ? (
                 showPublic ? (
-                  <NavLink
-                    className="nav-link"
-                    to="/login"
-                    onClick={() => setShowNav(false)}
-                  >
-                    <>
-                      {"P\u0159ihl\u00e1\u0161en\u00ed"} <small>{LOGIN_SUBLABEL}</small>
-                    </>
+                  <NavLink className="nav-link nav-link-auth" to="/login" onClick={() => setShowNav(false)}>
+                    {t("nav.login")}
                   </NavLink>
                 ) : null
               ) : (
                 <MDBDropdown>
-                  <MDBDropdownToggle tag="a" className="nav-link" role="button">
-                    <MDBIcon icon="user" className="ms-2" /> {getUserName() || 'U\u017eivatel'}
+                  <MDBDropdownToggle tag="a" className="nav-link nav-link-auth" role="button">
+                    <MDBIcon icon="user" className="ms-2" /> {getUserName() || t("common.userFallback")}
                   </MDBDropdownToggle>
                   <MDBDropdownMenu>
-                    {userMenuItems.map((item) => (
-                      item.addDivider
-                        ? <MDBDropdownItem divider key={item.right} />
-                        : (
-                          <MDBDropdownItem
-                            link
-                            childTag="button"
-                            key={item.right}
-                            onClick={() => {
-                              if (item.path === 'logout') app.logout();
-                              else navigate(item.path);
-                              setShowNav(false);
-                            }}
-                          >
-                            <div>{item.label}</div>
-                          </MDBDropdownItem>
-                        )
-                    ))}
+                    {userMenuItems.map((item) =>
+                      item.addDivider ? (
+                        <MDBDropdownItem divider key={item.right} />
+                      ) : (
+                        <MDBDropdownItem
+                          link
+                          childTag="button"
+                          key={item.right}
+                          onClick={() => {
+                            if (item.path === "logout") app.logout();
+                            else navigate(item.path);
+                            setShowNav(false);
+                          }}
+                        >
+                          <div>{getMenuLabel(item)}</div>
+                        </MDBDropdownItem>
+                      )
+                    )}
                   </MDBDropdownMenu>
                 </MDBDropdown>
               )}
+              <LanguageSwitcher compact />
             </MDBCol>
           </MDBRow>
         </MDBContainer>
       </MDBNavbar>
-      {/* NavigaĹˇnĂ­ menu (hamburger v carouselu) */}
+
       <div className="carousel-menu d-md-none">
         <MDBBtn
           color="light"
           size="sm"
           className="carousel-menu-toggle"
-          aria-label="OtevĹ™Ă­t menu"
+          aria-label={t("nav.openMenu")}
           onClick={() => setShowNav(!showNav)}
         >
           <MDBIcon icon="bars" fas />
         </MDBBtn>
 
-        {showNav ? (
-          <div
-            className="carousel-menu-backdrop"
-            onClick={() => setShowNav(false)}
-            aria-hidden="true"
-          />
-        ) : null}
+        {showNav ? <div className="carousel-menu-backdrop" onClick={() => setShowNav(false)} aria-hidden="true" /> : null}
 
         <MDBCollapse id="carouselNav" open={showNav} className="carousel-menu-panel">
           <div className="carousel-menu-items">
-            <NavLink
-              className='nav-link'
-              to="/"
-              onClick={() => setShowNav(false)}
-            >
-              Home
+            <div className="d-flex justify-content-end mb-2">
+              <LanguageSwitcher compact />
+            </div>
+
+            <NavLink className="nav-link" to="/" onClick={() => setShowNav(false)}>
+              {t("nav.home")}
             </NavLink>
 
             {navItems.filter(shouldShowNavItem).map((item) => (
@@ -288,49 +324,43 @@ const Header = () => {
                 key={item.path}
                 className={`nav-link ${item.path === "/navody" ? "nav-link-guides" : ""}`}
                 to={item.path}
-                {...(item.external ? { target: '_blank' } : {})}
+                {...(item.external ? { target: "_blank" } : {})}
                 onClick={() => setShowNav(false)}
               >
-                {getNavItemLabel(item)}
+                {getItemLabel(item)}
               </NavLink>
             ))}
 
             {!isLoggedIn ? (
               showPublic ? (
-                <NavLink
-                  className="nav-link mt-2"
-                  to="/login"
-                  onClick={() => setShowNav(false)}
-                >
-                  <>
-                    {"P\u0159ihl\u00e1\u0161en\u00ed"} <small>{LOGIN_SUBLABEL}</small>
-                  </>
+                <NavLink className="nav-link mt-2" to="/login" onClick={() => setShowNav(false)}>
+                  {t("nav.login")}
                 </NavLink>
               ) : null
             ) : (
               <MDBDropdown>
-                <MDBDropdownToggle tag='a' className='nav-link' role='button'>
-                  <MDBIcon icon='user' className='ms-2' /> {getUserName() || 'UĹľivatel'}
+                <MDBDropdownToggle tag="a" className="nav-link" role="button">
+                  <MDBIcon icon="user" className="ms-2" /> {getUserName() || t("common.userFallback")}
                 </MDBDropdownToggle>
                 <MDBDropdownMenu>
-                  {userMenuItems.map((item) => (
-                    item.addDivider
-                      ? <MDBDropdownItem divider key={item.right} />
-                      : (
-                        <MDBDropdownItem
-                          link
-                          childTag='button'
-                          key={item.right}
-                          onClick={() => {
-                            if (item.path === 'logout') app.logout();
-                            else navigate(item.path);
-                            setShowNav(false);
-                          }}
-                        >
-                          <div>{item.label}</div>
-                        </MDBDropdownItem>
-                      )
-                  ))}
+                  {userMenuItems.map((item) =>
+                    item.addDivider ? (
+                      <MDBDropdownItem divider key={item.right} />
+                    ) : (
+                      <MDBDropdownItem
+                        link
+                        childTag="button"
+                        key={item.right}
+                        onClick={() => {
+                          if (item.path === "logout") app.logout();
+                          else navigate(item.path);
+                          setShowNav(false);
+                        }}
+                      >
+                        <div>{getMenuLabel(item)}</div>
+                      </MDBDropdownItem>
+                    )
+                  )}
                 </MDBDropdownMenu>
               </MDBDropdown>
             )}
@@ -342,10 +372,3 @@ const Header = () => {
 };
 
 export default Header;
-
-
-
-
-
-
-

@@ -12,6 +12,22 @@ code {
     monospace;
 }
 
+.loading-icon {
+  color: #0d6efd;
+  opacity: 0.1;
+}
+
+.loading-label {
+  position: absolute;
+  left: 50%;
+  top: calc(50% + 2rem);
+  transform: translateX(-50%);
+  color: #495057;
+  font-size: 0.9rem;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
 .collapse-content {
   display: flex;
   align-items: baseline;
@@ -72,6 +88,19 @@ li.nav-item a.nav-link.active {
 .footer-credit-content > a:first-of-type:focus {
   text-decoration: none;
   background-color: rgba(255, 255, 255, 0.95);
+}
+
+.footer-credit-maker-badge {
+  display: inline-block;
+  padding: 0.06rem 0.45rem;
+  border: 1px solid rgba(255, 193, 7, 0.55);
+  border-radius: 999px;
+  background-color: rgba(255, 193, 7, 0.2);
+  color: #6f4700;
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  line-height: 1.2;
 }
 
 .footer-credit-cookies {
@@ -272,4 +301,10 @@ li.nav-item a.nav-link.active {
   height: 100%;
   border-radius: 50%;
   object-fit: cover;
+}
+
+/* Weather section */
+.weather-title {
+  font-size: 1.2rem;
+  font-weight: 600;
 }

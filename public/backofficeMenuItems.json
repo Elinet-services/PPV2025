@@ -1,4 +1,4 @@
 [
-  { "right": "changepassword", "label": "Změna hesla", "path": "/changepassword"},
-  { "right": "logout", "label": "Odhlásit", "path": "logout" }
+  { "right": "changepassword", "labelKey": "menu.changePassword", "path": "/changepassword"},
+  { "right": "logout", "labelKey": "menu.logout", "path": "logout" }
 ]

@@ -1,6 +1,6 @@
 [
-  { "right": "edit", "label": "Změna údajů", "path": "/registration"},
-  { "right": "documentmanagement", "label": "Backoffice", "path": "/backoffice"},
-  { "right": "changepassword", "label": "Změna hesla", "path": "/changepassword"},
-  { "right": "logout", "label": "Odhlásit", "path": "logout" }
+  { "right": "edit", "labelKey": "menu.changeDetails", "path": "/registration"},
+  { "right": "documentmanagement", "labelKey": "menu.backoffice", "path": "/backoffice"},
+  { "right": "changepassword", "labelKey": "menu.changePassword", "path": "/changepassword"},
+  { "right": "logout", "labelKey": "menu.logout", "path": "logout" }
 ]

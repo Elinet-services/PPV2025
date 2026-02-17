@@ -40,6 +40,7 @@ beforeEach(() => {
 });
 
 test("login: hashes password and navigates on success", async () => {
+  const user = userEvent.setup();
   const navigateMock = jest.fn();
   useNavigate.mockReturnValue(navigateMock);
 
@@ -50,9 +51,9 @@ test("login: hashes password and navigates on success", async () => {
 
   renderLogin();
 
-  await userEvent.type(screen.getByLabelText("Email"), "  JIRI.JANDA@ELINET.CZ ");
-  await userEvent.type(screen.getByLabelText("Heslo"), "tajneheslo");
-  await userEvent.click(screen.getByRole("button", { name: "Přihlásit" }));
+  await user.type(screen.getByLabelText(/email/i), "  JIRI.JANDA@ELINET.CZ ");
+  await user.type(screen.getByLabelText(/heslo/i), "tajneheslo");
+  await user.click(screen.getByRole("button", { name: /přihlásit/i }));
 
   const normalizedEmail = "jiri.janda@elinet.cz";
   const expectedHash = sha256.create().update(normalizedEmail + "tajneheslo").digest().toHex();
@@ -74,13 +75,14 @@ test("login: hashes password and navigates on success", async () => {
 });
 
 test("forgot password: sends normalized email and empty password", async () => {
+  const user = userEvent.setup();
   processRequest.mockResolvedValueOnce({ isError: false, responseData: {} });
 
   renderLogin();
 
-  await userEvent.type(screen.getByLabelText("Email"), "Jiri.Janda@EliNet.cz");
-  await userEvent.click(screen.getByRole("button", { name: "Zapomenuté heslo" }));
-  await userEvent.click(screen.getByRole("button", { name: "Odeslat odkaz" }));
+  await user.type(screen.getByLabelText(/email/i), "Jiri.Janda@EliNet.cz");
+  await user.click(screen.getByRole("button", { name: /zapomenuté heslo/i }));
+  await user.click(screen.getByRole("button", { name: /odeslat odkaz/i }));
 
   await waitFor(() => expect(processRequest).toHaveBeenCalledTimes(1));
   const [payload, action] = processRequest.mock.calls[0];
