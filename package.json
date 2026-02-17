@@ -30,6 +30,7 @@
     "client": "react-scripts start",
     "build": "react-scripts build",
     "i18n:check": "node scripts/check-i18n.js",
+    "docs:sync": "node scripts/sync-working-docs.js",
     "test": "react-scripts test",
     "test:ci": "npm run i18n:check && react-scripts test --watchAll=false --passWithNoTests",
     "e2e": "playwright test",

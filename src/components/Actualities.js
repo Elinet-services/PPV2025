@@ -41,6 +41,26 @@ const decodeBodyText = (bodyText) => {
   }
 };
 
+const executeEmbeddedScripts = (container) => {
+  if (!container) return;
+
+  const scripts = container.querySelectorAll("script");
+  scripts.forEach((scriptNode) => {
+    const alreadyExecuted = scriptNode.getAttribute("data-ppv-executed") === "1";
+    if (alreadyExecuted) return;
+
+    const replacement = document.createElement("script");
+
+    Array.from(scriptNode.attributes).forEach((attribute) => {
+      replacement.setAttribute(attribute.name, attribute.value);
+    });
+
+    replacement.setAttribute("data-ppv-executed", "1");
+    replacement.text = scriptNode.text || "";
+    scriptNode.parentNode?.replaceChild(replacement, scriptNode);
+  });
+};
+
 const Actualities = ({ noteList }) => {
   const { t, i18n } = useTranslation();
   const [loading, setLoading] = useState(true);
@@ -66,6 +86,15 @@ const Actualities = ({ noteList }) => {
     setTranslatingNotes({});
     setTranslationErrors({});
   }, [currentLanguage]);
+
+  useEffect(() => {
+    if (typeof document === "undefined") return;
+    const root = document.getElementById("actualities");
+    if (!root) return;
+
+    const bodyContainers = root.querySelectorAll(".actualities-body");
+    bodyContainers.forEach((container) => executeEmbeddedScripts(container));
+  }, [allNoteList, currentLanguage, filteredNoteList, translatedNotes]);
 
   const getNoteKey = (note, index) => {
     const rowKey = note.rowNr !== undefined && note.rowNr !== null ? `row-${note.rowNr}` : `idx-${index}`;

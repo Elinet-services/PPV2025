@@ -118,6 +118,21 @@
         "i3link": "Registrierung / Anmeldung bearbeiten",
         "i3b": "(nach Anmeldung) erreichbar."
       },
+      "menu": {
+        "title": "Menü nach Bildschirmgröße",
+        "i0": "Eingeklapptes Menü: nur das Hamburger-Symbol, die Punkte sind ausgeblendet. Ausgeklapptes Menü: die Punkte werden angezeigt (mobil als Panel, auf Tablet in der oberen Leiste).",
+        "i1": "Mobil (bis 767 px): Öffnen Sie das Menü über das Hamburger-Symbol (drei Striche) oben links im Header (über den Bildern).",
+        "i2": "Es öffnet sich ein Vollbild-Panel. Schließen Sie es durch Tippen außerhalb des Panels oder durch Auswahl eines Menüpunktes.",
+        "i3": "Tablet / kleiner Laptop (768-991 px): Unter den Bildern ist eine Menüleiste, die Punkte sind aber eingeklappt. Öffnen Sie sie mit dem Hamburger-Symbol.",
+        "i4": "Große Bildschirme (ab 992 px): Das Menü ist ausgeklappt und die Punkte sind direkt in einer Zeile sichtbar; rechts befinden sich Anmeldung/Benutzer und Sprachumschalter.",
+        "i5": "Backoffice verhält sich genauso (eingeklappt unter 992 px, ausgeklappt ab 992 px).",
+        "screensTitle": "Screenshots",
+        "shotMobileCollapsed": "Mobil (Menü eingeklappt)",
+        "shotMobile": "Mobil (Menü geöffnet)",
+        "shotTabletCollapsed": "Tablet (Menü eingeklappt)",
+        "shotTablet": "Tablet (Menü ausgeklappt)",
+        "shotDesktop": "Desktop (Menü in einer Zeile)"
+      },
       "forgot": {
         "title": "Passwort vergessen (Link senden)",
         "i1a": "Auf der Seite",

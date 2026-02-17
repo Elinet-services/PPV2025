@@ -69,3 +69,12 @@ desktop.ini
 # Temporary files
 # =====================
 *.tmp
+
+# =====================
+# Working docs (local)
+# =====================
+/backoffice-spec-working.md
+/backoffice-spec-working.txt
+/backoffice-rbac-questionnaire-working.md
+/backoffice-rbac-questionnaire-working.txt
+/backoffice-rbac-questionnaire-working.docx

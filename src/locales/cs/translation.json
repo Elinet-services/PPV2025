@@ -118,6 +118,21 @@
         "i3link": "Registraci / Úpravu přihlášky",
         "i3b": "(po přihlášení)."
       },
+      "menu": {
+        "title": "Menu podle velikosti obrazovky",
+        "i0": "Sbalené menu: vidíte jen ikonu tří čárek a položky jsou skryté. Rozbalené menu: položky se zobrazí (na mobilu jako panel, na tabletu v horní liště).",
+        "i1": "Mobil (do 767 px): menu otevřete klepnutím na ikonu tří čárek vlevo nahoře v záhlaví (nad obrázky).",
+        "i2": "Otevře se panel přes celou obrazovku. Zavřete ho klepnutím mimo panel nebo výběrem položky.",
+        "i3": "Tablet / menší notebook (768-991 px): menu je v pruhu pod obrázky, položky jsou schované. Rozbalíte je ikonou tří čárek.",
+        "i4": "Velká obrazovka (992 px a více): menu je rozbalené a položky jsou vidět rovnou v řádku; vpravo je přihlášení/uživatel a přepínač jazyka.",
+        "i5": "Backoffice: chování je stejné jako výše (pod 992 px rozbalení ikonou tří čárek).",
+        "screensTitle": "Ukázky",
+        "shotMobileCollapsed": "Mobil (sbalené menu)",
+        "shotMobile": "Mobil (otevřené menu)",
+        "shotTabletCollapsed": "Tablet (sbalené menu)",
+        "shotTablet": "Tablet (rozbalené menu)",
+        "shotDesktop": "Desktop (menu v řádku)"
+      },
       "forgot": {
         "title": "Zapomenuté heslo (odeslání odkazu)",
         "i1a": "Na stránce",

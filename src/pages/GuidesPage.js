@@ -37,6 +37,110 @@ const GuidesPage = () => {
         ],
       },
       {
+        id: "menu",
+        title: t("guides.blocks.menu.title"),
+        searchText: [
+          t("guides.blocks.menu.title"),
+          t("guides.blocks.menu.i0"),
+          t("guides.blocks.menu.i1"),
+          t("guides.blocks.menu.i2"),
+          t("guides.blocks.menu.i3"),
+          t("guides.blocks.menu.i4"),
+          t("guides.blocks.menu.i5"),
+          t("guides.blocks.menu.screensTitle"),
+          t("guides.blocks.menu.shotMobileCollapsed"),
+          t("guides.blocks.menu.shotMobile"),
+          t("guides.blocks.menu.shotTabletCollapsed"),
+          t("guides.blocks.menu.shotTablet"),
+          t("guides.blocks.menu.shotDesktop"),
+        ].join(" "),
+        items: [
+          t("guides.blocks.menu.i0"),
+          t("guides.blocks.menu.i1"),
+          t("guides.blocks.menu.i2"),
+          t("guides.blocks.menu.i3"),
+          t("guides.blocks.menu.i4"),
+          t("guides.blocks.menu.i5"),
+        ],
+        extra: (
+          <div className="mt-3">
+            <MDBTypography tag="h6" className="mb-2 text-start">
+              {t("guides.blocks.menu.screensTitle")}
+            </MDBTypography>
+            <div className="row g-3">
+              <div className="col-12 col-md-6 col-lg-4">
+                <figure className="m-0">
+                  <img
+                    src="/img/guides/menu-mobile-collapsed.png"
+                    alt={t("guides.blocks.menu.shotMobileCollapsed")}
+                    className="img-fluid rounded border"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                  <figcaption className="small text-muted mt-1 text-start">
+                    {t("guides.blocks.menu.shotMobileCollapsed")}
+                  </figcaption>
+                </figure>
+              </div>
+
+              <div className="col-12 col-md-6 col-lg-4">
+                <figure className="m-0">
+                  <img
+                    src="/img/guides/menu-mobile.png"
+                    alt={t("guides.blocks.menu.shotMobile")}
+                    className="img-fluid rounded border"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                  <figcaption className="small text-muted mt-1 text-start">{t("guides.blocks.menu.shotMobile")}</figcaption>
+                </figure>
+              </div>
+
+              <div className="col-12 col-md-6 col-lg-4">
+                <figure className="m-0">
+                  <img
+                    src="/img/guides/menu-tablet-collapsed.png"
+                    alt={t("guides.blocks.menu.shotTabletCollapsed")}
+                    className="img-fluid rounded border"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                  <figcaption className="small text-muted mt-1 text-start">
+                    {t("guides.blocks.menu.shotTabletCollapsed")}
+                  </figcaption>
+                </figure>
+              </div>
+
+              <div className="col-12 col-md-6 col-lg-4">
+                <figure className="m-0">
+                  <img
+                    src="/img/guides/menu-tablet.png"
+                    alt={t("guides.blocks.menu.shotTablet")}
+                    className="img-fluid rounded border"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                  <figcaption className="small text-muted mt-1 text-start">{t("guides.blocks.menu.shotTablet")}</figcaption>
+                </figure>
+              </div>
+
+              <div className="col-12 col-md-6 col-lg-4">
+                <figure className="m-0">
+                  <img
+                    src="/img/guides/menu-desktop.png"
+                    alt={t("guides.blocks.menu.shotDesktop")}
+                    className="img-fluid rounded border"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                  <figcaption className="small text-muted mt-1 text-start">{t("guides.blocks.menu.shotDesktop")}</figcaption>
+                </figure>
+              </div>
+            </div>
+          </div>
+        ),
+      },
+      {
         id: "forgot",
         title: t("guides.blocks.forgot.title"),
         searchText: [t("guides.blocks.forgot.title"), t("guides.blocks.forgot.i1a"), t("guides.blocks.forgot.i1link"), t("guides.blocks.forgot.i2"), t("guides.blocks.forgot.i3")].join(" "),
@@ -128,6 +232,7 @@ const GuidesPage = () => {
                 <MDBListGroupItem key={`${block.id}-${index}`}>{item}</MDBListGroupItem>
               ))}
             </MDBListGroup>
+            {block.extra ? block.extra : null}
           </div>
         ))
       )}

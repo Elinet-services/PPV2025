@@ -118,6 +118,21 @@
         "i3link": "Inscription / Modifier l'inscription",
         "i3b": "(après connexion)."
       },
+      "menu": {
+        "title": "Menu selon la taille d'écran",
+        "i0": "Menu replié : seul le bouton hamburger est visible et les éléments sont masqués. Menu déplié : les éléments s'affichent (sur mobile sous forme de panneau, sur tablette dans la barre du haut).",
+        "i1": "Mobile (jusqu'à 767 px) : ouvrez le menu via le bouton hamburger (trois lignes) en haut à gauche de l'en-tête (au-dessus des images).",
+        "i2": "Un panneau plein écran s'ouvre. Fermez-le en touchant en dehors du panneau ou en sélectionnant un élément du menu.",
+        "i3": "Tablette / petit ordinateur portable (768-991 px) : la barre de menu est sous les images, mais les éléments sont repliés. Dépliez-les avec le bouton hamburger.",
+        "i4": "Grand écran (992 px et plus) : le menu est déplié et les éléments sont visibles en ligne ; la connexion/utilisateur et le sélecteur de langue sont à droite.",
+        "i5": "Le backoffice se comporte de la même manière (replié sous 992 px, déplié à partir de 992 px).",
+        "screensTitle": "Captures d'écran",
+        "shotMobileCollapsed": "Mobile (menu replié)",
+        "shotMobile": "Mobile (menu ouvert)",
+        "shotTabletCollapsed": "Tablette (menu replié)",
+        "shotTablet": "Tablette (menu déplié)",
+        "shotDesktop": "Ordinateur (menu en ligne)"
+      },
       "forgot": {
         "title": "Mot de passe oublié (envoi du lien)",
         "i1a": "Sur la page",

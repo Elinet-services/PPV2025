@@ -118,6 +118,21 @@
         "i3link": "Registration / Edit entry",
         "i3b": "(after signing in)."
       },
+      "menu": {
+        "title": "Menu by screen size",
+        "i0": "Collapsed menu shows only the hamburger icon and hides the items. Expanded menu shows the items (on mobile as a panel, on tablet in the top bar).",
+        "i1": "Mobile (up to 767 px): open the menu using the hamburger (three-line) button in the top left of the header (above the images).",
+        "i2": "A full-screen panel opens. Close it by tapping outside the panel or by selecting a menu item.",
+        "i3": "Tablet / small laptop (768-991 px): the menu bar is under the header images, but items are collapsed. Expand them using the hamburger button.",
+        "i4": "Large screens (992 px and up): the menu is expanded and items are visible in a row; sign in/user and the language switcher are on the right.",
+        "i5": "Backoffice behaves the same way (collapsed below 992 px, expanded from 992 px).",
+        "screensTitle": "Screenshots",
+        "shotMobileCollapsed": "Mobile (collapsed menu)",
+        "shotMobile": "Mobile (menu open)",
+        "shotTabletCollapsed": "Tablet (collapsed menu)",
+        "shotTablet": "Tablet (expanded menu)",
+        "shotDesktop": "Desktop (menu in a row)"
+      },
       "forgot": {
         "title": "Forgot password (send link)",
         "i1a": "On the",
