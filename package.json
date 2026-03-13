@@ -19,7 +19,7 @@
     "mdb-react-wysiwyg": "git+https://oauth2:WD71xL7gGeb-jc7MDGM-@git.mdbootstrap.com/mdb/react/mdb5/plugins/prd/wysiwyg-editor",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "react-i18next": "^15.4.1",
+    "react-i18next": "15.4.1",
     "react-phone-number-input": "^3.4.14",
     "react-router-dom": "^7.13.0",
     "react-scripts": "^5.0.1",

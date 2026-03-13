@@ -222,8 +222,10 @@ function extendSession() {
 
 export async function fetchData(action, params) {
   extendSession();
+  const tokenParam = getToken() ? `&token=${encodeURIComponent(getToken())}` : '';
+
   try {
-    const response = await fetch(apiBaseUrlGet + `?action=${action}&domain=${domainName}` + (params || ""));
+    const response = await fetch(apiBaseUrlGet + `?action=${action}&domain=${domainName}` + tokenParam + (params || ""));
     if (response.ok) {
       return response.json();
     }
