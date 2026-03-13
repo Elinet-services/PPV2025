@@ -8,6 +8,7 @@ import Footer from "./components/BackofficeFooter.js";
 import LoadingSpinner from "./components/LoadingSpinner";
 import { AppContext } from "./App.js";
 
+const DocumentManagement = lazy(() => import("./pages/DocumentManagement.js"));
 const DocumentList = lazy(() => import("./pages/DocumentList.js"));
 const RacerListPage = lazy(() => import("./pages/RacerListPage.js"));
 const EditNotes = lazy(() => import("./pages/EditNotes.js"));
@@ -39,6 +40,7 @@ const BackofficeApp = () => {
       <MDBContainer className="content-container no-logos">
         <Suspense fallback={<LoadingSpinner className="my-5" height="100px" label={t("common.loading")} />}>
           <Routes>
+            <Route path="documentmanagement" element={<DocumentManagement />} />
             <Route path="documents" element={<DocumentList />} />
             <Route path="racerlist" element={<RacerListPage />} /> {/* ✅ FIX */}
             <Route path="notes" element={<EditNotes />} />

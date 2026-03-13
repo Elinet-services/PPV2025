@@ -188,11 +188,15 @@
   },
   "documents": {
     "loading": "Načítám dokumenty...",
+    "fileName": "Název souboru",
     "name": "Název dokumentu",
     "inserted": "Datum vložení",
+    "published": "Publikováno",
     "description": "Popis",
     "action": "Akce",
-    "download": "Stáhnout"
+    "download": "Stáhnout",
+    "editDocument": "Upravit dokument",
+    "newDocument": "Nový dokument"
   },
   "actualities": {
     "latest": "Poslední aktualita",
