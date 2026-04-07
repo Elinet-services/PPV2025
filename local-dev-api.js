@@ -6,6 +6,7 @@ const DEFAULT_DOMAIN = "ppvcup2026";
 const DATA_DIR = path.join(__dirname, ".dev-data");
 const DATA_FILE = path.join(DATA_DIR, "jirka-dev-db.json");
 const UPLOAD_DIR = path.join(DATA_DIR, "uploads");
+const OUTBOX_DIR = path.join(DATA_DIR, "outbox");
 const FRONTEND_ORIGIN = "http://localhost:3000";
 const ADMIN_EMAIL = "jiri.janda@elinet.cz";
 const ADMIN_PASSWORD_HASH = "36ff68cc586c55fde9fe0bff633eeb3c147e66215e7c758f359c41104437d983";
@@ -113,6 +114,7 @@ function createInitialDb() {
 function ensureDb() {
   ensureDir(DATA_DIR);
   ensureDir(UPLOAD_DIR);
+  ensureDir(OUTBOX_DIR);
 
   if (!fs.existsSync(DATA_FILE)) {
     fs.writeFileSync(DATA_FILE, `${JSON.stringify(createInitialDb(), null, 2)}\n`, "utf8");
@@ -261,8 +263,86 @@ function createResetTokenForUser(user) {
   return `${user.resetPasswordHash}g${hexEncode(user.email)}`;
 }
 
+function createRegistrationTokenForUser(user) {
+  user.resetPasswordHash = makeId("register");
+  user.resetPasswordAt = isoNow();
+  return user.resetPasswordHash;
+}
+
 function createLocalDownloadUrl(documentId) {
   return `${FRONTEND_ORIGIN.replace(":3000", ":3001")}/dev-api/file/${documentId}`;
+}
+
+function createLocalAppUrl(pathnameWithHash) {
+  return `${FRONTEND_ORIGIN}${pathnameWithHash}`;
+}
+
+function writeOutboxMail({ type, to, subject, html, meta = {} }) {
+  ensureDir(OUTBOX_DIR);
+  const id = `${Date.now()}-${crypto.randomUUID()}`;
+  const payload = {
+    id,
+    type,
+    to,
+    subject,
+    html,
+    meta,
+    createdAt: isoNow(),
+  };
+
+  fs.writeFileSync(path.join(OUTBOX_DIR, `${id}.json`), `${JSON.stringify(payload, null, 2)}\n`, "utf8");
+  fs.writeFileSync(path.join(OUTBOX_DIR, `${id}.html`), html, "utf8");
+  return payload;
+}
+
+function listOutbox() {
+  ensureDir(OUTBOX_DIR);
+  return fs
+    .readdirSync(OUTBOX_DIR)
+    .filter((file) => file.endsWith(".json"))
+    .map((file) => JSON.parse(fs.readFileSync(path.join(OUTBOX_DIR, file), "utf8")))
+    .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+}
+
+function createRegistrationEmailPreview(user, domain, registerToken) {
+  const race = getRaceList(loadDb())[domain] || {};
+  const confirmationUrl = createLocalAppUrl(`/#/?registrationsubmittoken=${registerToken}`);
+  return writeOutboxMail({
+    type: "registration-confirmation",
+    to: user.email,
+    subject: "[DEV] Potvrzení emailu pro registraci",
+    meta: { registerToken, confirmationUrl, domain },
+    html: `<!doctype html>
+<html lang="cs">
+  <head><meta charset="utf-8"><title>DEV potvrzení registrace</title></head>
+  <body style="font-family: Arial, sans-serif; line-height: 1.6;">
+    <h3>DEV potvrzení registrace</h3>
+    <p>Pro registraci do prostředí <b>DEV</b> pro závod <b>${escapeHtml(race.raceName || domain)}</b> potvrďte email kliknutím na odkaz níže.</p>
+    <p><a href="${confirmationUrl}">${confirmationUrl}</a></p>
+    <p>Tento mail je vygenerovaný lokálně v outboxu, neposílá se do produkce.</p>
+  </body>
+</html>`,
+  });
+}
+
+function createResetEmailPreview(user, resetToken, domain) {
+  const resetUrl = createLocalAppUrl(`/#/resetpassword?resetToken=${resetToken}`);
+  return writeOutboxMail({
+    type: "password-reset",
+    to: user.email,
+    subject: "[DEV] Reset hesla",
+    meta: { resetToken, resetUrl, domain },
+    html: `<!doctype html>
+<html lang="cs">
+  <head><meta charset="utf-8"><title>DEV reset hesla</title></head>
+  <body style="font-family: Arial, sans-serif; line-height: 1.6;">
+    <h3>DEV reset hesla</h3>
+    <p>Pro prostředí <b>DEV</b> si nastav nové heslo přes odkaz:</p>
+    <p><a href="${resetUrl}">${resetUrl}</a></p>
+    <p>Tento mail je vygenerovaný lokálně v outboxu, neposílá se do produkce.</p>
+  </body>
+</html>`,
+  });
 }
 
 function buildBackofficeHtml(title, description) {
@@ -386,6 +466,10 @@ function registerLocalDevRoutes(app) {
     res.download(document.localPath, document.filename || path.basename(document.localPath));
   });
 
+  app.get("/dev-api/outbox", (req, res) => {
+    sendGetResponse(res, 200, { ok: true, count: listOutbox().length, data: listOutbox() });
+  });
+
   app.post("/dev-api/base", (req, res) => {
     const db = loadDb();
     const payload = parseRequestBody(req.rawBody);
@@ -419,7 +503,7 @@ function registerLocalDevRoutes(app) {
             rights: [...DEFAULT_USER_RIGHTS],
             role: "U",
             loginToken: "",
-            registeredAt: isoNow(),
+            registeredAt: "",
             resetPasswordHash: "",
             resetPasswordAt: "",
             parameters: {},
@@ -428,7 +512,7 @@ function registerLocalDevRoutes(app) {
         }
 
         user.passwordHash = payload.password || user.passwordHash;
-        user.registeredAt = user.registeredAt || isoNow();
+        const registerToken = createRegistrationTokenForUser(user);
         user.parameters[domain] = {
           ...user.parameters[domain],
           ...payload,
@@ -444,7 +528,8 @@ function registerLocalDevRoutes(app) {
         delete user.parameters[domain].domain;
 
         saveDb(db);
-        sendBaseResponse(res, 200, "", false, {});
+        const outboxEntry = createRegistrationEmailPreview(user, domain, registerToken);
+        sendBaseResponse(res, 200, "", false, { outboxId: outboxEntry.id, confirmationUrl: outboxEntry.meta.confirmationUrl });
         return;
       }
 
@@ -452,6 +537,10 @@ function registerLocalDevRoutes(app) {
         const user = findUserByEmail(db, payload.email);
         if (!user || user.passwordHash !== payload.password) {
           sendBaseResponse(res, 401, "Neplatný e-mail nebo heslo.", true);
+          return;
+        }
+        if (!user.registeredAt) {
+          sendBaseResponse(res, 403, "Registrace ještě nebyla potvrzena přes email.", true);
           return;
         }
 
@@ -511,7 +600,8 @@ function registerLocalDevRoutes(app) {
         if (user) {
           const resetToken = createResetTokenForUser(user);
           saveDb(db);
-          sendBaseResponse(res, 200, "", false, { resetToken });
+          const outboxEntry = createResetEmailPreview(user, resetToken, domain);
+          sendBaseResponse(res, 200, "", false, { resetToken, outboxId: outboxEntry.id, resetUrl: outboxEntry.meta.resetUrl });
           return;
         }
 
@@ -548,6 +638,16 @@ function registerLocalDevRoutes(app) {
       }
 
       if (action === "registrationsubmit") {
+        const user = findUserByResetHash(db, payload.token);
+        if (!user) {
+          sendBaseResponse(res, 404, "Potvrzovací token nebyl nalezen.", true);
+          return;
+        }
+
+        user.registeredAt = isoNow();
+        user.resetPasswordHash = "";
+        user.resetPasswordAt = "";
+        saveDb(db);
         sendBaseResponse(res, 200, "", false, {});
         return;
       }
