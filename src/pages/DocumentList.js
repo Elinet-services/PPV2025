@@ -10,7 +10,6 @@ const Documents = ({ documentList }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (documentList.length === 0) return;
     setLoading(false);
   }, [documentList]);
 
@@ -35,7 +34,12 @@ const Documents = ({ documentList }) => {
                 <td>{formatDate(doc.dateInserted)}</td>
                 <td>{doc.description}</td>
                 <td>
-                  <MDBBtn tag="a" href={`https://drive.google.com/uc?export=download&id=${doc.fileId}`} download color="primary">
+                  <MDBBtn
+                    tag="a"
+                    href={doc.downloadUrl || `https://drive.google.com/uc?export=download&id=${doc.fileId}`}
+                    download
+                    color="primary"
+                  >
                     {t("documents.download")}
                   </MDBBtn>
                 </td>

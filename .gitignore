@@ -69,6 +69,7 @@ desktop.ini
 # Temporary files
 # =====================
 *.tmp
+/.dev-data/
 
 # =====================
 # Working docs (local)

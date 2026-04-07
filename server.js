@@ -1,5 +1,6 @@
 const express = require("express");
 const { exec } = require("child_process");
+const { registerLocalDevRoutes } = require("./local-dev-api");
 
 const PORT = Number(process.env.PORT || 3001); // Použij jiný port než React
 const UPDATE_RACELIST_COMMAND = "node fetchRacers.js";
@@ -43,6 +44,8 @@ function createApp(options = {}) {
   const app = express();
   const execCommand = options.execCommand || exec;
   const logger = options.logger || console;
+
+  registerLocalDevRoutes(app);
 
   app.get("/update-racelist", async (req, res) => {
     logMessage(logger, "log", "🔄 Spouštím fetchRacers.js...");

@@ -27,10 +27,21 @@ const BackofficeHeader = ({ menuItems, logout }) => {
 
   const [navItems, setNavItems] = useState([]);
   const [showNav, setShowNav] = useState(false);
+  const isLocalDevApi = apiBaseUrl.startsWith("http://localhost:3001/dev-api/");
 
   const getLabel = (item) => {
     if (item.labelKey) return t(item.labelKey);
     return item.label;
+  };
+
+  const getTargetPath = (item) => {
+    if (!item.backoffice) return item.path;
+    if (!isLocalDevApi) return `${apiBaseUrl}${item.path}&token=${getToken()}`;
+
+    if (item.path.includes("racermanagement")) return "/backoffice/racerlist";
+    if (item.path.includes("documentmanagement")) return "/documents";
+
+    return item.path;
   };
 
   useEffect(() => {
@@ -60,8 +71,8 @@ const BackofficeHeader = ({ menuItems, logout }) => {
                     <MDBNavbarItem key={item.path}>
                       <NavLink
                         className="nav-link"
-                        to={item.backoffice ? `${apiBaseUrl}${item.path}&token=${getToken()}` : item.path}
-                        {...(item.external ? { target: "_blank" } : {})}
+                        to={getTargetPath(item)}
+                        {...(item.external && !isLocalDevApi ? { target: "_blank" } : {})}
                         onClick={() => setShowNav(false)}
                       >
                         {getLabel(item)}

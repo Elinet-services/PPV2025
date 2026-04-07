@@ -1,5 +1,5 @@
 {
-  "apiBaseUrl": "https://script.google.com/macros/s/AKfycbxiPG1OCCz4BikKTDybKiX9NScox1_-OUXTjUKY8sLMVplYb25lizxaewrHLp7tFXhVkQ/exec",
-  "apiBaseUrlGet": "https://script.google.com/macros/s/AKfycbxcHserxu2PtKdAsPxmAtWALUvolGpI1tVokYKIE5IIsXsiON5SVaciD_3C13W-7uPQUA/exec",
+  "apiBaseUrl": "http://localhost:3001/dev-api/base",
+  "apiBaseUrlGet": "http://localhost:3001/dev-api/get",
   "domainName": "ppvcup2026"
 }
