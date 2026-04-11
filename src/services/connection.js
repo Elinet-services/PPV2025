@@ -1,4 +1,4 @@
-export let apiBaseUrl = "https://script.google.com/macros/s/AKfycbzAtoHGIXbvooP54sjFZFTJ8hdKpQs_d0EoK2sfLCUGlfE--D60vK7DGa8WVVCd9iWw/exec";
+export let apiBaseUrl = "https://script.google.com/macros/s/AKfycbzyEIEsVxdtnGtbomXp5L_oAMqET49GKTXRaF_gpOdqsXFa_QOHGn2eyQ1V3DXF8u7M/exec";
 export let apiBaseUrlGet = "https://script.google.com/macros/s/AKfycbwpF48CKmoeOtbkq5EU1drEilJ8yBx6u1DIV3DdSwYl3XtZrSlPLTMTnouzpbSv2zWGJg/exec";
 export let domainName = "ppvcup2026";
 
@@ -220,10 +220,13 @@ function extendSession() {
   }
 }
 
-export async function fetchData(action, params) {
+export async function fetchData(action, params, useBackoffice) {
   extendSession();
+  const tokenParam = getToken() ? `&token=${encodeURIComponent(getToken())}` : '';
+
   try {
-    const response = await fetch(apiBaseUrlGet + `?action=${action}&domain=${domainName}` + (params || ""));
+    const response = await fetch((useBackoffice ? apiBaseUrl : apiBaseUrlGet)
+                                  + `?action=${action}&domain=${domainName}` + tokenParam + (params || ""));
     if (response.ok) {
       return response.json();
     }
